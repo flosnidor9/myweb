@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나의 미니홈피</title>
+  <link href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css" rel="stylesheet">
+  <style>
+    :root {
+      --desk:   #008080;
+      --face:   #d4d0c8;
+      --light:  #ffffff;
+      --mid:    #808080;
+      --dark:   #404040;
+      --active: #000080;
+      --winbg:  #ffffff;
+      --text:   #000000;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--desk);
+      font-family: 'Galmuri11', 'MS Sans Serif', sans-serif;
+      font-size: 11px;
+      color: var(--text);
+      cursor: none;
+      padding-bottom: 32px;
+    }
+
+    /* Cursor */
+    #cursor {
+      position: fixed;
+      font-size: 14px;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 10px;
+      animation: sp 0.7s ease-out forwards;
+    }
+    @keyframes sp {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 0; transform: translateY(-18px) scale(0.3); }
+    }
+
+    /* Main window */
+    .window {
+      position: fixed;
+      width: 760px;
+      background: var(--face);
+      border: 2px solid;
+      border-color: var(--light) var(--dark) var(--dark) var(--light);
+      box-shadow: 1px 1px 0 var(--dark);
+      z-index: 10;
+    }
+
+    /* Title bar */
+    .title-bar {
+      background: var(--active);
+      color: var(--light);
+      padding: 3px 4px 3px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .title-bar-text {
+      font-size: 11px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: move;
+      flex: 1;
+    }
+    .title-bar-controls { display: flex; gap: 2px; }
+    .title-btn {
+      width: 16px; height: 14px;
+      background: var(--face);
+      border: 1px solid;
+      border-color: var(--light) var(--mid) var(--mid) var(--light);
+      font-size: 9px;
+      font-family: inherit;
+      color: var(--text);
+      cursor: default;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .title-btn:active {
+      border-color: var(--mid) var(--light) var(--light) var(--mid);
+    }
+
+    /* Menu bar */
+    .menu-bar {
+      background: var(--face);
+      border-bottom: 1px solid var(--mid);
+      padding: 2px 4px;
+      display: flex;
+      gap: 1px;
+    }
+    .menu-item {
+      padding: 2px 8px;
+      cursor: default;
+    }
+    .menu-item:hover {
+      background: var(--active);
+      color: var(--light);
+    }
+
+    /* Window body */
+    .window-body { padding: 8px; }
+
+    /* Layout */
+    .layout {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 6px;
+    }
+    .layout td { vertical-align: top; }
+    .col-side { width: 158px; }
+
+    /* Panel */
+    .panel {
+      border: 2px solid;
+      border-color: var(--mid) var(--light) var(--light) var(--mid);
+      margin-bottom: 6px;
+    }
+    .panel-title {
+      background: var(--active);
+      color: var(--light);
+      padding: 2px 6px;
+      font-weight: bold;
+    }
+    .panel-body {
+      padding: 6px;
+      background: var(--winbg);
+      line-height: 1.8;
+    }
+
+    /* Profile */
+    .avatar {
+      display: block;
+      width: 64px; height: 64px;
+      margin: 2px auto 6px;
+      border: 2px solid;
+      border-color: var(--mid) var(--light) var(--light) var(--mid);
+      background: var(--face);
+      font-size: 32px;
+      line-height: 60px;
+      text-align: center;
+    }
+    .pname { text-align: center; font-weight: bold; }
+    .pstat { text-align: center; font-size: 10px; color: var(--mid); margin-top: 2px; }
+
+    /* Nav */
+    .nav a {
+      display: block;
+      padding: 3px 6px;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--face);
+    }
+    .nav a:last-child { border: none; }
+    .nav a:hover { background: var(--active); color: var(--light); }
+
+    /* Clock */
+    #clock {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    #date-disp {
+      font-size: 9px;
+      text-align: center;
+      color: var(--mid);
+      margin-top: 2px;
+    }
+
+    /* Welcome */
+    .welcome {
+      border: 2px solid;
+      border-color: var(--mid) var(--light) var(--light) var(--mid);
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 6px;
+      background: var(--winbg);
+    }
+    .welcome .big { font-size: 13px; font-weight: bold; }
+    .welcome p { font-size: 11px; color: var(--mid); line-height: 2; margin-top: 6px; }
+
+    /* Diary */
+    .diary-date {
+      font-size: 10px;
+      color: var(--mid);
+      border-bottom: 1px solid var(--face);
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+    .diary-body { font-size: 11px; line-height: 2.1; }
+
+    /* Blink */
+    .blink { animation: bl 1s step-start infinite; }
+    @keyframes bl { 50% { opacity: 0; } }
+
+    /* Taskbar */
+    .taskbar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 28px;
+      background: var(--face);
+      border-top: 2px solid var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      z-index: 100;
+    }
+    .start-btn {
+      background: var(--face);
+      border: 2px solid;
+      border-color: var(--light) var(--mid) var(--mid) var(--light);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 1px 10px;
+      cursor: default;
+    }
+    .start-btn:active {
+      border-color: var(--mid) var(--light) var(--light) var(--mid);
+    }
+    .taskbar-clock {
+      background: var(--face);
+      border: 2px solid;
+      border-color: var(--mid) var(--light) var(--light) var(--mid);
+      padding: 2px 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+    }
+    .taskbar-window {
+      background: var(--active);
+      color: var(--light);
+      border: 2px solid;
+      border-color: var(--light) var(--mid) var(--mid) var(--light);
+      padding: 1px 10px;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor">✿</div>
+
+<div class="window">
+  <div class="title-bar">
+    <div class="title-bar-text">
+      <span>🌸</span>
+      <span>나의 미니홈피</span>
+    </div>
+    <div class="title-bar-controls">
+      <button class="title-btn">_</button>
+      <button class="title-btn">□</button>
+      <button class="title-btn">✕</button>
+    </div>
+  </div>
+
+  <div class="menu-bar">
+    <span class="menu-item">파일(F)</span>
+    <span class="menu-item">보기(V)</span>
+    <span class="menu-item">도움말(H)</span>
+  </div>
+
+  <div class="window-body">
+    <table class="layout">
+      <tr>
+
+        <td class="col-side">
+
+          <div class="panel">
+            <div class="panel-title">프로필</div>
+            <div class="panel-body" style="text-align:center">
+              <div class="avatar">🌸</div>
+              <div class="pname">홈피 주인</div>
+              <div class="pstat">오늘도 반짝반짝</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">메뉴</div>
+            <div class="panel-body nav">
+              <a href="#">🏠 홈</a>
+              <a href="#">📔 다이어리</a>
+              <a href="#">🖼️ 사진첩</a>
+              <a href="#">💌 방명록</a>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">현재 시각</div>
+            <div class="panel-body">
+              <div id="clock">00:00:00</div>
+              <div id="date-disp"></div>
+            </div>
+          </div>
+
+        </td>
+
+        <td>
+
+          <div class="welcome">
+            <div class="big"><span class="blink">★</span> 어서오세요~ <span class="blink">★</span></div>
+            <p>나의 소중한 미니홈피에 오신 것을 환영해요! ♡<br>편히 쉬다 가세요~</p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">📔 다이어리</div>
+            <div class="panel-body">
+              <div class="diary-date">2026.09.07 (일) ☀️ 맑음</div>
+              <div class="diary-body">
+                드디어 나만의 홈피를 만들었어요! 🎉<br>
+                앞으로 여기에 일상도 올리고 사진도 올리고<br>
+                방명록에 흔적도 남겨주세요~ ♡<br>
+                <br>
+                <span style="color:#000080">♡ from. 홈피 주인 ♡</span>
+              </div>
+            </div>
+          </div>
+
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="taskbar">
+  <button class="start-btn">🪟 시작</button>
+  <div class="taskbar-window">🌸 나의 미니홈피</div>
+  <div class="taskbar-clock" id="taskbar-clock">00:00</div>
+</div>
+
+<script>
+// Window drag
+const win = document.querySelector('.window');
+const titleBar = document.querySelector('.title-bar');
+
+win.style.left = Math.max(0, (innerWidth  - win.offsetWidth)  / 2) + 'px';
+win.style.top  = Math.max(0, (innerHeight - win.offsetHeight) / 3) + 'px';
+
+let dragging = false, ox = 0, oy = 0;
+
+titleBar.addEventListener('mousedown', e => {
+  if (e.target.classList.contains('title-btn')) return;
+  dragging = true;
+  const r = win.getBoundingClientRect();
+  ox = e.clientX - r.left;
+  oy = e.clientY - r.top;
+});
+document.addEventListener('mouseup', () => { dragging = false; });
+
+// Cursor + drag move
+const cur = document.getElementById('cursor');
+const chars = ['✿','★','♡','✦','♪'];
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+  if (dragging) {
+    win.style.left = (e.clientX - ox) + 'px';
+    win.style.top  = (e.clientY - oy) + 'px';
+    return;
+  }
+  if (Math.random() < 0.18) spark(e.clientX, e.clientY);
+});
+function spark(x, y) {
+  const el = document.createElement('div');
+  el.className = 'sparkle';
+  el.textContent = chars[Math.floor(Math.random() * chars.length)];
+  el.style.left  = (x + (Math.random()-0.5)*18) + 'px';
+  el.style.top   = (y + (Math.random()-0.5)*18) + 'px';
+  el.style.color = ['#000080','#800080','#008080'][Math.floor(Math.random()*3)];
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 700);
+}
+
+const DAYS = ['일','월','화','수','목','금','토'];
+function tick() {
+  const n = new Date(), p = v => String(v).padStart(2,'0');
+  document.getElementById('clock').textContent =
+    `${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+  document.getElementById('date-disp').textContent =
+    `${n.getFullYear()}.${p(n.getMonth()+1)}.${p(n.getDate())} (${DAYS[n.getDay()]})`;
+  document.getElementById('taskbar-clock').textContent =
+    `${p(n.getHours())}:${p(n.getMinutes())}`;
+}
+setInterval(tick, 1000); tick();
+</script>
+</body>
+</html>
