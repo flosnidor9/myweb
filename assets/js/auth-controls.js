@@ -23,7 +23,9 @@ export function initAuthControls({ auth, db, onAdminChange }) {
     try { if (auth.currentUser) await signOut(auth); else await signInWithPopup(auth, new GoogleAuthProvider()); }
     catch (error) { status.hidden = false; status.textContent = 'Google 로그인에 실패했습니다.'; console.error(error); }
   });
+  const mobileToggle = document.getElementById('mobile-admin-btn');
   toggle.addEventListener('click', () => { menu.hidden = !menu.hidden; });
-  document.addEventListener('click', (event) => { if (!event.target.closest('#start-menu, #start-menu-toggle')) menu.hidden = true; });
+  if (mobileToggle) mobileToggle.addEventListener('click', () => { menu.hidden = !menu.hidden; });
+  document.addEventListener('click', (event) => { if (!event.target.closest('#start-menu, #start-menu-toggle, #mobile-admin-btn')) menu.hidden = true; });
   onAuthStateChanged(auth, setState);
 }

@@ -283,3 +283,111 @@
       font-size: 11px; color: var(--text1); flex-shrink: 0; cursor: pointer;
     }
     .tb-clock:active { background: var(--pink3); }
+
+    /* ── 게시글 목록 행 ── */
+    .board-post-row {
+      display: flex; flex-direction: column; gap: 4px;
+      width: 100%; padding: 8px; border: 1px solid var(--pink4);
+      background: #fffafd; color: var(--text1); font: inherit;
+      text-align: left; cursor: pointer;
+    }
+    .board-post-row:hover { background: var(--pink4); border-color: var(--pink2); }
+    .board-post-row-title { font-size: 11px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board-post-row-bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .board-post-row-preview { font-size: 9px; color: var(--text2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board-post-row-meta { font-size: 9px; color: var(--text2); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── 게시글 상세 ── */
+    .board-post-detail-header { border-bottom: 1px solid var(--pink4); padding-bottom: 6px; margin-bottom: 8px; }
+    .board-post-detail-header strong { display: block; font-size: 12px; color: var(--text1); }
+    .board-post-meta { display: block; margin-top: 3px; font-size: 9px; color: var(--text2); }
+    .board-post-body {
+      font-size: 11px; color: var(--text1); line-height: 1.8;
+      white-space: pre-wrap; overflow-wrap: anywhere;
+      max-height: 360px; overflow-y: auto;
+    }
+
+    /* ── 모바일 헤더 / 네비게이션 ── */
+    #mobile-header {
+      display: none; position: fixed; top: 0; left: 0; right: 0;
+      height: 44px; z-index: 200;
+      background: linear-gradient(to right, var(--pink1), var(--pink2));
+      padding: 0 12px; align-items: center; justify-content: space-between;
+    }
+    #mobile-header-title { font-weight: bold; font-size: 13px; letter-spacing: 1px; color: var(--white); }
+    #mobile-header-right { display: flex; align-items: center; gap: 8px; }
+    #mobile-clock-display { font-family: 'Courier New', monospace; font-size: 11px; color: rgba(255,255,255,0.9); }
+    #mobile-admin-btn {
+      background: transparent; border: 1px solid rgba(255,255,255,0.5);
+      color: var(--white); font: inherit; font-size: 12px;
+      width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    #mobile-nav {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      height: 56px; z-index: 200;
+      background: linear-gradient(to top, var(--pink3), var(--pink4));
+      border-top: 2px solid var(--pink2); align-items: stretch;
+    }
+    #mobile-nav button {
+      flex: 1; border: none; border-right: 1px solid rgba(232,84,122,0.25);
+      background: transparent; color: var(--text1); font: inherit;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px; cursor: pointer; padding: 4px 2px;
+    }
+    #mobile-nav button:last-child { border-right: none; }
+    #mobile-nav button.active { background: rgba(255,255,255,0.4); font-weight: bold; }
+    .nav-icon { font-size: 18px; line-height: 1; }
+    .nav-label { font-size: 9px; }
+
+    /* ── 모바일 전용 뷰 (560px 이하) ── */
+    @media (max-width: 560px) {
+      /* 데스크탑 크롬 숨김, 모바일 크롬 표시 */
+      .icon-grid, .taskbar { display: none !important; }
+      #mobile-header, #mobile-nav { display: flex !important; }
+
+      /* 시작 메뉴 위치 조정 */
+      .start-menu { bottom: auto; top: 44px; left: auto; right: 4px; }
+
+      /* 창 → 전체화면 패널
+         top/left/right/bottom 고정으로 iOS Safari 100vh 버그 회피 */
+      .win {
+        display: none !important;
+        position: fixed !important;
+        top: 44px !important; left: 0 !important;
+        right: 0 !important; bottom: 56px !important;
+        width: auto !important; max-width: none !important; height: auto !important;
+        border: none !important; box-shadow: none !important;
+        overflow: hidden !important;
+      }
+      .win.mobile-active {
+        display: flex !important; flex-direction: column !important;
+      }
+      .win-body { flex: 1 !important; min-height: 0 !important; overflow-y: auto; font-size: 12px; }
+      .win-title { cursor: default !important; flex-shrink: 0 !important; }
+      .win-btns { display: none !important; }
+      .win-menubar { flex-shrink: 0 !important; }
+
+      /* 게시판 */
+      .board-body { min-height: unset; }
+      .board-post-body { max-height: none; }
+
+      /* 다이어리: 2열 → 1열 */
+      #win-diary { width: 100vw; }
+      .diary-layout { grid-template-columns: 1fr; }
+      .diary-calendar { border-right: none; padding-right: 0; border-bottom: 1px solid var(--pink4); padding-bottom: 8px; }
+
+      /* 방명록 */
+      .guestbook-body { max-height: none; }
+
+      /* 홈 */
+      #win-welcome { width: 100vw; }
+
+      /* 프로필 가운데 정렬 */
+      .profile-layout { justify-content: center; }
+
+      /* 작은 텍스트 가독성 향상 */
+      .board-post-row-preview, .board-post-row-meta, .board-post-meta,
+      .board-guide, .board-eyebrow, .board-status,
+      .guestbook-status, .guestbook-intro,
+      .diary-date, .pstat, .pinfo { font-size: 10px; }
+    }

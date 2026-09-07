@@ -394,6 +394,33 @@
   </button>
 </div>
 
+<!-- ── 모바일 헤더 ── -->
+<div id="mobile-header">
+  <span id="mobile-header-title">🐰 BANANA ROOM</span>
+  <div id="mobile-header-right">
+    <button id="mobile-admin-btn" title="설정">⚙</button>
+    <time id="mobile-clock-display">00:00</time>
+  </div>
+</div>
+<!-- ── 모바일 네비게이션 ── -->
+<nav id="mobile-nav">
+  <button data-win="win-welcome" onclick="openWin('win-welcome')">
+    <span class="nav-icon">🏠</span><span class="nav-label">홈</span>
+  </button>
+  <button data-win="win-profile" onclick="openWin('win-profile')">
+    <span class="nav-icon">🌸</span><span class="nav-label">프로필</span>
+  </button>
+  <button data-win="win-diary" onclick="openWin('win-diary')">
+    <span class="nav-icon">📔</span><span class="nav-label">다이어리</span>
+  </button>
+  <button data-win="win-board" onclick="openWin('win-board')">
+    <span class="nav-icon">📋</span><span class="nav-label">게시판</span>
+  </button>
+  <button data-win="win-guestbook" onclick="openWin('win-guestbook')">
+    <span class="nav-icon">💌</span><span class="nav-label">방명록</span>
+  </button>
+</nav>
+
 <script type="module" src="assets/js/window-ui.js"></script>
 <script type="module" src="assets/js/music-player.js"></script>
 <script type="module" src="assets/js/typing-games.js"></script>

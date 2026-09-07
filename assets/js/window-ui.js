@@ -23,6 +23,7 @@ function readWindowState() {
 }
 
 const savedWindowState = readWindowState();
+const isMobile = window.matchMedia('(max-width: 560px)').matches;
 
 function saveWindowState(id, state) {
   const el = document.getElementById(id);
@@ -123,6 +124,7 @@ function focusWin(id) {
 
 // ── 윈도우 열기 ──
 function openWin(id) {
+  if (isMobile) { mobileActivate(id); return; }
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.add('open');
@@ -139,21 +141,23 @@ function closeWin(id) {
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.remove('open');
+  el.classList.remove('mobile-active');
   el.style.display = 'none';
   OPEN_WINS.delete(id);
   EXIST_WINS.delete(id);
-  saveWindowState(id, 'closed');
-  updateTaskbar();
+  if (!isMobile) saveWindowState(id, 'closed');
+  if (!isMobile) updateTaskbar();
 }
 
 // ── 최소화 (taskbar로) ──
 function minimizeWin(id) {
   const el = document.getElementById(id);
   if (!el) return;
+  el.classList.remove('mobile-active');
   el.style.display = 'none';
   OPEN_WINS.delete(id);
-  saveWindowState(id, 'minimized');
-  updateTaskbar();
+  if (!isMobile) saveWindowState(id, 'minimized');
+  if (!isMobile) updateTaskbar();
 }
 
 // ── 태스크바 업데이트 ──
@@ -180,9 +184,27 @@ function updateTaskbar() {
   });
 }
 
+// ── 모바일 패널 전환 ──
+function mobileActivate(id) {
+  document.querySelectorAll('.win.mobile-active').forEach(w => w.classList.remove('mobile-active'));
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('mobile-active');
+  OPEN_WINS.clear(); OPEN_WINS.add(id); EXIST_WINS.add(id);
+  document.querySelectorAll('#mobile-nav button[data-win]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.win === id);
+  });
+  el.dispatchEvent(new CustomEvent('win-open', { bubbles: false }));
+}
+
 // ── 데스크탑 아이콘 클릭 ──
 let selectedIco = null;
 function icoClick(el, winId) {
+  if (isMobile) {
+    if (winId) mobileActivate(winId);
+    else showToast('공사중이에요! ♡');
+    return;
+  }
   if (selectedIco) selectedIco.classList.remove('active');
   el.classList.add('active');
   selectedIco = el;
@@ -241,8 +263,11 @@ const cols  = ['#e8547a','#ff8fab','#ffb3c6','#c45a7a','#ff6b9d'];
 
 document.addEventListener('mousemove', e => {
   if (dragEl) {
-    dragEl.style.left = (e.clientX - dox) + 'px';
-    dragEl.style.top  = (e.clientY - doy) + 'px';
+    const taskbarH = 28;
+    const maxLeft = Math.max(0, window.innerWidth - dragEl.offsetWidth);
+    const maxTop  = Math.max(0, window.innerHeight - dragEl.offsetHeight - taskbarH);
+    dragEl.style.left = Math.max(0, Math.min(maxLeft, e.clientX - dox)) + 'px';
+    dragEl.style.top  = Math.max(0, Math.min(maxTop,  e.clientY - doy)) + 'px';
     return;
   }
   if (Math.random() < 0.15) spark(e.clientX, e.clientY);
@@ -273,26 +298,34 @@ function tick() {
     `${n.getFullYear()}.${p(n.getMonth()+1)}.${p(n.getDate())} (${DAYS[n.getDay()]})`;
   document.getElementById('taskbar-clock').textContent =
     `${p(n.getHours())}:${p(n.getMinutes())}`;
+  const mc = document.getElementById('mobile-clock-display');
+  if (mc) mc.textContent = `${p(n.getHours())}:${p(n.getMinutes())}`;
 }
 setInterval(tick, 1000); tick();
 
 // ── 초기 위치 설정 ──
 window.addEventListener('load', () => {
+  if (isMobile) {
+    // 모바일: 모든 창을 EXIST에 등록하고 홈 패널을 활성화
+    Object.keys(WIN_META).forEach(id => EXIST_WINS.add(id));
+    mobileActivate('win-welcome');
+    return;
+  }
+
+  // 데스크탑: 위치 계산 후 배치
   const W = innerWidth, H = innerHeight;
   const setPos = (id, x, y) => {
     const el = document.getElementById(id);
     if (!el) return;
     const maxLeft = Math.max(0, W - el.offsetWidth);
-    const maxTop = Math.max(0, H - el.offsetHeight);
+    const maxTop = Math.max(0, H - el.offsetHeight - 28);
     el.style.left = Math.min(maxLeft, Math.max(0, x)) + 'px';
-    el.style.top  = Math.min(maxTop, Math.max(0, y)) + 'px';
+    el.style.top  = Math.min(maxTop,  Math.max(0, y)) + 'px';
   };
 
-  // 처음에 열려있는 윈도우들
   ['win-profile','win-clock','win-welcome'].forEach(id => EXIST_WINS.add(id));
   ['win-profile','win-clock','win-welcome'].forEach(id => OPEN_WINS.add(id));
 
-  // 위치
   setPos('win-profile', 100, 48);
   setPos('win-clock',   100, 290);
 
@@ -340,9 +373,7 @@ window.addEventListener('load', () => {
     }
   });
 
-  // 처음 열려 있는 창도 포커스 순서로 쌓아, 이후 열리는 창이 항상 맨 위에 오게 한다.
   ['win-profile', 'win-clock', 'win-welcome'].forEach(focusWin);
-
   updateTaskbar();
 });
 

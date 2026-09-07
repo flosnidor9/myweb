@@ -61,6 +61,7 @@
       box-shadow: 4px 4px 0 var(--shadow), 0 0 0 1px var(--pink3);
       z-index: 10;
       display: none;
+      max-width: calc(100vw - 12px);
     }
     .win.open { display: block; }
     .win-title {
