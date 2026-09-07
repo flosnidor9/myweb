@@ -131,6 +131,7 @@ function openWin(id) {
   EXIST_WINS.add(id);
   saveWindowState(id, 'open');
   focusWin(id);
+  el.dispatchEvent(new CustomEvent('win-open', { bubbles: false }));
 }
 
 // ── 닫기 (완전히 숨김) ──

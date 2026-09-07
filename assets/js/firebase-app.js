@@ -15,6 +15,9 @@ const features = [profile, welcome, diary, guestbook];
 features.forEach((feature) => feature.render());
 board.render();
 
+document.getElementById('win-board').addEventListener('win-open', () => board.reload());
+document.getElementById('win-diary').addEventListener('win-open', () => diary.render());
+
 try {
   const { auth, db } = createFirebase();
   features.forEach((feature) => feature.connect(db));
