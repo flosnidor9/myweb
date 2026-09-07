@@ -24,12 +24,12 @@
       width: 100%; height: 100%;
       overflow: hidden;
       background:
-        radial-gradient(ellipse 120% 60% at 50% 0%,   #b8e6ff 0%, transparent 65%),
-        radial-gradient(ellipse 80%  40% at 80% 20%,  #daf5ff 0%, transparent 55%),
+        radial-gradient(ellipse 120% 60% at 50% 0%,   #b8f5f5 0%, transparent 65%),
+        radial-gradient(ellipse 80%  40% at 80% 20%,  #d8fafa 0%, transparent 55%),
         linear-gradient(180deg,
-          #c5e8ff 0%, #d8f0ff 18%,
+          #c5f5f5 0%, #d8fafa 18%,
           #fce8f2 42%, #ffd4e8 62%,
-          #ffe4c4 82%, #ffd9a8 100%);
+          #ffdce9 82%, #ffcee2 100%);
       font-family: 'Galmuri11', 'MS Sans Serif', sans-serif;
       font-size: 11px;
       color: var(--text1);
@@ -142,6 +142,15 @@
       padding: 2px 8px; cursor: default; color: var(--text1);
     }
     .mitem:hover { background: var(--pink2); color: var(--white); }
+    .menu { position: relative; }
+    .mitem { border: 0; background: transparent; font: inherit; }
+    .menu-dropdown {
+      position: absolute; top: 100%; left: 0; z-index: 20; min-width: 84px;
+      padding: 2px; border: 1px solid var(--pink1); background: var(--white);
+      box-shadow: 2px 2px 0 var(--shadow);
+    }
+    .menu-dropdown button { width: 100%; padding: 3px 7px; border: 0; background: transparent; color: var(--text1); font: inherit; text-align: left; }
+    .menu-dropdown button:hover { background: var(--pink2); color: var(--white); }
 
     /* ── 픽셀 아이콘 (윈도우 내부) ── */
     .px-icon {
@@ -152,7 +161,10 @@
     }
 
     /* ── 프로필 윈도우 ── */
-    #win-profile { width: 170px; }
+    #win-profile { width: 170px; transition: width 0.18s ease; }
+    #win-profile.editing { width: 390px; }
+    .profile-layout { display: flex; align-items: flex-start; gap: 10px; }
+    .profile-summary { width: 150px; flex: 0 0 150px; }
     .avatar {
       display: block; width: 56px; height: 56px;
       margin: 6px auto 7px;
@@ -161,6 +173,8 @@
       font-size: 26px; line-height: 52px; text-align: center;
       box-shadow: 2px 2px 0 var(--shadow);
     }
+    .avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .avatar img[hidden] { display: none; }
     .pname { text-align: center; font-weight: bold; color: var(--text1); }
     .pstat { text-align: center; font-size: 10px; color: var(--text2); margin-top: 2px; }
     .pinfo {
@@ -168,6 +182,30 @@
       border-top: 1px solid var(--pink4);
       font-size: 10px; color: var(--text2); line-height: 2;
     }
+    .profile-auth, .profile-editor { margin-top: 8px; text-align: left; }
+    .profile-auth button, .profile-editor button {
+      width: 100%; padding: 4px 6px; border: 1px solid var(--pink1);
+      background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer;
+    }
+    .profile-auth button:hover, .profile-editor button:hover { background: var(--pink3); }
+    .profile-auth-status { margin-top: 4px; font-size: 9px; color: var(--text2); text-align: center; word-break: break-all; }
+    .profile-editor {
+      flex: 1; min-width: 0; margin-top: 0;
+      border-left: 1px solid var(--pink4); padding: 0 0 0 10px;
+    }
+    .profile-editor label { display: block; margin: 4px 0 2px; font-size: 9px; color: var(--text2); }
+    .profile-editor input, .profile-editor textarea {
+      width: 100%; border: 1px solid var(--pink3); padding: 3px; font: inherit; color: var(--text1);
+    }
+    .profile-editor textarea { height: 42px; resize: vertical; }
+    .profile-editor[hidden] { display: none; }
+    .profile-image-preview {
+      display: block; width: 100%; height: 72px; margin-top: 5px;
+      border: 1px solid var(--pink3); object-fit: cover; background: var(--pink5);
+    }
+    .profile-image-preview[hidden] { display: none; }
+    .profile-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
+    .profile-editor-actions button { width: auto; flex: 1; }
 
     /* ── 시계 윈도우 ── */
     #win-clock { width: 170px; }
@@ -204,15 +242,42 @@
     }
     .welcome-box .big { font-size: 13px; font-weight: bold; color: var(--pink1); }
     .welcome-box p { font-size: 11px; color: var(--text2); line-height: 2; margin-top: 6px; }
+    .welcome-editor { margin-top: 9px; text-align: left; }
+    .welcome-editor label { display: block; margin: 5px 0 2px; font-size: 10px; color: var(--text2); }
+    .welcome-editor input, .welcome-editor textarea {
+      width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit;
+    }
+    .welcome-editor textarea { height: 72px; resize: vertical; }
+    .welcome-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
+    .welcome-editor-actions button { flex: 1; padding: 4px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; }
+    .welcome-editor-actions button:hover { background: var(--pink3); }
 
     /* ── 다이어리 윈도우 ── */
-    #win-diary { width: 370px; }
+    #win-diary { width: 600px; }
+    .diary-layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 12px; }
+    .diary-calendar { border-right: 1px solid var(--pink4); padding-right: 12px; }
+    .diary-calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; font-size: 10px; color: var(--text1); }
+    .diary-calendar-header button { width: 20px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-calendar-week, .diary-calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+    .diary-calendar-week { color: var(--text2); font-size: 9px; margin-bottom: 2px; }
+    .diary-calendar-day { position: relative; min-height: 23px; border: 0; border-radius: 2px; background: transparent; color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-calendar-day:hover, .diary-calendar-day.selected { background: var(--pink4); }
+    .diary-calendar-day.muted { color: var(--pink3); cursor: default; }
+    .diary-calendar-day.has-entry::after { content: ''; position: absolute; width: 4px; height: 4px; left: calc(50% - 2px); bottom: 2px; border-radius: 50%; background: var(--pink1); }
     .diary-date {
       font-size: 10px; color: var(--text2);
       border-bottom: 1px solid var(--pink4);
       padding-bottom: 5px; margin-bottom: 9px;
     }
     .diary-body { font-size: 11px; line-height: 2.2; color: var(--text1); }
+    .diary-empty { color: var(--text2); }
+    .diary-editor { margin-top: 9px; }
+    .diary-editor label { display: block; margin: 5px 0 2px; font-size: 10px; color: var(--text2); }
+    .diary-editor input, .diary-editor select, .diary-editor textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
+    .diary-editor textarea { height: 105px; resize: vertical; }
+    .diary-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
+    .diary-editor-actions button { flex: 1; padding: 4px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-editor-actions button:hover { background: var(--pink3); }
     .memo-deco {
       float: right; margin: 0 0 6px 12px;
       image-rendering: pixelated; width: 72px;
@@ -252,6 +317,16 @@
       flex-shrink: 0;
     }
     .start-btn:active { background: var(--pink3); }
+    .start-menu {
+      position: fixed; left: 4px; bottom: 28px; z-index: 101;
+      min-width: 130px; padding: 4px; border: 2px solid var(--pink1);
+      background: var(--pink5); box-shadow: 3px 3px 0 var(--shadow);
+    }
+    .start-menu button {
+      width: 100%; padding: 5px 7px; border: 0; background: transparent;
+      color: var(--text1); font: inherit; text-align: left; cursor: default;
+    }
+    .start-menu button:hover { background: var(--pink2); color: var(--white); }
     .tb-sep { width: 1px; background: var(--pink2); height: 18px; flex-shrink: 0; }
     .tb-wins { display: flex; gap: 3px; flex: 1; overflow: hidden; }
     .tb-win {
@@ -317,7 +392,6 @@
     <img src="assets/icons/warning.png" alt=""><span>프로필</span>
   </div>
 </div>
-
 <!-- ── 프로필 윈도우 ── -->
 <div class="win open" id="win-profile">
   <div class="win-title" data-win="win-profile">
@@ -329,13 +403,32 @@
     </div>
   </div>
   <div class="win-body" style="text-align:center">
-    <div class="avatar">🌸</div>
-    <div class="pname">홈피 주인</div>
-    <div class="pstat">오늘도 반짝반짝 ♡</div>
-    <div class="pinfo">
-      🌸 방문자: 1,234<br>
-      ♡ 친구: 12명<br>
-      ✦ 방명록: 56개
+    <div class="profile-layout">
+      <div class="profile-summary">
+        <div class="avatar"><span id="profile-avatar-fallback">🌸</span><img id="profile-avatar-image" alt="프로필 사진" hidden></div>
+        <div class="pname" id="profile-name">홈피 주인</div>
+        <div class="pstat" id="profile-status">오늘도 반짝반짝 ♡</div>
+        <div class="pinfo" id="profile-info">🌸 방문자: 1,234<br>♡ 친구: 12명<br>✦ 방명록: 56개</div>
+        <div class="profile-auth">
+          <button type="button" id="profile-edit" hidden>프로필 수정</button>
+          <div class="profile-auth-status" id="profile-auth-status" hidden></div>
+        </div>
+      </div>
+      <form class="profile-editor" id="profile-editor" hidden>
+        <label for="profile-name-input">이름</label>
+        <input id="profile-name-input" name="name" maxlength="60" required>
+        <label for="profile-status-input">상태 메시지</label>
+        <input id="profile-status-input" name="status" maxlength="120">
+        <label for="profile-image-url-input">프로필 사진 링크</label>
+        <input id="profile-image-url-input" name="imageUrl" type="url" maxlength="2000" placeholder="https://example.com/photo.jpg">
+        <img class="profile-image-preview" id="profile-image-preview" alt="프로필 사진 미리보기" hidden>
+        <label for="profile-info-input">소개 (줄바꿈 가능)</label>
+        <textarea id="profile-info-input" name="info" maxlength="500"></textarea>
+        <div class="profile-editor-actions">
+          <button type="submit">프로필 저장</button>
+          <button type="button" id="profile-edit-cancel">취소</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -369,15 +462,30 @@
     </div>
   </div>
   <div class="win-menubar">
-    <span class="mitem">파일(F)</span>
+    <div class="menu">
+      <button class="mitem" id="welcome-file-menu" type="button">파일(F)</button>
+      <div class="menu-dropdown" id="welcome-file-dropdown" hidden>
+        <button id="welcome-edit" type="button" hidden>편집(E)</button>
+      </div>
+    </div>
     <span class="mitem">보기(V)</span>
     <span class="mitem">도움말(H)</span>
   </div>
   <div class="win-body">
     <div class="welcome-box">
-      <div class="big"><span class="blink">★</span> 어서오세요~ <span class="blink">★</span></div>
-      <p>나의 소중한 미니홈피에 오신 것을 환영해요! ♡<br>편히 쉬다 가세요~</p>
+      <div class="big" id="welcome-title">★ 어서오세요~ ★</div>
+      <p id="welcome-message">나의 소중한 미니홈피에 오신 것을 환영해요! ♡<br>편히 쉬다 가세요~</p>
     </div>
+    <form class="welcome-editor" id="welcome-editor" hidden>
+      <label for="welcome-title-input">제목</label>
+      <input id="welcome-title-input" name="title" maxlength="100" required>
+      <label for="welcome-message-input">홈 문구 (줄바꿈 가능)</label>
+      <textarea id="welcome-message-input" name="message" maxlength="1000" required></textarea>
+      <div class="welcome-editor-actions">
+        <button type="submit">저장</button>
+        <button type="button" id="welcome-edit-cancel">취소</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -394,18 +502,73 @@
     </div>
   </div>
   <div class="win-menubar">
-    <span class="mitem">파일(F)</span>
-    <span class="mitem">편집(E)</span>
+    <div class="menu">
+      <button class="mitem" id="diary-file-menu" type="button">파일(F)</button>
+      <div class="menu-dropdown" id="diary-file-dropdown" hidden>
+        <button id="diary-add" type="button" hidden>추가(A)</button>
+      </div>
+    </div>
+    <button class="mitem" id="diary-edit" type="button" hidden>편집(E)</button>
   </div>
   <div class="win-body">
-    <img class="memo-deco" src="assets/windows/memo.png" alt="">
-    <div class="diary-date">2026.09.07 (일) ☀️ 맑음</div>
-    <div class="diary-body">
-      드디어 나만의 홈피를 만들었어요! 🎉<br>
-      앞으로 여기에 일상도 올리고 사진도 올리고<br>
-      방명록에 흔적도 남겨주세요~ ♡<br>
-      <br>
-      <span style="color:var(--pink1)">♡ from. 홈피 주인 ♡</span>
+    <div class="diary-layout">
+      <aside class="diary-calendar" aria-label="다이어리 캘린더">
+        <div class="diary-calendar-header">
+          <button type="button" id="diary-prev-month" aria-label="이전 달">◀</button>
+          <strong id="diary-calendar-month"></strong>
+          <button type="button" id="diary-next-month" aria-label="다음 달">▶</button>
+        </div>
+        <div class="diary-calendar-week" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+        <div class="diary-calendar-days" id="diary-calendar-days"></div>
+      </aside>
+      <section>
+        <div class="diary-date" id="diary-date"></div>
+        <div class="diary-body" id="diary-body"></div>
+        <form class="diary-editor" id="diary-editor" hidden>
+          <label for="diary-date-input">날짜</label>
+          <input id="diary-date-input" name="date" type="date" required>
+          <label for="diary-mood-input">기분</label>
+          <select id="diary-mood-input" name="mood">
+            <option value="">선택 안 함</option>
+            <option value="😁 행복">😁 행복</option>
+            <option value="🥰 설렘">🥰 설렘</option>
+            <option value="😆 신남">😆 신남</option>
+            <option value="🤩 감탄">🤩 감탄</option>
+            <option value="😌 평온">😌 평온</option>
+            <option value="😊 만족">😊 만족</option>
+            <option value="😎 자신감">😎 자신감</option>
+            <option value="🥳 축하">🥳 축하</option>
+            <option value="😐 보통">😐 보통</option>
+            <option value="😶 멍함">😶 멍함</option>
+            <option value="🤔 고민">🤔 고민</option>
+            <option value="😵 혼란">😵 혼란</option>
+            <option value="😮 놀람">😮 놀람</option>
+            <option value="😳 당황">😳 당황</option>
+            <option value="🥺 그리움">🥺 그리움</option>
+            <option value="😔 우울">😔 우울</option>
+            <option value="😢 슬픔">😢 슬픔</option>
+            <option value="🥹 감동">🥹 감동</option>
+            <option value="😤 답답">😤 답답</option>
+            <option value="😠 짜증">😠 짜증</option>
+            <option value="😡 화남">😡 화남</option>
+            <option value="😰 불안">😰 불안</option>
+            <option value="😨 무서움">😨 무서움</option>
+            <option value="😩 지침">😩 지침</option>
+            <option value="🥱 피곤">🥱 피곤</option>
+            <option value="🤒 아픔">🤒 아픔</option>
+            <option value="😴 졸림">😴 졸림</option>
+            <option value="🫠 녹초">🫠 녹초</option>
+          </select>
+          <label for="diary-title-input">제목</label>
+          <input id="diary-title-input" name="title" maxlength="100" required>
+          <label for="diary-content-input">내용</label>
+          <textarea id="diary-content-input" name="content" maxlength="5000" required></textarea>
+          <div class="diary-editor-actions">
+            <button type="submit">저장</button>
+            <button type="button" id="diary-edit-cancel">취소</button>
+          </div>
+        </form>
+      </section>
     </div>
   </div>
 </div>
@@ -415,11 +578,16 @@
 
 <!-- ── 태스크바 ── -->
 <div class="taskbar">
-  <button class="start-btn">🐰 시작</button>
+  <button class="start-btn" id="start-menu-toggle" type="button">🐰 시작</button>
   <div class="tb-sep"></div>
   <div class="tb-wins" id="tb-wins"></div>
   <div class="tb-sep"></div>
   <div class="tb-clock" id="taskbar-clock">00:00</div>
+</div>
+<div class="start-menu" id="start-menu" hidden>
+  <button id="admin-login" type="button" title="관리자 로그인">
+    <span id="admin-login-label">관리자 로그인</span>
+  </button>
 </div>
 
 <script>
@@ -640,6 +808,415 @@ window.addEventListener('load', () => {
 
   updateTaskbar();
 });
+</script>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
+  import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js';
+  import { collection, doc, getDoc, getFirestore, onSnapshot, serverTimestamp, setDoc } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
+  import { firebaseConfig } from './firebase-config.js';
+
+  const defaults = {
+    name: '홈피 주인',
+    status: '오늘도 반짝반짝 ♡',
+    info: '🌸 방문자: 1,234\n♡ 친구: 12명\n✦ 방명록: 56개',
+  };
+  const welcomeDefaults = {
+    title: '★ 어서오세요~ ★',
+    message: '나의 소중한 미니홈피에 오신 것을 환영해요! ♡\n편히 쉬다 가세요~',
+  };
+  const nameEl = document.getElementById('profile-name');
+  const statusEl = document.getElementById('profile-status');
+  const infoEl = document.getElementById('profile-info');
+  const avatarImage = document.getElementById('profile-avatar-image');
+  const avatarFallback = document.getElementById('profile-avatar-fallback');
+  const editor = document.getElementById('profile-editor');
+  const imageUrlInput = document.getElementById('profile-image-url-input');
+  const imagePreview = document.getElementById('profile-image-preview');
+  const profileWindow = document.getElementById('win-profile');
+  const editButton = document.getElementById('profile-edit');
+  const cancelEditButton = document.getElementById('profile-edit-cancel');
+  const welcomeTitleEl = document.getElementById('welcome-title');
+  const welcomeMessageEl = document.getElementById('welcome-message');
+  const welcomeEditor = document.getElementById('welcome-editor');
+  const welcomeFileMenu = document.getElementById('welcome-file-menu');
+  const welcomeFileDropdown = document.getElementById('welcome-file-dropdown');
+  const welcomeEditButton = document.getElementById('welcome-edit');
+  const welcomeEditCancelButton = document.getElementById('welcome-edit-cancel');
+  const startMenuToggle = document.getElementById('start-menu-toggle');
+  const startMenu = document.getElementById('start-menu');
+  const adminLoginButton = document.getElementById('admin-login');
+  const adminLoginLabel = document.getElementById('admin-login-label');
+  const authStatus = document.getElementById('profile-auth-status');
+  const diaryDateEl = document.getElementById('diary-date');
+  const diaryBodyEl = document.getElementById('diary-body');
+  const diaryEditor = document.getElementById('diary-editor');
+  const diaryFileMenu = document.getElementById('diary-file-menu');
+  const diaryFileDropdown = document.getElementById('diary-file-dropdown');
+  const diaryAddButton = document.getElementById('diary-add');
+  const diaryEditButton = document.getElementById('diary-edit');
+  const diaryEditCancelButton = document.getElementById('diary-edit-cancel');
+  const diaryCalendarMonth = document.getElementById('diary-calendar-month');
+  const diaryCalendarDays = document.getElementById('diary-calendar-days');
+  const diaryPrevMonth = document.getElementById('diary-prev-month');
+  const diaryNextMonth = document.getElementById('diary-next-month');
+  let db;
+  let auth;
+  let isAdmin = false;
+  let diaryEntries = new Map();
+  let selectedDiaryDate = formatDiaryDate(new Date());
+  let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+  function getSafeImageUrl(value) {
+    const url = String(value || '').trim();
+    if (!url) return '';
+    try {
+      const parsed = new URL(url);
+      return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+    } catch {
+      return '';
+    }
+  }
+
+  function updateImagePreview(value) {
+    const imageUrl = getSafeImageUrl(value);
+    imagePreview.hidden = !imageUrl;
+    if (imageUrl) imagePreview.src = imageUrl;
+    else imagePreview.removeAttribute('src');
+  }
+
+  function updateProfileImage(value) {
+    const imageUrl = getSafeImageUrl(value);
+    avatarImage.hidden = !imageUrl;
+    avatarFallback.hidden = Boolean(imageUrl);
+    if (imageUrl) avatarImage.src = imageUrl;
+    else avatarImage.removeAttribute('src');
+    updateImagePreview(imageUrl);
+  }
+
+  function renderProfile(data = defaults) {
+    const profile = { ...defaults, ...data };
+    nameEl.textContent = profile.name;
+    statusEl.textContent = profile.status;
+    infoEl.replaceChildren();
+    profile.info.split('\n').forEach((line, index) => {
+      if (index) infoEl.append(document.createElement('br'));
+      infoEl.append(document.createTextNode(line));
+    });
+    editor.elements.name.value = profile.name;
+    editor.elements.status.value = profile.status;
+    editor.elements.imageUrl.value = profile.imageUrl || '';
+    editor.elements.info.value = profile.info;
+    updateProfileImage(profile.imageUrl);
+  }
+
+  function renderWelcome(data = welcomeDefaults) {
+    const welcome = { ...welcomeDefaults, ...data };
+    welcomeTitleEl.textContent = welcome.title;
+    welcomeMessageEl.replaceChildren();
+    welcome.message.split('\n').forEach((line, index) => {
+      if (index) welcomeMessageEl.append(document.createElement('br'));
+      welcomeMessageEl.append(document.createTextNode(line));
+    });
+    welcomeEditor.elements.title.value = welcome.title;
+    welcomeEditor.elements.message.value = welcome.message;
+  }
+
+  function formatDiaryDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function parseDiaryDate(value) {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  function renderDiary() {
+    const selected = parseDiaryDate(selectedDiaryDate);
+    const entry = diaryEntries.get(selectedDiaryDate);
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    diaryDateEl.textContent = `${selected.getFullYear()}.${String(selected.getMonth() + 1).padStart(2, '0')}.${String(selected.getDate()).padStart(2, '0')} (${weekdays[selected.getDay()]})${entry?.mood ? ` · ${entry.mood}` : ''}`;
+    diaryBodyEl.replaceChildren();
+    if (!entry) {
+      const empty = document.createElement('p');
+      empty.className = 'diary-empty';
+      empty.textContent = '이 날짜에는 아직 작성된 다이어리가 없어요.';
+      diaryBodyEl.append(empty);
+    } else {
+      if (entry.title) {
+        const title = document.createElement('strong');
+        title.textContent = entry.title;
+        diaryBodyEl.append(title, document.createElement('br'));
+      }
+      entry.content.split('\n').forEach((line, index) => {
+        if (index) diaryBodyEl.append(document.createElement('br'));
+        diaryBodyEl.append(document.createTextNode(line));
+      });
+    }
+    renderDiaryCalendar();
+  }
+
+  function renderDiaryCalendar() {
+    const year = calendarMonth.getFullYear();
+    const month = calendarMonth.getMonth();
+    diaryCalendarMonth.textContent = `${year}.${String(month + 1).padStart(2, '0')}`;
+    diaryCalendarDays.replaceChildren();
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+    for (let index = 0; index < firstDay + lastDate; index += 1) {
+      if (index < firstDay) {
+        const blank = document.createElement('span');
+        blank.className = 'diary-calendar-day muted';
+        diaryCalendarDays.append(blank);
+        continue;
+      }
+      const day = index - firstDay + 1;
+      const date = formatDiaryDate(new Date(year, month, day));
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `diary-calendar-day${date === selectedDiaryDate ? ' selected' : ''}${diaryEntries.has(date) ? ' has-entry' : ''}`;
+      button.textContent = day;
+      button.setAttribute('aria-label', `${date}${diaryEntries.has(date) ? ', 작성된 다이어리 있음' : ''}`);
+      button.addEventListener('click', () => {
+        selectedDiaryDate = date;
+        diaryEditor.hidden = true;
+        renderDiary();
+      });
+      diaryCalendarDays.append(button);
+    }
+  }
+
+  function openDiaryEditor(mode) {
+    if (!isAdmin) return;
+    const entry = mode === 'edit' ? diaryEntries.get(selectedDiaryDate) : null;
+    if (mode === 'edit' && !entry) {
+      window.showToast('먼저 작성된 날짜를 선택하세요.');
+      return;
+    }
+    diaryEditor.dataset.mode = mode;
+    diaryEditor.elements.date.disabled = mode === 'edit';
+    diaryEditor.elements.date.value = selectedDiaryDate;
+    diaryEditor.elements.mood.value = entry?.mood || '';
+    diaryEditor.elements.title.value = entry?.title || '';
+    diaryEditor.elements.content.value = entry?.content || '';
+    diaryEditor.hidden = false;
+  }
+
+  function setEditorOpen(open) {
+    editor.hidden = !open;
+    profileWindow.classList.toggle('editing', open);
+  }
+
+  function showEditor(show) {
+    isAdmin = show;
+    editButton.hidden = !show;
+    welcomeEditButton.hidden = !show;
+    diaryAddButton.hidden = !show;
+    diaryEditButton.hidden = !show;
+    if (!show) {
+      setEditorOpen(false);
+      welcomeEditor.hidden = true;
+      diaryEditor.hidden = true;
+    }
+  }
+
+  async function setAdminState(user) {
+    showEditor(false);
+    if (!user) {
+      adminLoginLabel.textContent = '관리자 로그인';
+      adminLoginButton.title = 'Google로 관리자 로그인';
+      authStatus.hidden = true;
+      return;
+    }
+    authStatus.hidden = false;
+    adminLoginLabel.textContent = '로그아웃';
+    adminLoginButton.title = '로그아웃';
+    authStatus.textContent = '관리자 권한을 확인하는 중...';
+    try {
+      const admin = await getDoc(doc(db, 'admins', user.uid));
+      if (admin.exists() && admin.data().enabled === true) {
+        showEditor(true);
+        authStatus.textContent = `${user.email || user.uid} · 관리자`;
+      } else {
+        authStatus.textContent = `${user.email || user.uid} · 읽기 전용`;
+      }
+    } catch (error) {
+      authStatus.textContent = '관리자 권한을 확인할 수 없습니다.';
+      console.error(error);
+    }
+  }
+
+  async function startFirebase() {
+    if (!firebaseConfig || firebaseConfig.apiKey === 'PASTE_YOUR_API_KEY') {
+      authStatus.textContent = 'Firebase 설정 후 프로필을 연결할 수 있습니다.';
+      return;
+    }
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    auth = getAuth(app);
+    onSnapshot(doc(db, 'siteContent', 'profile'), (snapshot) => renderProfile(snapshot.data()), (error) => {
+      authStatus.textContent = '프로필을 불러오지 못했습니다.';
+      console.error(error);
+    });
+    onSnapshot(doc(db, 'siteContent', 'welcome'), (snapshot) => renderWelcome(snapshot.data()), (error) => {
+      console.error('홈 문구를 불러오지 못했습니다.', error);
+    });
+    onSnapshot(collection(db, 'diaryEntries'), (snapshot) => {
+      diaryEntries = new Map(snapshot.docs.map((entry) => [entry.id, entry.data()]));
+      renderDiary();
+    }, (error) => {
+      console.error('다이어리를 불러오지 못했습니다.', error);
+    });
+    onAuthStateChanged(auth, setAdminState);
+  }
+
+  adminLoginButton.addEventListener('click', async () => {
+    if (!auth) return;
+    startMenu.hidden = true;
+    if (auth.currentUser) {
+      await signOut(auth);
+      return;
+    }
+    try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+    catch (error) { authStatus.textContent = 'Google 로그인에 실패했습니다.'; console.error(error); }
+  });
+  imageUrlInput.addEventListener('input', () => updateImagePreview(imageUrlInput.value));
+  avatarImage.addEventListener('error', () => {
+    avatarImage.hidden = true;
+    avatarFallback.hidden = false;
+  });
+  imagePreview.addEventListener('error', () => { imagePreview.hidden = true; });
+  startMenuToggle.addEventListener('click', () => {
+    startMenu.hidden = !startMenu.hidden;
+  });
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('#start-menu, #start-menu-toggle')) startMenu.hidden = true;
+  });
+  editButton.addEventListener('click', () => {
+    if (isAdmin) setEditorOpen(true);
+  });
+  cancelEditButton.addEventListener('click', () => setEditorOpen(false));
+  welcomeFileMenu.addEventListener('click', () => {
+    if (welcomeEditButton.hidden) {
+      welcomeFileDropdown.hidden = true;
+      window.showToast('관리자 로그인 후 편집할 수 있어요.');
+      return;
+    }
+    welcomeFileDropdown.hidden = !welcomeFileDropdown.hidden;
+  });
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('.menu')) welcomeFileDropdown.hidden = true;
+  });
+  welcomeEditButton.addEventListener('click', () => {
+    welcomeFileDropdown.hidden = true;
+    if (!isAdmin) {
+      window.showToast('관리자 로그인 후 편집할 수 있어요.');
+      return;
+    }
+    welcomeEditor.hidden = false;
+  });
+  welcomeEditCancelButton.addEventListener('click', () => { welcomeEditor.hidden = true; });
+  diaryFileMenu.addEventListener('click', () => {
+    if (diaryAddButton.hidden) {
+      diaryFileDropdown.hidden = true;
+      window.showToast('관리자 로그인 후 추가할 수 있어요.');
+      return;
+    }
+    diaryFileDropdown.hidden = !diaryFileDropdown.hidden;
+  });
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('#diary-file-menu, #diary-file-dropdown')) diaryFileDropdown.hidden = true;
+  });
+  diaryAddButton.addEventListener('click', () => {
+    diaryFileDropdown.hidden = true;
+    openDiaryEditor('add');
+  });
+  diaryEditButton.addEventListener('click', () => {
+    openDiaryEditor('edit');
+  });
+  diaryEditCancelButton.addEventListener('click', () => { diaryEditor.hidden = true; });
+  editor.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!isAdmin) return;
+    const form = new FormData(editor);
+    const rawImageUrl = form.get('imageUrl');
+    const imageUrl = getSafeImageUrl(rawImageUrl);
+    if (String(rawImageUrl).trim() && !imageUrl) {
+      authStatus.hidden = false;
+      authStatus.textContent = 'http 또는 https 사진 링크를 입력하세요.';
+      return;
+    }
+    const profile = {
+      name: form.get('name').trim(), status: form.get('status').trim(), imageUrl, info: form.get('info').trim(),
+      updatedAt: serverTimestamp(),
+    };
+    try {
+      await setDoc(doc(db, 'siteContent', 'profile'), profile, { merge: true });
+      authStatus.textContent = '프로필을 저장했습니다.';
+      setEditorOpen(false);
+    } catch (error) {
+      authStatus.textContent = '저장하지 못했습니다. 관리자 설정을 확인하세요.';
+      console.error(error);
+    }
+  });
+  welcomeEditor.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!isAdmin || !db) return;
+    const form = new FormData(welcomeEditor);
+    const welcome = {
+      title: form.get('title').trim(),
+      message: form.get('message').trim(),
+      updatedAt: serverTimestamp(),
+    };
+    try {
+      await setDoc(doc(db, 'siteContent', 'welcome'), welcome, { merge: true });
+      renderWelcome(welcome);
+      welcomeEditor.hidden = true;
+      window.showToast('홈 문구를 저장했습니다.');
+    } catch (error) {
+      window.showToast('홈 문구를 저장하지 못했습니다.');
+      console.error(error);
+    }
+  });
+  diaryEditor.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!isAdmin || !db) return;
+    const form = new FormData(diaryEditor);
+    const date = diaryEditor.elements.date.disabled ? selectedDiaryDate : String(form.get('date'));
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+    if (diaryEditor.dataset.mode === 'add' && diaryEntries.has(date)) {
+      window.showToast('이미 작성된 날짜예요. 편집 메뉴를 사용하세요.');
+      return;
+    }
+    const entry = {
+      title: String(form.get('title')).trim(),
+      content: String(form.get('content')).trim(),
+      mood: String(form.get('mood')).trim(),
+      updatedAt: serverTimestamp(),
+    };
+    const previousEntry = diaryEntries.get(date);
+    diaryEntries.set(date, { ...previousEntry, ...entry });
+    selectedDiaryDate = date;
+    calendarMonth = new Date(parseDiaryDate(date).getFullYear(), parseDiaryDate(date).getMonth(), 1);
+    diaryEditor.hidden = true;
+    renderDiary();
+    try {
+      await setDoc(doc(db, 'diaryEntries', date), entry, { merge: true });
+      window.showToast('다이어리를 저장했습니다.');
+    } catch (error) {
+      if (previousEntry) diaryEntries.set(date, previousEntry);
+      else diaryEntries.delete(date);
+      renderDiary();
+      window.showToast('다이어리를 저장하지 못했습니다. 관리자 설정을 확인하세요.');
+      console.error(error);
+    }
+  });
+  renderProfile();
+  renderWelcome();
+  renderDiary();
+  startFirebase();
 </script>
 </body>
 </html>

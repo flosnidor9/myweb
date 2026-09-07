@@ -19,3 +19,10 @@ Gemfile.lock
 
 # oh-my-claudecode state
 .omc/
+
+# Local Node.js dependencies and Vite build output
+node_modules/
+dist/
+
+# Local Chrome debugging profile
+.chrome-debug/
