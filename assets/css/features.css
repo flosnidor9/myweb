@@ -156,6 +156,11 @@
     .board-admin-form p { margin: 2px 0; color: var(--text2); font-size: 9px; line-height: 1.5; }
     .board-admin-form button { padding: 4px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-admin-form button:hover { background: var(--pink3); }
+    .board-admin-form fieldset { border: 1px solid var(--pink3); padding: 4px 7px 6px; }
+    .board-admin-form legend { color: var(--text2); font-size: 9px; padding: 0 2px; }
+    .board-type-option { display: flex; align-items: center; gap: 4px; padding: 2px 0; cursor: pointer; }
+    .board-type-option input[type="radio"] { width: auto; }
+    #board-admin-password-row, #board-admin-master-row { display: contents; }
     .board-status { min-height: 16px; margin: 6px 0 0; color: var(--text2); font-size: 9px; }
     /* 방명록 창 */
     #win-guestbook { width: min(390px, calc(100vw - 24px)); }

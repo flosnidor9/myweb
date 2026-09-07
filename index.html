@@ -81,19 +81,27 @@
       <p>비밀번호는 이 기기에 저장되지 않으며, 암호화된 게시글을 여는 데에만 사용됩니다.</p>
     </form>
     <form id="board-admin-form" class="board-admin-form" hidden>
-      <strong>새 암호화 게시판 등록</strong>
-      <label for="board-admin-id">영문 ID</label><input id="board-admin-id" name="id" maxlength="40" pattern="[a-z0-9-]+" required placeholder="friends-only">
+      <strong>새 게시판 등록</strong>
+      <fieldset class="board-type-select">
+        <legend>게시판 유형</legend>
+        <label class="board-type-option"><input type="radio" name="boardType" value="private" checked> 🔒 비공개 (비밀번호 필요)</label>
+        <label class="board-type-option"><input type="radio" name="boardType" value="public"> 🔓 공개</label>
+      </fieldset>
+      <label for="board-admin-id">게시판 ID</label><input id="board-admin-id" name="id" maxlength="40" pattern="[a-z0-9-]+" required placeholder="예: friends-only">
+      <p class="board-field-hint">영소문자·숫자·하이픈(-) 조합. 게시판을 구분하는 고유 식별자예요.</p>
       <label for="board-admin-name">게시판 이름</label><input id="board-admin-name" name="name" maxlength="40" required>
       <label for="board-admin-description">설명</label><input id="board-admin-description" name="description" maxlength="160">
-      <label for="board-admin-title">첫 글 제목</label><input id="board-admin-title" name="title" maxlength="120" required>
-      <label for="board-admin-content">첫 글 내용</label><textarea id="board-admin-content" name="content" maxlength="5000" required></textarea>
-      <label for="board-admin-password">게시판 비밀번호</label><input id="board-admin-password" name="password" type="password" autocomplete="new-password" minlength="16" required>
-      <label for="board-admin-master">마스터키</label><input id="board-admin-master" name="masterKey" type="password" autocomplete="off" required>
+      <div id="board-admin-password-row">
+        <label for="board-admin-password">게시판 비밀번호</label><input id="board-admin-password" name="password" type="text" autocomplete="off" minlength="16" required>
+      </div>
+      <div id="board-admin-master-row">
+        <label for="board-admin-master">마스터키</label><input id="board-admin-master" name="masterKey" type="password" autocomplete="off" required>
+      </div>
       <label for="board-admin-token">GitHub 쓰기 토큰</label><input id="board-admin-token" name="token" type="password" autocomplete="off" required>
       <p>토큰과 마스터키는 저장하지 않습니다. 비밀번호는 16자 이상으로 설정하세요.</p>
       <button type="submit">private 저장소에 등록</button>
     </form>
-    <button id="board-admin-toggle" class="board-admin-toggle" type="button" hidden>+ 관리자 등록</button>
+    <button id="board-admin-toggle" class="board-admin-toggle" type="button" hidden>+ 새 게시판</button>
     <p id="board-status" class="board-status" aria-live="polite"></p>
   </div>
 </div>
