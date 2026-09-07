@@ -1,8 +1,4 @@
 const $ = (selector) => document.querySelector(selector);
-const full = {
-  board: $('#typing-full-board'), post: $('#typing-full-post'), text: $('#typing-full-text'), input: $('#typing-full-input'),
-  status: $('#typing-full-status'), speed: $('#typing-full-speed'), next: $('#typing-full-next'), posts: [], index: -1, pages: [], page: 0, offset: 0, finishedPage: false, started: null, lastInputAt: null, elapsed: 0, timer: null, idleTimer: null,
-};
 const random = {
   board: $('#typing-random-board'), text: $('#typing-random-text'), input: $('#typing-random-input'),
   status: $('#typing-random-status'), speed: $('#typing-random-speed'), next: $('#typing-random-next'), sentences: [], last: '', started: null, lastInputAt: null, elapsed: 0, timer: null, idleTimer: null,
@@ -31,9 +27,13 @@ function populateBoards(select, placeholder) {
   byId.forEach((board) => { const option = document.createElement('option'); option.value = board.id; option.textContent = board.name; select.append(option); });
   if (byId.has(previous)) select.value = previous;
 }
-function refreshBoards() { populateBoards(full.board, '게시판 선택'); populateBoards(random.board, '게시판 선택'); }
-function normalizeQuotes(value) { return value.replace(/[“”„‟〝〞＂]/g, '"'); }
-function matchesTarget(typed, target) { return normalizeQuotes(typed) === normalizeQuotes(target); }
+function refreshBoards() { populateBoards(random.board, '게시판 선택'); }
+function normalizeTyping(value) {
+  return value
+    .replace(/[“”„‟〝〞＂]/g, '"')
+    .replace(/\.\.\.|⋯/g, '⋯');
+}
+function matchesTarget(typed, target) { return normalizeTyping(typed) === normalizeTyping(target); }
 function renderTarget(element, target, typed = '', cursorIndex = null) {
   const targetChars = Array.from(target), typedChars = Array.from(typed);
   const caretIndex = Math.min(Math.max(0, cursorIndex === null ? typedChars.length : cursorIndex), targetChars.length);
@@ -43,7 +43,7 @@ function renderTarget(element, target, typed = '', cursorIndex = null) {
       const caret = document.createElement('span'); caret.className = 'practice-caret'; caret.setAttribute('aria-hidden', 'true'); element.append(caret);
     }
     const span = document.createElement('span'); span.className = 'practice-char';
-    span.classList.add(index < typedChars.length ? (normalizeQuotes(typedChars[index]) === normalizeQuotes(character) ? 'correct' : 'incorrect') : 'pending');
+    span.classList.add(index < typedChars.length ? (normalizeTyping(typedChars[index]) === normalizeTyping(character) ? 'correct' : 'incorrect') : 'pending');
     const displayed = index < typedChars.length ? typedChars[index] : character;
     span.textContent = displayed; element.append(span);
   });
@@ -110,67 +110,24 @@ async function getPosts(id) {
   const posts = validPosts((await response.json()).posts);
   boardCache.set(id, { board, posts }); return posts;
 }
-function splitIntoPages(content, maximumLength = 450) {
-  const pieces = content.split(/(?<=[.!?…。！？])\s+|\n+/u).map((piece) => piece.trim()).filter(Boolean);
-  const pages = [];
-  let page = '';
-  pieces.forEach((piece) => {
-    if (piece.length > maximumLength) {
-      if (page) { pages.push(page); page = ''; }
-      for (let start = 0; start < piece.length; start += maximumLength) pages.push(Array.from(piece).slice(start, start + maximumLength).join(''));
-    } else if (page && page.length + piece.length + 1 > maximumLength) {
-      pages.push(page); page = piece;
-    } else page = page ? `${page} ${piece}` : piece;
-  });
-  if (page) pages.push(page);
-  return pages;
+function hasVisibleText(value) {
+  return value.replace(/[\s\u00A0\u200B-\u200D\u2060\uFEFF]/gu, '').length > 0;
 }
-function renderFullPage() {
-  const page = full.pages[full.page];
-  full.input.value = '';
-  if (!page) {
-    full.text.textContent = full.posts.length ? '글을 선택해 주세요.' : '게시판을 선택해 주세요.';
-    full.input.disabled = true; full.next.disabled = true; full.next.textContent = '다음 페이지 ▶';
-    return;
-  }
-  renderTarget(full.text, page);
-  full.text.scrollTop = 0;
-  full.input.disabled = false;
-  full.next.disabled = !full.finishedPage;
-  full.next.textContent = full.page === full.pages.length - 1 ? '다른 글 ▶' : '다음 페이지 ▶';
-  full.status.textContent = `페이지 ${full.page + 1} / ${full.pages.length}`;
-  updateMeter(full);
-  full.input.focus();
+function sentences(posts) {
+  return posts.flatMap((post) => post.content
+    .split(/(?<=[.!?…。！？])\s+|\n+/u)
+    .map((sentence) => sentence.trim())
+    .filter(hasVisibleText));
 }
-function renderFull() {
-  full.pages = full.index >= 0 ? splitIntoPages(full.posts[full.index]?.content || '') : [];
-  full.page = 0; full.offset = 0; full.finishedPage = false;
-  resetTimer(full);
-  renderFullPage();
-  return;
-  full.input.value = ''; resetTimer(full);
-  const post = full.posts[full.index];
-  if (!post) { full.text.textContent = full.posts.length ? '글을 선택해 주세요.' : '게시판을 선택해 주세요.'; full.input.disabled = true; full.next.disabled = true; return; }
-  renderTarget(full.text, post.content); full.input.disabled = false; full.next.disabled = full.posts.length < 2; full.input.focus();
-}
-async function chooseFullBoard() {
-  full.status.textContent = '';
-  try {
-    full.posts = await getPosts(full.board.value); full.index = -1;
-    full.post.replaceChildren(); const first = document.createElement('option'); first.value = ''; first.textContent = full.posts.length ? '글 선택' : '쓸 글이 없습니다'; full.post.append(first);
-    full.posts.forEach((post, index) => { const option = document.createElement('option'); option.value = String(index); option.textContent = post.title; full.post.append(option); });
-    full.post.disabled = !full.posts.length;
-    if (full.board.value && !full.posts.length) full.status.textContent = '연습할 내용이 있는 글이 없습니다.';
-  } catch { full.posts = []; full.index = -1; full.status.textContent = '게시글을 불러오지 못했습니다.'; }
-  renderFull();
-}
-function sentences(posts) { return posts.flatMap((post) => post.content.split(/(?<=[.!?…。！？])\s+|\n+/u).map((sentence) => sentence.trim()).filter(Boolean)); }
 function renderRandom() {
   random.input.value = ''; resetTimer(random);
   if (!random.sentences.length) { random.text.textContent = '게시판을 선택해 주세요.'; random.input.disabled = true; random.next.disabled = true; return; }
   const pool = random.sentences.length > 1 ? random.sentences.filter((sentence) => sentence !== random.last) : random.sentences;
   random.last = pool[Math.floor(Math.random() * pool.length)]; renderTarget(random.text, random.last);
-  random.input.disabled = false; random.next.disabled = false; random.input.maxLength = random.last.length; random.input.focus();
+  random.input.disabled = false; random.next.disabled = false;
+  // A middle-dot ellipsis (⋯) may be typed as three ordinary periods (...).
+  random.input.maxLength = random.last.length + (random.last.match(/⋯/g)?.length || 0) * 2;
+  random.input.focus();
 }
 async function chooseRandomBoard() {
   random.status.textContent = '';
@@ -178,32 +135,6 @@ async function chooseRandomBoard() {
   catch { random.sentences = []; random.status.textContent = '게시글을 불러오지 못했습니다.'; }
   renderRandom();
 }
-full.board.addEventListener('change', chooseFullBoard);
-full.post.addEventListener('change', () => { const index = Number.parseInt(full.post.value, 10); full.index = Number.isInteger(index) ? index : -1; renderFull(); });
-full.next.addEventListener('click', () => {
-  if (!full.finishedPage) return;
-  if (full.page < full.pages.length - 1) {
-    full.offset += characterCount(full.pages[full.page]);
-    full.page += 1; full.finishedPage = false; renderFullPage();
-  } else {
-    full.index = (full.index + 1) % full.posts.length;
-    full.post.value = String(full.index); renderFull();
-  }
-});
-full.input.addEventListener('input', () => {
-  const target = full.pages[full.page];
-  if (!target || full.finishedPage) return;
-  trackInput(full, target);
-  if (matchesTarget(full.input.value, target)) {
-    full.finishedPage = true;
-    full.input.disabled = true;
-    full.next.disabled = false;
-    full.status.textContent = full.page === full.pages.length - 1 ? '글을 모두 입력했습니다.' : `페이지 ${full.page + 1} 완료`;
-  }
-});
-['keyup', 'click', 'select'].forEach((eventName) => full.input.addEventListener(eventName, () => {
-  const target = full.pages[full.page]; if (target) syncCursor(full, target);
-}));
 random.board.addEventListener('change', chooseRandomBoard);
 random.next.addEventListener('click', renderRandom);
 random.input.addEventListener('input', () => { if (random.last) trackInput(random, random.last); });
@@ -213,7 +144,7 @@ random.input.addEventListener('input', () => { if (random.last) trackInput(rando
 random.input.addEventListener('keydown', (event) => { if (event.key === 'Enter' && matchesTarget(random.input.value, random.last)) { event.preventDefault(); renderRandom(); } });
 window.addEventListener('board-content-available', (event) => { const { board, posts } = event.detail || {}; if (!board?.id) return; boardCache.set(board.id, { board, posts: validPosts(posts) }); refreshBoards(); });
 fetch('board-data/manifest.json', { cache: 'no-store' }).then((response) => response.ok ? response.json() : Promise.reject()).then((data) => { publicBoards = Array.isArray(data.boards) ? data.boards.filter((board) => board?.public && typeof board.id === 'string' && typeof board.name === 'string') : []; refreshBoards(); }).catch(refreshBoards);
-refreshBoards(); renderFull(); renderRandom();
+refreshBoards(); renderRandom();
 
 const words = ['바나나', '딸기', '구름', '별빛', '하트', '리본', '고양이', '우체통'];
 let fallingWords = [], rainSpawnTimer = null, rainFallTimer = null, rainRunning = false, score = 0, life = 3, level = 1;
@@ -228,6 +159,6 @@ function rainTick() { if (!rainRunning) return; const limit = rainField.clientHe
 function startRain() { if (rainRunning) return; clearRainTimers(); clearRain(); score = 0; life = 3; level = 1; rainRunning = true; rainStart.textContent = '끝내기'; rainStatus.textContent = '떨어지는 단어를 입력하고 Enter!'; updateRainStats(); rainInput.value = ''; rainInput.focus(); spawnWord(); rainFallTimer = setInterval(rainTick, 125); rainSpawnTimer = setInterval(() => { spawnWord(); level = Math.min(9, 1 + Math.floor(score / 80)); updateRainStats(); }, 3200); }
 rainStart.addEventListener('click', () => { if (rainRunning) finishRain('게임 종료!'); else startRain(); });
 rainInput.addEventListener('keydown', (event) => { if (event.key !== 'Enter' || !rainRunning) return; event.preventDefault(); const typed = rainInput.value.trim(); const match = fallingWords.find((item) => item.text === typed); if (match) { match.element.classList.add('popped'); setTimeout(() => match.element.remove(), 180); fallingWords = fallingWords.filter((item) => item !== match); score += typed.length * 5; rainStatus.textContent = 'GOOD!'; updateRainStats(); } else rainStatus.textContent = typed ? '그 단어는 아직 없어요.' : '단어를 입력해 주세요.'; rainInput.value = ''; });
-document.querySelectorAll('[data-typing-mode]').forEach((button) => button.addEventListener('click', () => { const mode = button.dataset.typingMode; if (mode !== 'rain') pauseRain(); document.querySelectorAll('[data-typing-mode]').forEach((item) => item.classList.toggle('active', item === button)); document.querySelectorAll('.typing-panel').forEach((panel) => { panel.hidden = panel.dataset.panel !== mode; }); if (mode === 'rain') startRain(); else if (mode === 'board-full') full.input.focus(); else random.input.focus(); }));
+document.querySelectorAll('[data-typing-mode]').forEach((button) => button.addEventListener('click', () => { const mode = button.dataset.typingMode; if (mode !== 'rain') pauseRain(); document.querySelectorAll('[data-typing-mode]').forEach((item) => item.classList.toggle('active', item === button)); document.querySelectorAll('.typing-panel').forEach((panel) => { panel.hidden = panel.dataset.panel !== mode; }); if (mode === 'rain') startRain(); else random.input.focus(); }));
 document.querySelector('#win-typing .win-btns').addEventListener('click', pauseRain);
 updateRainStats();

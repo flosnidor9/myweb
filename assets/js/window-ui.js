@@ -343,8 +343,11 @@ window.addEventListener('load', () => {
     el.style.top  = Math.min(maxTop,  Math.max(0, y)) + 'px';
   };
 
-  ['win-profile','win-clock','win-welcome'].forEach(id => EXIST_WINS.add(id));
-  ['win-profile','win-clock','win-welcome'].forEach(id => OPEN_WINS.add(id));
+  // Every desktop reload starts from this fixed set.  Window positions may be
+  // remembered, but previous open/minimized/closed states must not be restored.
+  const initiallyOpen = ['win-profile', 'win-clock', 'win-welcome', 'win-music'];
+  initiallyOpen.forEach(id => EXIST_WINS.add(id));
+  initiallyOpen.forEach(id => OPEN_WINS.add(id));
 
   setPos('win-profile', 100, 48);
   setPos('win-clock',   100, 290);
@@ -375,25 +378,9 @@ window.addEventListener('load', () => {
       setPos(id, saved.left, saved.top);
     }
 
-    if (saved.state === 'closed') {
-      el.classList.remove('open');
-      el.style.display = 'none';
-      OPEN_WINS.delete(id);
-      EXIST_WINS.delete(id);
-    } else if (saved.state === 'minimized') {
-      el.classList.remove('open');
-      el.style.display = 'none';
-      OPEN_WINS.delete(id);
-      EXIST_WINS.add(id);
-    } else if (saved.state === 'open') {
-      el.classList.add('open');
-      el.style.display = 'block';
-      OPEN_WINS.add(id);
-      EXIST_WINS.add(id);
-    }
   });
 
-  ['win-profile', 'win-clock', 'win-welcome'].forEach(focusWin);
+  initiallyOpen.forEach(focusWin);
   updateTaskbar();
 });
 

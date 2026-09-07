@@ -114,7 +114,7 @@
 </div>
 <!-- ── 타자 놀이 ── -->
 <!-- 음악 플레이어 -->
-<div class="win" id="win-music">
+<div class="win open" id="win-music">
   <div class="win-title" data-win="win-music">
     <span class="win-label"><img class="px-icon" src="assets/icons/key.png" alt="">음악 플레이어</span>
     <div class="win-btns">
@@ -153,25 +153,11 @@
     </div>
   </div>
   <div class="typing-tabs" role="tablist" aria-label="타자 놀이 선택">
-    <button type="button" class="active" data-typing-mode="board-full">게시글 쭉 쓰기</button>
-    <button type="button" data-typing-mode="board-random">게시글 랜덤 문장</button>
+    <button type="button" class="active" data-typing-mode="board-random">게시글 랜덤 문장</button>
     <button type="button" data-typing-mode="rain">산성비</button>
   </div>
   <div class="win-body typing-body">
-    <section class="typing-panel board-typing-panel" data-panel="board-full" hidden>
-      <p class="typing-guide">게시판과 글을 고른 뒤 내용을 끝까지 입력해 보세요.</p>
-      <div class="board-typing-controls">
-        <label>게시판 <select id="typing-full-board" aria-label="쭉 쓰기 게시판 선택"></select></label>
-        <label>글 <select id="typing-full-post" aria-label="쭉 쓰기 글 선택"></select></label>
-      </div>
-      <p class="board-typing-status" id="typing-full-status" aria-live="polite"></p>
-      <div class="practice-editor board-full-editor">
-        <div class="practice-text" id="typing-full-text" aria-hidden="true"></div>
-        <textarea id="typing-full-input" class="typing-input" autocomplete="off" spellcheck="false" aria-label="게시글 전체 입력"></textarea>
-      </div>
-      <div class="typing-footer"><span class="typing-speed" id="typing-full-speed">속도 -- 타/분</span><button type="button" id="typing-full-next">다른 글 ▶</button></div>
-    </section>
-    <section class="typing-panel board-typing-panel" data-panel="board-random" hidden>
+    <section class="typing-panel board-typing-panel" data-panel="board-random">
       <p class="typing-guide">선택한 게시판의 글에서 문장 하나를 랜덤으로 가져옵니다.</p>
       <div class="board-typing-controls">
         <label>게시판 <select id="typing-random-board" aria-label="랜덤 문장 게시판 선택"></select></label>
