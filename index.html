@@ -49,6 +49,40 @@
   <div class="desktop-icon" id="ico-profile"   onclick="icoClick(this,'win-profile')">
     <img src="assets/icons/warning.png" alt=""><span>프로필</span>
   </div>
+  <div class="desktop-icon" id="ico-typing"    onclick="icoClick(this,'win-typing')">
+    <img src="assets/icons/key.png" alt=""><span>타자 놀이</span>
+  </div>
+</div>
+<!-- ── 타자 놀이 ── -->
+<div class="win" id="win-typing">
+  <div class="win-title" data-win="win-typing">
+    <span class="win-label"><img class="px-icon" src="assets/icons/key.png" alt="">타자 놀이</span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-typing')">_</button>
+      <button class="tbtn" type="button">□</button>
+      <button class="tbtn" onclick="closeWin('win-typing')">×</button>
+    </div>
+  </div>
+  <div class="typing-tabs" role="tablist" aria-label="타자 놀이 선택">
+    <button type="button" class="active" data-typing-mode="practice">타자연습</button>
+    <button type="button" data-typing-mode="rain">산성비</button>
+  </div>
+  <div class="win-body typing-body">
+    <section class="typing-panel" data-panel="practice">
+      <p class="typing-guide">아래 문장을 똑같이 입력하고 Enter를 누르세요.</p>
+      <div class="practice-editor">
+        <div class="practice-text" id="typing-practice-text" aria-hidden="true"></div>
+        <input id="typing-practice-input" class="typing-input" type="text" autocomplete="off" spellcheck="false" aria-label="연습 문장 입력">
+      </div>
+      <div class="typing-footer"><span class="typing-speed" id="typing-practice-speed">속도 -- 타/분</span><button type="button" id="typing-practice-next">다음 문장 ▶</button></div>
+    </section>
+    <section class="typing-panel" data-panel="rain" hidden>
+      <div class="rain-stats"><span>SCORE <b id="acid-rain-score">0000</b></span><span>♥ <b id="acid-rain-life">♥♥♥</b></span><span>LEVEL <b id="acid-rain-level">1</b></span></div>
+      <div id="acid-rain-field" class="acid-rain-field" aria-label="산성비 게임 영역"></div>
+      <input id="acid-rain-input" class="typing-input" type="text" autocomplete="off" spellcheck="false" placeholder="단어를 입력하고 Enter" aria-label="산성비 단어 입력">
+      <div class="typing-footer"><span id="acid-rain-status" aria-live="polite">새 게임을 눌러 시작하세요.</span><button type="button" id="acid-rain-start">새 게임</button></div>
+    </section>
+  </div>
 </div>
 <!-- ── 프로필 윈도우 ── -->
 <div class="win open" id="win-profile">
@@ -249,6 +283,7 @@
 </div>
 
 <script type="module" src="assets/js/window-ui.js"></script>
+<script type="module" src="assets/js/typing-games.js"></script>
 <script type="module" src="assets/js/firebase-app.js"></script>
 </body>
 </html>

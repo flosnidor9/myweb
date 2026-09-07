@@ -4,6 +4,7 @@ const WIN_META = {
   'win-clock':   { label: '⏰ 현재 시각' },
   'win-welcome': { label: '🏠 홈' },
   'win-diary':   { label: '📔 다이어리' },
+  'win-typing':  { label: '⌨ 타자 놀이' },
 };
 const OPEN_WINS = new Set();  // currently open (not minimized) windows
 const EXIST_WINS = new Set(); // windows that haven't been closed
@@ -32,7 +33,7 @@ document.addEventListener('pointerdown', event => {
 }, { passive: true });
 
 // Randomize the supplied key sounds. Two voices per recording preserve rapid typing.
-const keyboardSounds = ['key1.mp3', 'key2.mp3', 'key3.mp3', 'key4.mp3', 'key5.mp3', 'key6.mp3'].map(file =>
+const keyboardSounds = ['key1.mp3', 'key2.mp3', 'key3.mp3', 'key4.mp3', 'key5.mp3', 'key6.mp3', 'key7.mp3'].map(file =>
   Array.from({ length: 2 }, () => {
     const sound = new Audio(`assets/sounds/${file}`);
     sound.preload = 'auto';
@@ -257,6 +258,9 @@ window.addEventListener('load', () => {
 
   const dia = document.getElementById('win-diary');
   setPos('win-diary', (W - dia.offsetWidth) / 2 + 30, 90);
+
+  const typing = document.getElementById('win-typing');
+  setPos('win-typing', (W - typing.offsetWidth) / 2 + 50, 110);
 
   // 초기 z-index
   document.getElementById('win-profile').style.zIndex = 11;

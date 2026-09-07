@@ -121,4 +121,45 @@
       filter: sepia(0.3) hue-rotate(280deg) saturate(1.5);
     }
 
-    
+    /* ── 타자 놀이 ── */
+    #win-typing { width: min(450px, calc(100vw - 24px)); }
+    .typing-tabs { display: flex; gap: 3px; padding: 4px 5px 0; background: var(--pink4); }
+    .typing-tabs button, .typing-footer button {
+      border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1);
+      padding: 3px 8px; font: inherit; cursor: pointer;
+    }
+    .typing-tabs button.active { background: var(--pink2); color: var(--white); font-weight: bold; }
+    .typing-body { min-height: 250px; }
+    .typing-guide { margin-bottom: 8px; color: var(--text2); }
+    .practice-editor { position: relative; }
+    .practice-text {
+      min-height: 58px; padding: 12px; border: 1px inset var(--pink3); background: #fffafc;
+      font-size: 14px; line-height: 1.55; word-break: keep-all;
+    }
+    .practice-char.pending { color: #d7a9ba; }
+    .practice-char.correct { color: var(--text1); }
+    .practice-char.incorrect { color: #e23d55; }
+    .typing-input {
+      width: 100%; margin-top: 8px; padding: 7px; border: 1px solid var(--pink1);
+      outline: none; font: 12px 'Galmuri11', 'MS Sans Serif', sans-serif; color: var(--text1);
+    }
+    .typing-input:focus { box-shadow: 0 0 0 2px var(--pink4); }
+    .practice-editor .typing-input {
+      position: absolute; inset: 0; height: 100%; margin: 0; padding: 12px; border-color: transparent;
+      background: transparent; color: transparent; caret-color: var(--text1); font-size: 14px; line-height: 1.55;
+      transform: translateY(-3px);
+    }
+    .practice-editor .typing-input:focus { box-shadow: none; }
+    .practice-editor:focus-within .practice-text { border-color: var(--pink2); }
+    .typing-footer { min-height: 28px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; color: var(--text2); }
+    .typing-speed { color: var(--pink1); white-space: nowrap; }
+    .rain-stats { display: flex; justify-content: space-between; padding: 4px 7px; border: 1px solid var(--pink1); background: #432a40; color: #fff5fa; }
+    .rain-stats b { color: #ffb6ce; letter-spacing: 1px; }
+    .acid-rain-field { position: relative; height: 155px; overflow: hidden; border: 2px inset var(--pink3); background: radial-gradient(ellipse at 18% 22%, #fff 0 9%, transparent 10%), radial-gradient(ellipse at 72% 36%, #fff 0 11%, transparent 12%), linear-gradient(#bcecf5, #d9f7f6 68%, #ffe0ec); }
+    .acid-rain-field::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 16px; background: repeating-linear-gradient(90deg, #8ed6a1 0 12px, #b8edbf 12px 24px); }
+    .falling-word { position: absolute; z-index: 1; color: #fff; font-weight: bold; white-space: nowrap; text-shadow: 1px 1px 0 #6d9cb3, -1px 0 #6d9cb3; image-rendering: pixelated; }
+    .falling-word::before { content: '▪▪'; position: absolute; top: -7px; left: 1px; color: #fff; font-size: 7px; letter-spacing: 3px; text-shadow: 1px 1px #8fc5d3; }
+    .falling-word.popped { animation: typing-pop 0.18s steps(2, end) forwards; }
+    @keyframes typing-pop { to { transform: scale(1.7); opacity: 0; } }
+    @media (max-width: 520px) { .typing-footer { align-items: flex-start; flex-direction: column; } .typing-body { min-height: 270px; } }
+
