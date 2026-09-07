@@ -1,0 +1,187 @@
+/* ── 프로필 윈도우 ── */
+    #win-profile { width: 170px; transition: width 0.18s ease; }
+    #win-profile.editing { width: 390px; }
+    .profile-layout { display: flex; align-items: flex-start; gap: 10px; }
+    .profile-summary { width: 150px; flex: 0 0 150px; }
+    .avatar {
+      display: block; width: 56px; height: 56px;
+      margin: 6px auto 7px;
+      border: 2px solid var(--pink1);
+      background: var(--pink4);
+      font-size: 26px; line-height: 52px; text-align: center;
+      box-shadow: 2px 2px 0 var(--shadow);
+    }
+    .avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .avatar img[hidden] { display: none; }
+    .pname { text-align: center; font-weight: bold; color: var(--text1); }
+    .pstat { text-align: center; font-size: 10px; color: var(--text2); margin-top: 2px; }
+    .pinfo {
+      margin-top: 7px; padding-top: 6px;
+      border-top: 1px solid var(--pink4);
+      font-size: 10px; color: var(--text2); line-height: 2;
+    }
+    .profile-auth, .profile-editor { margin-top: 8px; text-align: left; }
+    .profile-auth button, .profile-editor button {
+      width: 100%; padding: 4px 6px; border: 1px solid var(--pink1);
+      background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer;
+    }
+    .profile-auth button:hover, .profile-editor button:hover { background: var(--pink3); }
+    .profile-auth-status { margin-top: 4px; font-size: 9px; color: var(--text2); text-align: center; word-break: break-all; }
+    .profile-editor {
+      flex: 1; min-width: 0; margin-top: 0;
+      border-left: 1px solid var(--pink4); padding: 0 0 0 10px;
+    }
+    .profile-editor label { display: block; margin: 4px 0 2px; font-size: 9px; color: var(--text2); }
+    .profile-editor input, .profile-editor textarea {
+      width: 100%; border: 1px solid var(--pink3); padding: 3px; font: inherit; color: var(--text1);
+    }
+    .profile-editor textarea { height: 42px; resize: vertical; }
+    .profile-editor[hidden] { display: none; }
+    .profile-image-preview {
+      display: block; width: 100%; height: 72px; margin-top: 5px;
+      border: 1px solid var(--pink3); object-fit: cover; background: var(--pink5);
+    }
+    .profile-image-preview[hidden] { display: none; }
+    .profile-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
+    .profile-editor-actions button { width: auto; flex: 1; }
+
+    /* ── 시계 윈도우 ── */
+    #win-clock { width: 170px; }
+    #clock {
+      font-family: 'Courier New', monospace;
+      font-size: 18px; text-align: center;
+      letter-spacing: 2px; color: var(--text1); font-weight: bold;
+      padding: 4px 0;
+    }
+    #date-disp {
+      font-size: 9px; text-align: center;
+      color: var(--text2); margin-top: 2px; padding-bottom: 2px;
+    }
+
+    /* ── 홈 윈도우 ── */
+    #win-welcome { width: 370px; }
+    .welcome-box {
+      border: 1px solid var(--pink3);
+      padding: 14px; text-align: center;
+      background: linear-gradient(135deg, var(--white) 0%, var(--pink4) 100%);
+      position: relative; overflow: hidden;
+    }
+    .welcome-box::before {
+      content: '♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡';
+      position: absolute; top: 4px; left: 0; right: 0;
+      font-size: 9px; color: var(--pink3); letter-spacing: 6px;
+      white-space: nowrap; overflow: hidden; pointer-events: none;
+    }
+    .welcome-box::after {
+      content: '♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡';
+      position: absolute; bottom: 4px; left: 0; right: 0;
+      font-size: 9px; color: var(--pink3); letter-spacing: 6px;
+      white-space: nowrap; overflow: hidden; pointer-events: none;
+    }
+    .welcome-box .big { font-size: 13px; font-weight: bold; color: var(--pink1); }
+    .welcome-box p { font-size: 11px; color: var(--text2); line-height: 2; margin-top: 6px; }
+    .welcome-editor { margin-top: 9px; text-align: left; }
+    .welcome-editor label { display: block; margin: 5px 0 2px; font-size: 10px; color: var(--text2); }
+    .welcome-editor input, .welcome-editor textarea {
+      width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit;
+    }
+    .welcome-editor textarea { height: 72px; resize: vertical; }
+    .welcome-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
+    .welcome-editor-actions button { flex: 1; padding: 4px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; }
+    .welcome-editor-actions button:hover { background: var(--pink3); }
+
+    /* ── 다이어리 윈도우 ── */
+    #win-diary { width: 600px; }
+    .diary-layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 12px; }
+    .diary-calendar { border-right: 1px solid var(--pink4); padding-right: 12px; }
+    .diary-calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; font-size: 10px; color: var(--text1); }
+    .diary-calendar-header button { width: 20px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-calendar-week, .diary-calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+    .diary-calendar-week { color: var(--text2); font-size: 9px; margin-bottom: 2px; }
+    .diary-calendar-day { position: relative; min-height: 23px; border: 0; border-radius: 2px; background: transparent; color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-calendar-day:hover, .diary-calendar-day.selected { background: var(--pink4); }
+    .diary-calendar-day.muted { color: var(--pink3); cursor: default; }
+    .diary-calendar-day.has-entry::after { content: ''; position: absolute; width: 4px; height: 4px; left: calc(50% - 2px); bottom: 2px; border-radius: 50%; background: var(--pink1); }
+    .diary-date {
+      font-size: 10px; color: var(--text2);
+      border-bottom: 1px solid var(--pink4);
+      padding-bottom: 5px; margin-bottom: 9px;
+    }
+    .diary-body { font-size: 11px; line-height: 2.2; color: var(--text1); }
+    .diary-empty { color: var(--text2); }
+    .diary-editor { margin-top: 9px; }
+    .diary-editor label { display: block; margin: 5px 0 2px; font-size: 10px; color: var(--text2); }
+    .diary-editor input, .diary-editor select, .diary-editor textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
+    .diary-editor textarea { height: 105px; resize: vertical; }
+    .diary-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
+    .diary-editor-actions button { flex: 1; padding: 4px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-editor-actions button:hover { background: var(--pink3); }
+    .memo-deco {
+      float: right; margin: 0 0 6px 12px;
+      image-rendering: pixelated; width: 72px;
+      filter: sepia(0.2) hue-rotate(280deg) saturate(1.3);
+    }
+
+    /* ── 깜빡임 ── */
+    .blink { animation: bl 1s step-start infinite; }
+    @keyframes bl { 50% { opacity: 0; } }
+
+    /* ── 토스트 알림 ── */
+    #toast {
+      position: fixed; bottom: 50px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--pink5); border: 2px solid var(--pink1);
+      padding: 6px 18px; font-size: 11px; color: var(--text1);
+      box-shadow: 3px 3px 0 var(--shadow);
+      z-index: 9000; opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; }
+
+    /* ── 태스크바 ── */
+    .taskbar {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
+      background: linear-gradient(to bottom, var(--pink3), var(--pink4));
+      border-top: 2px solid var(--pink2);
+      display: flex; align-items: center; gap: 4px;
+      padding: 0 4px; z-index: 100;
+    }
+    .start-btn {
+      background: linear-gradient(to bottom, var(--pink5), var(--pink4));
+      border: 1px solid var(--pink1); font-family: inherit;
+      font-size: 11px; font-weight: bold; padding: 2px 10px;
+      cursor: default; color: var(--text1);
+      flex-shrink: 0;
+    }
+    .start-btn:active { background: var(--pink3); }
+    .start-menu {
+      position: fixed; left: 4px; bottom: 28px; z-index: 101;
+      min-width: 130px; padding: 4px; border: 2px solid var(--pink1);
+      background: var(--pink5); box-shadow: 3px 3px 0 var(--shadow);
+    }
+    .start-menu button {
+      width: 100%; padding: 5px 7px; border: 0; background: transparent;
+      color: var(--text1); font: inherit; text-align: left; cursor: default;
+    }
+    .start-menu button:hover { background: var(--pink2); color: var(--white); }
+    .tb-sep { width: 1px; background: var(--pink2); height: 18px; flex-shrink: 0; }
+    .tb-wins { display: flex; gap: 3px; flex: 1; overflow: hidden; }
+    .tb-win {
+      background: linear-gradient(to bottom, var(--pink4), var(--pink3));
+      border: 1px solid var(--pink2); font-family: inherit;
+      font-size: 10px; color: var(--text1);
+      padding: 1px 8px; cursor: default;
+      white-space: nowrap; min-width: 0;
+    }
+    .tb-win:hover { background: var(--pink3); }
+    .tb-win.active {
+      background: linear-gradient(to bottom, var(--pink2), var(--pink3));
+      font-weight: bold;
+      border-color: var(--pink1);
+    }
+    .tb-clock {
+      background: var(--pink5); border: 1px solid var(--pink2);
+      padding: 2px 8px; font-family: 'Courier New', monospace;
+      font-size: 11px; color: var(--text1); flex-shrink: 0;
+    }

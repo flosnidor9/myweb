@@ -1,0 +1,124 @@
+/* ── 로딩 오버레이 ── */
+    #loading-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, #ffdded 0%, #fff0f6 50%, #ffe8c8 100%);
+      transition: opacity 0.6s ease;
+    }
+    #loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .load-win {
+      width: 380px; background: var(--pink5);
+      border: 2px solid var(--pink1);
+      box-shadow: 4px 4px 0 var(--shadow);
+    }
+    .load-bar-bg {
+      flex: 1; height: 14px; background: var(--white);
+      border: 1px solid var(--pink1);
+    }
+    .load-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--pink3), var(--pink2));
+      width: 0%; transition: width 0.08s linear;
+    }
+
+    /* ── 커서 / 스파클 ── */
+    #cursor {
+      position: fixed; font-size: 14px;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+    }
+    .sparkle {
+      position: fixed; pointer-events: none; z-index: 9997;
+      font-size: 10px; animation: sp 0.7s ease-out forwards;
+    }
+    @keyframes sp {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 0; transform: translateY(-20px) scale(0.2); }
+    }
+
+    /* ── 데스크탑 아이콘 ── */
+    .icon-grid {
+      position: fixed; left: 16px; top: 40px;
+      display: flex; flex-direction: column; gap: 6px;
+      z-index: 5;
+    }
+    .desktop-icon {
+      display: flex; flex-direction: column;
+      align-items: center; width: 68px; padding: 5px 4px 4px;
+      cursor: default; gap: 4px;
+    }
+    .desktop-icon:hover  { background: rgba(255,143,171,0.30); outline: 1px dotted var(--pink2); }
+    .desktop-icon.active { background: rgba(255,143,171,0.50); outline: 1px dotted var(--pink1); }
+    .desktop-icon img {
+      width: 32px; height: 32px;
+      image-rendering: pixelated;
+      filter: sepia(0.3) hue-rotate(280deg) saturate(1.5);
+    }
+    .desktop-icon span {
+      font-size: 10px; color: #fff; text-align: center; line-height: 1.3;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7), -1px -1px 1px rgba(0,0,0,0.4);
+    }
+
+    /* ── 공통 윈도우 ── */
+    .win {
+      position: fixed; background: var(--pink5);
+      border: 2px solid var(--pink1);
+      box-shadow: 4px 4px 0 var(--shadow), 0 0 0 1px var(--pink3);
+      z-index: 10;
+      display: none;
+    }
+    .win.open { display: block; }
+    .win-title {
+      background: linear-gradient(to right, var(--pink2), var(--pink3), var(--pink2));
+      color: var(--text1);
+      padding: 3px 4px 3px 7px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--pink1);
+      cursor: move;
+    }
+    .win-label {
+      font-size: 11px; font-weight: bold;
+      display: flex; align-items: center; gap: 5px;
+      pointer-events: none;
+    }
+    .win-btns { display: flex; gap: 3px; cursor: default; }
+    .tbtn {
+      width: 18px; height: 14px;
+      background: var(--pink5); border: 1px solid var(--pink1);
+      font-size: 9px; font-family: inherit; color: var(--text1);
+      display: flex; align-items: center; justify-content: center;
+      cursor: default;
+    }
+    .tbtn:hover  { background: var(--pink3); }
+    .tbtn:active { background: var(--pink4); }
+    .win-body {
+      padding: 8px; background: var(--white);
+      overflow: auto;
+    }
+    .win-menubar {
+      background: var(--pink4); border-bottom: 1px solid var(--pink3);
+      padding: 2px 4px; display: flex; gap: 1px;
+    }
+    .mitem {
+      padding: 2px 8px; cursor: default; color: var(--text1);
+    }
+    .mitem:hover { background: var(--pink2); color: var(--white); }
+    .menu { position: relative; }
+    .mitem { border: 0; background: transparent; font: inherit; }
+    .menu-dropdown {
+      position: absolute; top: 100%; left: 0; z-index: 20; min-width: 84px;
+      padding: 2px; border: 1px solid var(--pink1); background: var(--white);
+      box-shadow: 2px 2px 0 var(--shadow);
+    }
+    .menu-dropdown button { width: 100%; padding: 3px 7px; border: 0; background: transparent; color: var(--text1); font: inherit; text-align: left; }
+    .menu-dropdown button:hover { background: var(--pink2); color: var(--white); }
+
+    /* ── 픽셀 아이콘 (윈도우 내부) ── */
+    .px-icon {
+      width: 16px; height: 16px;
+      image-rendering: pixelated; vertical-align: middle;
+      margin-right: 3px; flex-shrink: 0;
+      filter: sepia(0.3) hue-rotate(280deg) saturate(1.5);
+    }
+
+    
