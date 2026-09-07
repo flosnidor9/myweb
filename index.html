@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BANANA ROOM</title>
   <link href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/css/all.css" rel="stylesheet" integrity="sha384-PPCRNvOLo1PV3wt2pK6M5OKjA1Ns92tcijTIdpPOKnPaelvWA3QO/oAWWLdcxNDE" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -79,6 +80,24 @@
       <button class="tbtn" onclick="closeWin('win-board')">×</button>
     </div>
   </div>
+  <div class="win-menubar board-menubar">
+    <div class="menu">
+      <button class="mitem" id="board-file-menu" type="button">파일(F)</button>
+      <div class="menu-dropdown" id="board-file-dropdown" hidden>
+        <button id="board-admin-toggle" type="button" hidden>새 게시판</button>
+        <button id="board-delete-toggle" class="board-delete-toggle" type="button" hidden>게시판 삭제</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="mitem" id="board-font-menu" type="button">글꼴(T)</button>
+      <div class="menu-dropdown" id="board-font-dropdown" hidden>
+        <button type="button" data-board-font="default">기본</button>
+        <button type="button" data-board-font="batang">KoPub 명조</button>
+        <button type="button" data-board-font="dotum">KoPub 고딕</button>
+        <button type="button" data-board-font="paperlogy">Paperlogy</button>
+      </div>
+    </div>
+  </div>
   <div class="win-body board-body">
     <div class="board-header">
       <div>
@@ -123,7 +142,6 @@
       <label for="board-post-token">GitHub 쓰기 토큰</label><input id="board-post-token" name="token" type="password" autocomplete="off" required>
       <button type="submit">게시글 등록</button>
     </form>
-    <button id="board-delete-toggle" class="board-admin-toggle board-delete-toggle" type="button" hidden>게시판 삭제</button>
     <form id="board-delete-form" class="board-admin-form" hidden>
       <strong>게시판 삭제</strong>
       <p id="board-delete-warning"></p>
@@ -134,7 +152,6 @@
       <p>삭제하면 게시글을 포함한 게시판 파일을 복구할 수 없습니다. 입력한 토큰과 마스터키는 저장되지 않습니다.</p>
       <button type="submit" class="board-post-action--danger">삭제 확인</button>
     </form>
-    <button id="board-admin-toggle" class="board-admin-toggle" type="button" hidden>+ 새 게시판</button>
     <p id="board-status" class="board-status" aria-live="polite"></p>
   </div>
 </div>
@@ -445,6 +462,12 @@
   </button>
   <button data-win="win-board" onclick="openWin('win-board')">
     <span class="nav-icon">📋</span><span class="nav-label">게시판</span>
+  </button>
+  <button data-win="win-typing" onclick="openWin('win-typing')">
+    <span class="nav-icon">⌨️</span><span class="nav-label">타자놀이</span>
+  </button>
+  <button data-win="win-music" onclick="openWin('win-music')">
+    <span class="nav-icon">🎵</span><span class="nav-label">음악</span>
   </button>
   <button data-win="win-guestbook" onclick="openWin('win-guestbook')">
     <span class="nav-icon">💌</span><span class="nav-label">방명록</span>

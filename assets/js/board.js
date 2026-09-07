@@ -33,11 +33,32 @@ export function initBoard() {
   const deleteMasterInput = document.getElementById('board-delete-master');
   const deleteTokenInput = document.getElementById('board-delete-token');
   const status      = document.getElementById('board-status');
+  const boardBody   = document.querySelector('#win-board .board-body');
+  const fileMenu    = document.getElementById('board-file-menu');
+  const fileDropdown = document.getElementById('board-file-dropdown');
+  const fontMenu    = document.getElementById('board-font-menu');
+  const fontDropdown = document.getElementById('board-font-dropdown');
 
   let boards = [], selected = null, isAdmin = false, currentPosts = [];
   let navLevel = 1; // 1=게시판 목록, 2=글 목록, 3=글 상세
 
   const setStatus = (msg = '') => { status.textContent = msg; };
+  const setBoardFont = (font) => {
+    boardBody.classList.toggle('board-font--batang', font === 'batang');
+    boardBody.classList.toggle('board-font--dotum', font === 'dotum');
+    boardBody.classList.toggle('board-font--paperlogy', font === 'paperlogy');
+  };
+  fileMenu.addEventListener('click', () => { if (isAdmin) fileDropdown.hidden = !fileDropdown.hidden; });
+  fontMenu.addEventListener('click', () => { fontDropdown.hidden = !fontDropdown.hidden; });
+  fontDropdown.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-board-font]');
+    if (!option) return;
+    setBoardFont(option.dataset.boardFont); fontDropdown.hidden = true;
+  });
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('#board-file-menu, #board-file-dropdown')) fileDropdown.hidden = true;
+    if (!event.target.closest('#board-font-menu, #board-font-dropdown')) fontDropdown.hidden = true;
+  });
   const hideDeleteControls = () => { deleteToggle.hidden = true; deleteForm.hidden = true; deleteForm.reset(); };
   const showDeleteControl = () => {
     if (!isAdmin || !selected) return;
@@ -294,11 +315,13 @@ export function initBoard() {
   });
 
   adminToggle.addEventListener('click', () => {
+    fileDropdown.hidden = true;
     if (navLevel >= 2) newPostForm.hidden = !newPostForm.hidden;
     else adminForm.hidden = !adminForm.hidden;
   });
 
   deleteToggle.addEventListener('click', () => {
+    fileDropdown.hidden = true;
     if (!isAdmin || !selected) return;
     deleteForm.hidden = !deleteForm.hidden;
     if (!deleteForm.hidden) deleteTokenInput.focus();
@@ -433,5 +456,5 @@ export function initBoard() {
   };
 
   reload();
-  return { reload, render, setAdmin: (enabled) => { isAdmin = enabled; adminToggle.hidden = !enabled; if (!enabled) { adminForm.hidden = true; newPostForm.hidden = true; hideDeleteControls(); } else if (selected && navLevel === 2) showDeleteControl(); } };
+  return { reload, render, setAdmin: (enabled) => { isAdmin = enabled; adminToggle.hidden = !enabled; if (!enabled) { fileDropdown.hidden = true; adminForm.hidden = true; newPostForm.hidden = true; hideDeleteControls(); } else if (selected && navLevel === 2) showDeleteControl(); } };
 }

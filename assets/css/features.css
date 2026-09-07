@@ -117,9 +117,22 @@
     .diary-editor-actions button { flex: 1; padding: 4px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer; }
     .diary-editor-actions button:hover { background: var(--pink3); }
     /* ── 게시판 ── */
-    #win-board { width: min(960px, calc(100vw - 48px)); }
+    #win-board { width: min(820px, calc(100vw - 48px)); }
     .board-body { min-height: min(826px, calc(100vh - 64px)); }
+    @font-face {
+      font-family: 'Paperlogy';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy@d73efc3cd471a7faf198f39b1783b14da13dd7c4/Paperlogy-4Regular.woff2') format('woff2');
+    }
+    .board-body { --board-font: inherit; }
+    .board-body.board-font--batang { --board-font: 'KoPubWorld Batang', serif; }
+    .board-body.board-font--dotum { --board-font: 'KoPubWorld Dotum', sans-serif; }
+    .board-body.board-font--paperlogy { --board-font: 'Paperlogy', sans-serif; }
+    .board-body { font-family: var(--board-font); }
     .board-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--pink4); padding-bottom: 7px; }
+    .board-menubar .menu-dropdown { min-width: 116px; }
     .board-eyebrow { margin: 0 0 2px; color: var(--pink2); font-size: 11px; letter-spacing: 1px; }
     .board-header h2 { margin: 0; color: var(--text1); font-size: 15px; }
     .board-header button, .board-create-toggle, .board-create-form button { padding: 3px 7px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
@@ -148,7 +161,8 @@
     .board-post-action--danger { border-color: #e0a0b0; color: #b04060; background: #fff0f4; }
     .board-post-action--danger:hover { background: #ffd8e4; }
     .board-post-form { display: grid; gap: 4px; }
-    .board-post-form input, .board-post-form textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; font-size: 12px; box-sizing: border-box; }
+    .board-post-form input, .board-post-form textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; box-sizing: border-box; }
+    .board-post-form > input[type="text"], .board-post-form textarea { font-size: 16px; }
     .board-post-form textarea { height: min(560px, calc(100vh - 290px)); resize: vertical; }
     .board-post-form p { margin: 0; color: var(--text2); font-size: 12px; }
     .board-post-form-actions { display: flex; gap: 4px; }
@@ -163,16 +177,14 @@
     .board-unlock-form button { padding: 3px 8px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-unlock-form button:hover { background: var(--pink3); }
     .board-unlock-form p { margin: 6px 0 0; color: var(--text2); font-size: 11px; line-height: 1.5; }
-    .board-admin-toggle { display: block; margin: 9px 0 0 auto; padding: 3px 7px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
-    .board-admin-toggle[hidden] { display: none; }
-    .board-admin-toggle:hover { background: var(--pink3); }
-    .board-delete-toggle { float: left; margin-right: 5px; color: #9f2946; }
+    .board-delete-toggle { color: #9f2946 !important; }
     .board-admin-form { display: grid; gap: 4px; margin-top: 9px; padding: 8px; border: 1px solid var(--pink3); background: var(--pink5); }
     .board-admin-form[hidden] { display: none; }
     .board-admin-form strong { color: var(--text1); font-size: 12px; }
     .board-admin-form label { color: var(--text2); font-size: 11px; }
     .board-admin-form input, .board-admin-form textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
     .board-admin-form textarea { height: 72px; resize: vertical; }
+    #board-new-post-form textarea { height: min(560px, calc(100vh - 290px)); min-height: 320px; }
     .board-admin-form p { margin: 2px 0; color: var(--text2); font-size: 11px; line-height: 1.5; }
     .board-admin-form button { padding: 4px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-admin-form button:hover { background: var(--pink3); }
@@ -247,17 +259,17 @@
       text-align: left; cursor: pointer;
     }
     .board-post-row:hover { background: var(--pink4); border-color: var(--pink2); }
-    .board-post-row-title { font-size: 13px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board-post-row-title { font-size: 15px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .board-post-row-bottom { display: flex; min-width: 0; justify-content: space-between; align-items: baseline; gap: 8px; }
-    .board-post-row-preview { font-size: 11px; color: var(--text2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .board-post-row-meta { font-size: 11px; color: var(--text2); white-space: nowrap; flex-shrink: 0; }
+    .board-post-row-preview { font-size: 13px; color: var(--text2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board-post-row-meta { font-size: 12px; color: var(--text2); white-space: nowrap; flex-shrink: 0; }
 
     /* ── 게시글 상세 ── */
     .board-post-detail-header { border-bottom: 1px solid var(--pink4); padding-bottom: 6px; margin-bottom: 8px; }
-    .board-post-detail-header strong { display: block; font-size: 14px; color: var(--text1); }
+    .board-post-detail-header strong { display: block; font-size: 16px; color: var(--text1); }
     .board-post-meta { display: block; margin-top: 3px; font-size: 11px; color: var(--text2); }
     .board-post-body {
-      font-size: 13px; color: var(--text1); line-height: 1.8;
+      font-size: 16px; color: var(--text1); line-height: 1.8;
       white-space: pre-wrap; overflow-wrap: anywhere;
       max-height: min(560px, calc(100vh - 260px)); overflow-y: auto;
     }
