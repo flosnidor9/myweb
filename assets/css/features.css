@@ -118,7 +118,7 @@
     .diary-editor-actions button:hover { background: var(--pink3); }
     /* ── 게시판 ── */
     #win-board { width: min(960px, calc(100vw - 48px)); }
-    .board-body { min-height: 620px; }
+    .board-body { min-height: min(826px, calc(100vh - 64px)); }
     .board-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--pink4); padding-bottom: 7px; }
     .board-eyebrow { margin: 0 0 2px; color: var(--pink2); font-size: 11px; letter-spacing: 1px; }
     .board-header h2 { margin: 0; color: var(--text1); font-size: 15px; }
@@ -149,7 +149,7 @@
     .board-post-action--danger:hover { background: #ffd8e4; }
     .board-post-form { display: grid; gap: 4px; }
     .board-post-form input, .board-post-form textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; font-size: 12px; box-sizing: border-box; }
-    .board-post-form textarea { height: 60px; resize: vertical; }
+    .board-post-form textarea { height: min(560px, calc(100vh - 290px)); resize: vertical; }
     .board-post-form p { margin: 0; color: var(--text2); font-size: 12px; }
     .board-post-form-actions { display: flex; gap: 4px; }
     .board-post-form-actions button { padding: 3px 8px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text1); font: inherit; font-size: 12px; cursor: pointer; }
@@ -166,6 +166,7 @@
     .board-admin-toggle { display: block; margin: 9px 0 0 auto; padding: 3px 7px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-admin-toggle[hidden] { display: none; }
     .board-admin-toggle:hover { background: var(--pink3); }
+    .board-delete-toggle { float: left; margin-right: 5px; color: #9f2946; }
     .board-admin-form { display: grid; gap: 4px; margin-top: 9px; padding: 8px; border: 1px solid var(--pink3); background: var(--pink5); }
     .board-admin-form[hidden] { display: none; }
     .board-admin-form strong { color: var(--text1); font-size: 12px; }
@@ -258,7 +259,7 @@
     .board-post-body {
       font-size: 13px; color: var(--text1); line-height: 1.8;
       white-space: pre-wrap; overflow-wrap: anywhere;
-      max-height: 420px; overflow-y: auto;
+      max-height: min(560px, calc(100vh - 260px)); overflow-y: auto;
     }
 
     /* ── 모바일 헤더 / 네비게이션 ── */

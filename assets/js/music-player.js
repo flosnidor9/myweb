@@ -137,10 +137,12 @@ const handlePlayerInit = () => {
 };
 
 document.getElementById('ico-music').addEventListener('click', handlePlayerInit);
+document.getElementById('win-music').addEventListener('win-open', handlePlayerInit);
 
 // 이전 세션에서 창이 열린 상태로 복원된 경우 플레이어 초기화 (window-ui.js의 load 이후 실행)
 window.addEventListener('load', () => {
-  if (document.getElementById('win-music')?.style.display === 'block') {
+  const musicWindow = document.getElementById('win-music');
+  if (musicWindow?.classList.contains('open') || musicWindow?.style.display === 'block') {
     handlePlayerInit();
   }
 });

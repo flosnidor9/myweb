@@ -108,6 +108,17 @@
       <label for="board-post-token">GitHub 쓰기 토큰</label><input id="board-post-token" name="token" type="password" autocomplete="off" required>
       <button type="submit">게시글 등록</button>
     </form>
+    <button id="board-delete-toggle" class="board-admin-toggle board-delete-toggle" type="button" hidden>게시판 삭제</button>
+    <form id="board-delete-form" class="board-admin-form" hidden>
+      <strong>게시판 삭제</strong>
+      <p id="board-delete-warning"></p>
+      <div id="board-delete-master-row">
+        <label for="board-delete-master">마스터키</label><input id="board-delete-master" name="masterKey" type="password" autocomplete="off">
+      </div>
+      <label for="board-delete-token">GitHub 쓰기 토큰</label><input id="board-delete-token" name="token" type="password" autocomplete="off" required>
+      <p>삭제하면 게시글을 포함한 게시판 파일을 복구할 수 없습니다. 입력한 토큰과 마스터키는 저장되지 않습니다.</p>
+      <button type="submit" class="board-post-action--danger">삭제 확인</button>
+    </form>
     <button id="board-admin-toggle" class="board-admin-toggle" type="button" hidden>+ 새 게시판</button>
     <p id="board-status" class="board-status" aria-live="polite"></p>
   </div>

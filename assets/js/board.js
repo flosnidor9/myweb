@@ -13,6 +13,7 @@ function githubUrl(path) { return `https://api.github.com/repos/${PRIVATE_REPOSI
 function headers(token) { return { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}` }; }
 async function getPrivateFile(path, token, optional = false) { const response = await fetch(githubUrl(path), { headers: headers(token) }); if (optional && response.status === 404) return null; if (!response.ok) throw new Error('private read failed'); const file = await response.json(); return { sha: file.sha, text: decodeBase64(file.content) }; }
 async function savePrivateFile(path, text, message, token, sha) { const response = await fetch(githubUrl(path), { method: 'PUT', headers: { ...headers(token), 'Content-Type': 'application/json' }, body: JSON.stringify({ message, content: encodeBase64(text), ...(sha ? { sha } : {}) }) }); if (!response.ok) throw new Error('private write failed'); }
+async function deletePrivateFile(path, message, token, sha) { const response = await fetch(githubUrl(path), { method: 'DELETE', headers: { ...headers(token), 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sha }) }); if (!response.ok) throw new Error('private delete failed'); }
 
 export function initBoard() {
   const title       = document.getElementById('board-title');
@@ -25,12 +26,26 @@ export function initBoard() {
   const adminForm   = document.getElementById('board-admin-form');
   const newPostForm = document.getElementById('board-new-post-form');
   const adminToggle = document.getElementById('board-admin-toggle');
+  const deleteToggle = document.getElementById('board-delete-toggle');
+  const deleteForm = document.getElementById('board-delete-form');
+  const deleteWarning = document.getElementById('board-delete-warning');
+  const deleteMasterRow = document.getElementById('board-delete-master-row');
+  const deleteMasterInput = document.getElementById('board-delete-master');
+  const deleteTokenInput = document.getElementById('board-delete-token');
   const status      = document.getElementById('board-status');
 
   let boards = [], selected = null, isAdmin = false, currentPosts = [];
   let navLevel = 1; // 1=게시판 목록, 2=글 목록, 3=글 상세
 
   const setStatus = (msg = '') => { status.textContent = msg; };
+  const hideDeleteControls = () => { deleteToggle.hidden = true; deleteForm.hidden = true; deleteForm.reset(); };
+  const showDeleteControl = () => {
+    if (!isAdmin || !selected) return;
+    deleteToggle.hidden = false;
+    deleteWarning.textContent = `“${selected.name}” 게시판과 모든 게시글을 삭제합니다.`;
+    deleteMasterRow.hidden = Boolean(selected.public);
+    deleteMasterInput.required = !selected.public;
+  };
   const sharePostsWithTyping = (items) => {
     if (!selected || !Array.isArray(items)) return;
     window.dispatchEvent(new CustomEvent('board-content-available', {
@@ -53,7 +68,7 @@ export function initBoard() {
     guide.textContent = '들어갈 게시판을 선택해 주세요.';
     back.hidden = true;
     list.hidden = false; posts.hidden = true;
-    unlockForm.hidden = true; adminForm.hidden = true; newPostForm.hidden = true;
+    unlockForm.hidden = true; adminForm.hidden = true; newPostForm.hidden = true; hideDeleteControls();
     pwInput.value = ''; setStatus('');
     if (!adminToggle.hidden) { adminToggle.textContent = '+ 새 게시판'; }
   };
@@ -65,6 +80,7 @@ export function initBoard() {
     back.hidden = false; back.textContent = '◀ 게시판 목록';
     list.hidden = true; posts.hidden = false;
     unlockForm.hidden = true; newPostForm.hidden = true;
+    showDeleteControl();
     if (isAdmin) { adminToggle.hidden = false; adminToggle.textContent = '+ 새 게시글'; }
     posts.replaceChildren(); setStatus('');
 
@@ -106,6 +122,7 @@ export function initBoard() {
     back.hidden = false; back.textContent = '◀ 목록';
     list.hidden = true; posts.hidden = false; newPostForm.hidden = true;
     if (isAdmin) adminToggle.hidden = true;
+    hideDeleteControls();
 
     const mkTokenInput = () => {
       const inp = document.createElement('input');
@@ -211,7 +228,7 @@ export function initBoard() {
     title.textContent = board.name;
     guide.textContent = board.description || (board.public ? '공개 게시판입니다.' : '암호화된 게시판입니다.');
     back.hidden = false; list.hidden = true;
-    adminForm.hidden = true; newPostForm.hidden = true; setStatus('');
+    adminForm.hidden = true; newPostForm.hidden = true; deleteForm.hidden = true; setStatus('');
     if (!adminToggle.hidden) adminToggle.textContent = '+ 새 게시글';
 
     if (board.public) {
@@ -279,6 +296,51 @@ export function initBoard() {
   adminToggle.addEventListener('click', () => {
     if (navLevel >= 2) newPostForm.hidden = !newPostForm.hidden;
     else adminForm.hidden = !adminForm.hidden;
+  });
+
+  deleteToggle.addEventListener('click', () => {
+    if (!isAdmin || !selected) return;
+    deleteForm.hidden = !deleteForm.hidden;
+    if (!deleteForm.hidden) deleteTokenInput.focus();
+  });
+
+  deleteForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!isAdmin || !selected) return;
+    const board = selected;
+    const token = deleteTokenInput.value;
+    const masterKey = deleteMasterInput.value;
+    if (!token || (!board.public && !masterKey)) { setStatus('필요한 값을 입력해 주세요.'); return; }
+    if (!window.confirm(`“${board.name}” 게시판을 완전히 삭제할까요?`)) { deleteTokenInput.value = ''; deleteMasterInput.value = ''; return; }
+    const submit = deleteForm.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    setStatus('게시판을 삭제하는 중…');
+    try {
+      const manifestFile = await getPrivateFile('boards.json', token);
+      const manifest = JSON.parse(manifestFile.text);
+      const boardList = Array.isArray(manifest.boards) ? manifest.boards : [];
+      if (!boardList.some((item) => item.id === board.id)) throw new Error('missing board');
+      const contentFile = await getPrivateFile(`boards/${board.id}.json`, token);
+      let passwordFile = null;
+      let nextPasswords = null;
+      if (!board.public) {
+        passwordFile = await getPrivateFile('passwords.enc.json', token);
+        const passwords = await decrypt(JSON.parse(passwordFile.text), masterKey);
+        if (!Object.prototype.hasOwnProperty.call(passwords, board.id)) throw new Error('missing password');
+        delete passwords[board.id];
+        nextPasswords = passwords;
+      }
+      if (nextPasswords) await savePrivateFile('passwords.enc.json', `${JSON.stringify(await encrypt(JSON.stringify(nextPasswords, null, 2), masterKey))}\n`, `Remove password for board: ${board.id}`, token, passwordFile.sha);
+      await deletePrivateFile(`boards/${board.id}.json`, `Delete board: ${board.id}`, token, contentFile.sha);
+      await savePrivateFile('boards.json', `${JSON.stringify({ boards: boardList.filter((item) => item.id !== board.id) }, null, 2)}\n`, `Remove board: ${board.id}`, token, manifestFile.sha);
+      boards = boardList.filter((item) => item.id !== board.id);
+      showList(); render();
+      setStatus('게시판을 삭제했습니다. 배포 반영 후 목록에서도 사라집니다.');
+    } catch {
+      setStatus('게시판을 삭제하지 못했습니다. 토큰 권한과 마스터키를 확인해 주세요.');
+    } finally {
+      deleteTokenInput.value = ''; deleteMasterInput.value = ''; submit.disabled = false;
+    }
   });
 
   newPostForm.addEventListener('submit', async (event) => {
@@ -371,5 +433,5 @@ export function initBoard() {
   };
 
   reload();
-  return { reload, render, setAdmin: (enabled) => { isAdmin = enabled; adminToggle.hidden = !enabled; if (!enabled) { adminForm.hidden = true; newPostForm.hidden = true; } } };
+  return { reload, render, setAdmin: (enabled) => { isAdmin = enabled; adminToggle.hidden = !enabled; if (!enabled) { adminForm.hidden = true; newPostForm.hidden = true; hideDeleteControls(); } else if (selected && navLevel === 2) showDeleteControl(); } };
 }
