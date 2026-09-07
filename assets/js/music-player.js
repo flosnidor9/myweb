@@ -1,5 +1,17 @@
 const PLAYLIST_ID = 'PLdbIhLq8RrtA';
-const DEFAULT_VOLUME = 50;
+const DEFAULT_VOLUME = 20;
+const VOLUME_KEY = 'musicVolume';
+
+function getSavedVolume() {
+  const saved = localStorage.getItem(VOLUME_KEY);
+  return saved !== null ? Number(saved) : DEFAULT_VOLUME;
+}
+
+function applyVolume(volume) {
+  volumeInput.value = String(volume);
+  volumeValue.textContent = `${volume}%`;
+  localStorage.setItem(VOLUME_KEY, String(volume));
+}
 
 const status = document.getElementById('music-status');
 const title = document.getElementById('music-title');
@@ -76,7 +88,7 @@ async function createPlayer() {
       playerVars: { listType: 'playlist', list: PLAYLIST_ID, playsinline: 1, rel: 0, origin: window.location.origin },
       events: {
         onReady: (event) => {
-          event.target.setVolume(DEFAULT_VOLUME);
+          event.target.setVolume(getSavedVolume());
           event.target.unMute();
           playerReady = true;
           status.textContent = '재생목록을 불러오는 중…';
@@ -117,11 +129,20 @@ async function createPlayer() {
   return player;
 }
 
-document.getElementById('ico-music').addEventListener('click', () => {
+const handlePlayerInit = () => {
   createPlayer().catch((error) => {
     status.textContent = 'YouTube 플레이어를 불러오지 못했어요. 연결 상태를 확인해 주세요.';
     console.error(error);
   });
+};
+
+document.getElementById('ico-music').addEventListener('click', handlePlayerInit);
+
+// 이전 세션에서 창이 열린 상태로 복원된 경우 플레이어 초기화 (window-ui.js의 load 이후 실행)
+window.addEventListener('load', () => {
+  if (document.getElementById('win-music')?.style.display === 'block') {
+    handlePlayerInit();
+  }
 });
 
 playButton.addEventListener('click', () => {
@@ -134,12 +155,14 @@ pauseButton.addEventListener('click', () => player?.pauseVideo());
 nextButton.addEventListener('click', () => player?.nextVideo());
 volumeInput.addEventListener('input', () => {
   const volume = Number(volumeInput.value);
-  volumeValue.textContent = `${volume}%`;
+  applyVolume(volume);
   if (playerReady) {
     player.setVolume(volume);
     if (volume > 0) player.unMute();
   }
 });
+
+applyVolume(getSavedVolume());
 progressInput.addEventListener('input', () => {
   if (!playerReady) return;
   const duration = player.getDuration();
