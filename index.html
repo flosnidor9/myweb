@@ -153,17 +153,35 @@
     </div>
   </div>
   <div class="typing-tabs" role="tablist" aria-label="타자 놀이 선택">
-    <button type="button" class="active" data-typing-mode="practice">타자연습</button>
+    <button type="button" class="active" data-typing-mode="board-full">게시글 쭉 쓰기</button>
+    <button type="button" data-typing-mode="board-random">게시글 랜덤 문장</button>
     <button type="button" data-typing-mode="rain">산성비</button>
   </div>
   <div class="win-body typing-body">
-    <section class="typing-panel" data-panel="practice">
-      <p class="typing-guide">아래 문장을 똑같이 입력하고 Enter를 누르세요.</p>
-      <div class="practice-editor">
-        <div class="practice-text" id="typing-practice-text" aria-hidden="true"></div>
-        <input id="typing-practice-input" class="typing-input" type="text" autocomplete="off" spellcheck="false" aria-label="연습 문장 입력">
+    <section class="typing-panel board-typing-panel" data-panel="board-full" hidden>
+      <p class="typing-guide">게시판과 글을 고른 뒤 내용을 끝까지 입력해 보세요.</p>
+      <div class="board-typing-controls">
+        <label>게시판 <select id="typing-full-board" aria-label="쭉 쓰기 게시판 선택"></select></label>
+        <label>글 <select id="typing-full-post" aria-label="쭉 쓰기 글 선택"></select></label>
       </div>
-      <div class="typing-footer"><span class="typing-speed" id="typing-practice-speed">속도 -- 타/분</span><button type="button" id="typing-practice-next">다음 문장 ▶</button></div>
+      <p class="board-typing-status" id="typing-full-status" aria-live="polite"></p>
+      <div class="practice-editor board-full-editor">
+        <div class="practice-text" id="typing-full-text" aria-hidden="true"></div>
+        <textarea id="typing-full-input" class="typing-input" autocomplete="off" spellcheck="false" aria-label="게시글 전체 입력"></textarea>
+      </div>
+      <div class="typing-footer"><span class="typing-speed" id="typing-full-speed">속도 -- 타/분</span><button type="button" id="typing-full-next">다른 글 ▶</button></div>
+    </section>
+    <section class="typing-panel board-typing-panel" data-panel="board-random" hidden>
+      <p class="typing-guide">선택한 게시판의 글에서 문장 하나를 랜덤으로 가져옵니다.</p>
+      <div class="board-typing-controls">
+        <label>게시판 <select id="typing-random-board" aria-label="랜덤 문장 게시판 선택"></select></label>
+      </div>
+      <p class="board-typing-status" id="typing-random-status" aria-live="polite"></p>
+      <div class="practice-editor">
+        <div class="practice-text" id="typing-random-text" aria-hidden="true"></div>
+        <input id="typing-random-input" class="typing-input" type="text" autocomplete="off" spellcheck="false" aria-label="랜덤 문장 입력">
+      </div>
+      <div class="typing-footer"><span class="typing-speed" id="typing-random-speed">속도 -- 타/분</span><button type="button" id="typing-random-next">다음 문장 ▶</button></div>
     </section>
     <section class="typing-panel" data-panel="rain" hidden>
       <div class="rain-stats"><span>SCORE <b id="acid-rain-score">0000</b></span><span>♥ <b id="acid-rain-life">♥♥♥</b></span><span>LEVEL <b id="acid-rain-level">1</b></span></div>

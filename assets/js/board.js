@@ -31,6 +31,12 @@ export function initBoard() {
   let navLevel = 1; // 1=게시판 목록, 2=글 목록, 3=글 상세
 
   const setStatus = (msg = '') => { status.textContent = msg; };
+  const sharePostsWithTyping = (items) => {
+    if (!selected || !Array.isArray(items)) return;
+    window.dispatchEvent(new CustomEvent('board-content-available', {
+      detail: { board: { id: selected.id, name: selected.name, public: Boolean(selected.public) }, posts: items },
+    }));
+  };
 
   const savePostsToRepo = async (arr, token) => {
     const path = `boards/${selected.id}.json`;
@@ -55,6 +61,7 @@ export function initBoard() {
   // ── 레벨 2: 글 목록 (제목+미리보기 행) ──
   const showPostList = (items) => {
     currentPosts = items; navLevel = 2;
+    sharePostsWithTyping(items);
     back.hidden = false; back.textContent = '◀ 게시판 목록';
     list.hidden = true; posts.hidden = false;
     unlockForm.hidden = true; newPostForm.hidden = true;
