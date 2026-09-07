@@ -624,6 +624,33 @@ document.addEventListener('pointerdown', event => {
   if (event.button === 0 && event.isPrimary) playMouseClick();
 }, { passive: true });
 
+// Randomize the supplied key sounds. Two voices per recording preserve rapid typing.
+const keyboardSounds = ['key1.mp3', 'key2.mp3', 'key3.mp3', 'key4.mp3', 'key5.mp3', 'key6.mp3'].map(file =>
+  Array.from({ length: 2 }, () => {
+    const sound = new Audio(`assets/sounds/${file}`);
+    sound.preload = 'auto';
+    sound.volume = 0.28;
+    return sound;
+  })
+);
+const keyboardSoundIndexes = Array(keyboardSounds.length).fill(0);
+function playKeyboardSound() {
+  const soundGroupIndex = Math.floor(Math.random() * keyboardSounds.length);
+  const soundGroup = keyboardSounds[soundGroupIndex];
+  const soundIndex = keyboardSoundIndexes[soundGroupIndex];
+  keyboardSoundIndexes[soundGroupIndex] = (soundIndex + 1) % soundGroup.length;
+  const sound = soundGroup[soundIndex];
+  sound.currentTime = 0;
+  sound.play().catch(() => {});
+}
+
+document.addEventListener('keydown', event => {
+  // Modifier-only keys and held-key repeats are intentionally silent.
+  if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'NumLock', 'ScrollLock'].includes(event.key)) return;
+  playKeyboardSound();
+});
+
 // ── 로딩 바 ──
 let pct = 0;
 const barEl  = document.getElementById('load-bar');
