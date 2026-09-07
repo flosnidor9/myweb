@@ -136,7 +136,7 @@
     .board-card-copy span { margin-top: 2px; color: var(--text2); font-size: 11px; }
     .board-access { padding: 2px 4px; border: 1px solid var(--pink3); color: var(--text2); font-size: 10px; white-space: nowrap; }
     .board-empty, .board-posts-empty { margin: 16px 0; color: var(--text2); font-size: 12px; text-align: center; }
-    .board-posts { display: grid; gap: 5px; }
+    .board-posts { display: grid; gap: 5px; min-width: 0; }
     .board-posts[hidden] { display: none; }
     .board-post { padding: 7px; border: 1px solid var(--pink4); background: #fffafd; }
     .board-post strong { color: var(--text1); font-size: 13px; }
@@ -239,13 +239,14 @@
     /* ── 게시글 목록 행 ── */
     .board-post-row {
       display: flex; flex-direction: column; gap: 4px;
-      width: 100%; padding: 8px; border: 1px solid var(--pink4);
+      width: 100%; min-width: 0; max-width: 100%; overflow: hidden;
+      padding: 8px; border: 1px solid var(--pink4);
       background: #fffafd; color: var(--text1); font: inherit;
       text-align: left; cursor: pointer;
     }
     .board-post-row:hover { background: var(--pink4); border-color: var(--pink2); }
     .board-post-row-title { font-size: 13px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .board-post-row-bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .board-post-row-bottom { display: flex; min-width: 0; justify-content: space-between; align-items: baseline; gap: 8px; }
     .board-post-row-preview { font-size: 11px; color: var(--text2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .board-post-row-meta { font-size: 11px; color: var(--text2); white-space: nowrap; flex-shrink: 0; }
 

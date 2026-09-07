@@ -215,8 +215,16 @@ export function initBoard() {
         .then(data => { if (!Array.isArray(data.posts)) throw new Error('invalid'); showPostList(data.posts); })
         .catch(() => setStatus('게시글을 불러오지 못했습니다.'));
     } else {
-      posts.hidden = true; unlockForm.hidden = false;
-      pwInput.value = ''; pwInput.focus();
+      // Only the local Vite development server implements this endpoint.
+      // Static deployments receive 404 and retain password-based decryption.
+      fetch(`__local-board/${encodeURIComponent(board.id)}`, { cache: 'no-store' })
+        .then(r => r.ok ? r.json() : Promise.reject(new Error('not local development')))
+        .then(data => {
+          if (!Array.isArray(data.posts)) throw new Error('invalid');
+          posts.hidden = false; unlockForm.hidden = true;
+          showPostList(data.posts);
+        })
+        .catch(() => { posts.hidden = true; unlockForm.hidden = false; pwInput.value = ''; pwInput.focus(); });
     }
   };
 
