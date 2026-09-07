@@ -262,10 +262,8 @@ window.addEventListener('load', () => {
   const typing = document.getElementById('win-typing');
   setPos('win-typing', (W - typing.offsetWidth) / 2 + 50, 110);
 
-  // 초기 z-index
-  document.getElementById('win-profile').style.zIndex = 11;
-  document.getElementById('win-clock').style.zIndex   = 12;
-  document.getElementById('win-welcome').style.zIndex  = 13;
+  // 처음 열려 있는 창도 포커스 순서로 쌓아, 이후 열리는 창이 항상 맨 위에 오게 한다.
+  ['win-profile', 'win-clock', 'win-welcome'].forEach(focusWin);
 
   updateTaskbar();
 });

@@ -183,5 +183,6 @@
     .tb-clock {
       background: var(--pink5); border: 1px solid var(--pink2);
       padding: 2px 8px; font-family: 'Courier New', monospace;
-      font-size: 11px; color: var(--text1); flex-shrink: 0;
+      font-size: 11px; color: var(--text1); flex-shrink: 0; cursor: pointer;
     }
+    .tb-clock:active { background: var(--pink3); }

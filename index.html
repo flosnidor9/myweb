@@ -37,20 +37,17 @@
   <div class="desktop-icon" id="ico-home"      onclick="icoClick(this,'win-welcome')">
     <img src="assets/icons/file.png" alt=""><span>홈</span>
   </div>
-  <div class="desktop-icon" id="ico-diary"     onclick="icoClick(this,'win-diary')">
-    <img src="assets/icons/memo.png" alt=""><span>다이어리</span>
-  </div>
-  <div class="desktop-icon" id="ico-photos"    onclick="icoClick(this,null)">
-    <img src="assets/icons/key.png" alt=""><span>사진첩</span>
-  </div>
-  <div class="desktop-icon" id="ico-guestbook" onclick="icoClick(this,null)">
-    <img src="assets/icons/mail.png" alt=""><span>방명록</span>
-  </div>
   <div class="desktop-icon" id="ico-profile"   onclick="icoClick(this,'win-profile')">
     <img src="assets/icons/warning.png" alt=""><span>프로필</span>
   </div>
+  <div class="desktop-icon" id="ico-diary"     onclick="icoClick(this,'win-diary')">
+    <img src="assets/icons/memo.png" alt=""><span>다이어리</span>
+  </div>
   <div class="desktop-icon" id="ico-typing"    onclick="icoClick(this,'win-typing')">
-    <img src="assets/icons/key.png" alt=""><span>타자 놀이</span>
+    <img src="assets/icons/key.png" alt=""><span>타자놀이</span>
+  </div>
+  <div class="desktop-icon" id="ico-guestbook" onclick="icoClick(this,null)">
+    <img src="assets/icons/mail.png" alt=""><span>방명록</span>
   </div>
 </div>
 <!-- ── 타자 놀이 ── -->
@@ -274,7 +271,7 @@
   <div class="tb-sep"></div>
   <div class="tb-wins" id="tb-wins"></div>
   <div class="tb-sep"></div>
-  <div class="tb-clock" id="taskbar-clock">00:00</div>
+  <button class="tb-clock" id="taskbar-clock" type="button" onclick="openWin('win-clock')" aria-label="현재 시각 창 열기">00:00</button>
 </div>
 <div class="start-menu" id="start-menu" hidden>
   <button id="admin-login" type="button" title="관리자 로그인">
