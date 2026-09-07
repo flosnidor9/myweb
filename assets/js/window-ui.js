@@ -174,6 +174,7 @@ function updateTaskbar() {
         el.style.display = 'block';
         OPEN_WINS.add(id);
         saveWindowState(id, 'open');
+        clampWin(id);
         focusWin(id);
       } else {
         focusWin(id);
@@ -263,7 +264,7 @@ const cols  = ['#e8547a','#ff8fab','#ffb3c6','#c45a7a','#ff6b9d'];
 
 document.addEventListener('mousemove', e => {
   if (dragEl) {
-    const taskbarH = 28;
+    const taskbarH = 32;
     const maxLeft = Math.max(0, window.innerWidth - dragEl.offsetWidth);
     const maxTop  = Math.max(0, window.innerHeight - dragEl.offsetHeight - taskbarH);
     dragEl.style.left = Math.max(0, Math.min(maxLeft, e.clientX - dox)) + 'px';
@@ -275,6 +276,25 @@ document.addEventListener('mousemove', e => {
 document.addEventListener('mouseup', () => {
   if (dragEl) saveWindowState(dragEl.id, 'open');
   dragEl = null;
+});
+
+// ── 단일 창을 뷰포트 경계 안으로 클램프 ──
+function clampWin(id) {
+  const el = document.getElementById(id);
+  if (!el || el.style.display === 'none') return;
+  const W = innerWidth, H = innerHeight;
+  const left = parseFloat(el.style.left) || 0;
+  const top  = parseFloat(el.style.top)  || 0;
+  const maxLeft = Math.max(0, W - el.offsetWidth);
+  const maxTop  = Math.max(0, H - el.offsetHeight - 32);
+  el.style.left = Math.min(maxLeft, Math.max(0, left)) + 'px';
+  el.style.top  = Math.min(maxTop,  Math.max(0, top))  + 'px';
+}
+
+// ── 창 크기 변경 시 보더 밖으로 나간 창 재배치 ──
+window.addEventListener('resize', () => {
+  if (isMobile) return;
+  EXIST_WINS.forEach(clampWin);
 });
 
 function spark(x, y) {
@@ -318,7 +338,7 @@ window.addEventListener('load', () => {
     const el = document.getElementById(id);
     if (!el) return;
     const maxLeft = Math.max(0, W - el.offsetWidth);
-    const maxTop = Math.max(0, H - el.offsetHeight - 28);
+    const maxTop = Math.max(0, H - el.offsetHeight - 32);
     el.style.left = Math.min(maxLeft, Math.max(0, x)) + 'px';
     el.style.top  = Math.min(maxTop,  Math.max(0, y)) + 'px';
   };

@@ -1,24 +1,24 @@
 /* ── 프로필 윈도우 ── */
-    #win-profile { width: 170px; transition: width 0.18s ease; }
-    #win-profile.editing { width: 390px; }
+    #win-profile { width: 200px; transition: width 0.18s ease; }
+    #win-profile.editing { width: 460px; }
     .profile-layout { display: flex; align-items: flex-start; gap: 10px; }
-    .profile-summary { width: 150px; flex: 0 0 150px; }
+    .profile-summary { width: 178px; flex: 0 0 178px; }
     .avatar {
-      display: block; width: 56px; height: 56px;
+      display: block; width: 64px; height: 64px;
       margin: 6px auto 7px;
       border: 2px solid var(--pink1);
       background: var(--pink4);
-      font-size: 26px; line-height: 52px; text-align: center;
+      font-size: 30px; line-height: 60px; text-align: center;
       box-shadow: 2px 2px 0 var(--shadow);
     }
     .avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .avatar img[hidden] { display: none; }
     .pname { text-align: center; font-weight: bold; color: var(--text1); }
-    .pstat { text-align: center; font-size: 10px; color: var(--text2); margin-top: 2px; }
+    .pstat { text-align: center; font-size: 12px; color: var(--text2); margin-top: 2px; }
     .pinfo {
       margin-top: 7px; padding-top: 6px;
       border-top: 1px solid var(--pink4);
-      font-size: 10px; color: var(--text2); line-height: 2;
+      font-size: 12px; color: var(--text2); line-height: 2;
     }
     .profile-auth, .profile-editor { margin-top: 8px; text-align: left; }
     .profile-auth button, .profile-editor button {
@@ -26,12 +26,12 @@
       background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer;
     }
     .profile-auth button:hover, .profile-editor button:hover { background: var(--pink3); }
-    .profile-auth-status { margin-top: 4px; font-size: 9px; color: var(--text2); text-align: center; word-break: break-all; }
+    .profile-auth-status { margin-top: 4px; font-size: 11px; color: var(--text2); text-align: center; word-break: break-all; }
     .profile-editor {
       flex: 1; min-width: 0; margin-top: 0;
       border-left: 1px solid var(--pink4); padding: 0 0 0 10px;
     }
-    .profile-editor label { display: block; margin: 4px 0 2px; font-size: 9px; color: var(--text2); }
+    .profile-editor label { display: block; margin: 4px 0 2px; font-size: 11px; color: var(--text2); }
     .profile-editor input, .profile-editor textarea {
       width: 100%; border: 1px solid var(--pink3); padding: 3px; font: inherit; color: var(--text1);
     }
@@ -46,20 +46,20 @@
     .profile-editor-actions button { width: auto; flex: 1; }
 
     /* ── 시계 윈도우 ── */
-    #win-clock { width: 170px; }
+    #win-clock { width: 200px; }
     #clock {
       font-family: 'Courier New', monospace;
-      font-size: 18px; text-align: center;
+      font-size: 22px; text-align: center;
       letter-spacing: 2px; color: var(--text1); font-weight: bold;
       padding: 4px 0;
     }
     #date-disp {
-      font-size: 9px; text-align: center;
+      font-size: 11px; text-align: center;
       color: var(--text2); margin-top: 2px; padding-bottom: 2px;
     }
 
     /* ── 홈 윈도우 ── */
-    #win-welcome { width: 370px; }
+    #win-welcome { width: 440px; }
     .welcome-box {
       border: 1px solid var(--pink3);
       padding: 14px; text-align: center;
@@ -69,19 +69,19 @@
     .welcome-box::before {
       content: '♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡';
       position: absolute; top: 4px; left: 0; right: 0;
-      font-size: 9px; color: var(--pink3); letter-spacing: 6px;
+      font-size: 11px; color: var(--pink3); letter-spacing: 6px;
       white-space: nowrap; overflow: hidden; pointer-events: none;
     }
     .welcome-box::after {
       content: '♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡';
       position: absolute; bottom: 4px; left: 0; right: 0;
-      font-size: 9px; color: var(--pink3); letter-spacing: 6px;
+      font-size: 11px; color: var(--pink3); letter-spacing: 6px;
       white-space: nowrap; overflow: hidden; pointer-events: none;
     }
-    .welcome-box .big { font-size: 13px; font-weight: bold; color: var(--pink1); }
-    .welcome-box p { font-size: 11px; color: var(--text2); line-height: 2; margin-top: 6px; }
+    .welcome-box .big { font-size: 15px; font-weight: bold; color: var(--pink1); }
+    .welcome-box p { font-size: 13px; color: var(--text2); line-height: 2; margin-top: 6px; }
     .welcome-editor { margin-top: 9px; text-align: left; }
-    .welcome-editor label { display: block; margin: 5px 0 2px; font-size: 10px; color: var(--text2); }
+    .welcome-editor label { display: block; margin: 5px 0 2px; font-size: 12px; color: var(--text2); }
     .welcome-editor input, .welcome-editor textarea {
       width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit;
     }
@@ -91,126 +91,126 @@
     .welcome-editor-actions button:hover { background: var(--pink3); }
 
     /* ── 다이어리 윈도우 ── */
-    #win-diary { width: 600px; }
-    .diary-layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 12px; }
+    #win-diary { width: 700px; }
+    .diary-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 12px; }
     .diary-calendar { border-right: 1px solid var(--pink4); padding-right: 12px; }
-    .diary-calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; font-size: 10px; color: var(--text1); }
-    .diary-calendar-header button { width: 20px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; font-size: 12px; color: var(--text1); }
+    .diary-calendar-header button { width: 24px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .diary-calendar-week, .diary-calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
-    .diary-calendar-week { color: var(--text2); font-size: 9px; margin-bottom: 2px; }
-    .diary-calendar-day { position: relative; min-height: 23px; border: 0; border-radius: 2px; background: transparent; color: var(--text1); font: inherit; cursor: pointer; }
+    .diary-calendar-week { color: var(--text2); font-size: 11px; margin-bottom: 2px; }
+    .diary-calendar-day { position: relative; min-height: 27px; border: 0; border-radius: 2px; background: transparent; color: var(--text1); font: inherit; cursor: pointer; }
     .diary-calendar-day:hover, .diary-calendar-day.selected { background: var(--pink4); }
     .diary-calendar-day.muted { color: var(--pink3); cursor: default; }
     .diary-calendar-day.has-entry::after { content: ''; position: absolute; width: 4px; height: 4px; left: calc(50% - 2px); bottom: 2px; border-radius: 50%; background: var(--pink1); }
     .diary-date {
-      font-size: 10px; color: var(--text2);
+      font-size: 12px; color: var(--text2);
       border-bottom: 1px solid var(--pink4);
       padding-bottom: 5px; margin-bottom: 9px;
     }
-    .diary-body { font-size: 11px; line-height: 2.2; color: var(--text1); }
+    .diary-body { font-size: 13px; line-height: 2.2; color: var(--text1); }
     .diary-empty { color: var(--text2); }
     .diary-editor { margin-top: 9px; }
-    .diary-editor label { display: block; margin: 5px 0 2px; font-size: 10px; color: var(--text2); }
+    .diary-editor label { display: block; margin: 5px 0 2px; font-size: 12px; color: var(--text2); }
     .diary-editor input, .diary-editor select, .diary-editor textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
     .diary-editor textarea { height: 105px; resize: vertical; }
     .diary-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
     .diary-editor-actions button { flex: 1; padding: 4px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer; }
     .diary-editor-actions button:hover { background: var(--pink3); }
     /* ── 게시판 ── */
-    #win-board { width: min(460px, calc(100vw - 24px)); }
+    #win-board { width: min(540px, calc(100vw - 24px)); }
     .board-body { min-height: 270px; }
     .board-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--pink4); padding-bottom: 7px; }
-    .board-eyebrow { margin: 0 0 2px; color: var(--pink2); font-size: 9px; letter-spacing: 1px; }
-    .board-header h2 { margin: 0; color: var(--text1); font-size: 13px; }
+    .board-eyebrow { margin: 0 0 2px; color: var(--pink2); font-size: 11px; letter-spacing: 1px; }
+    .board-header h2 { margin: 0; color: var(--text1); font-size: 15px; }
     .board-header button, .board-create-toggle, .board-create-form button { padding: 3px 7px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-header button:hover, .board-create-toggle:hover, .board-create-form button:hover { background: var(--pink3); }
-    .board-guide { min-height: 17px; margin: 7px 0; color: var(--text2); font-size: 10px; }
+    .board-guide { min-height: 17px; margin: 7px 0; color: var(--text2); font-size: 12px; }
     .board-list { display: grid; gap: 6px; }
     .board-list[hidden] { display: none; }
     .board-card { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px; border: 1px solid var(--pink3); background: #fffafd; color: var(--text1); font: inherit; text-align: left; cursor: pointer; }
     .board-card:hover { background: var(--pink4); border-color: var(--pink1); }
-    .board-card-icon { width: 28px; height: 28px; padding-top: 5px; flex: 0 0 28px; border: 1px solid var(--pink2); background: var(--pink5); color: var(--pink1); font-size: 18px; text-align: center; }
+    .board-card-icon { width: 32px; height: 32px; padding-top: 5px; flex: 0 0 32px; border: 1px solid var(--pink2); background: var(--pink5); color: var(--pink1); font-size: 21px; text-align: center; }
     .board-card-copy { min-width: 0; flex: 1; }
     .board-card-copy strong, .board-card-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .board-card-copy strong { font-size: 11px; }
-    .board-card-copy span { margin-top: 2px; color: var(--text2); font-size: 9px; }
-    .board-access { padding: 2px 4px; border: 1px solid var(--pink3); color: var(--text2); font-size: 8px; white-space: nowrap; }
-    .board-empty, .board-posts-empty { margin: 16px 0; color: var(--text2); font-size: 10px; text-align: center; }
+    .board-card-copy strong { font-size: 13px; }
+    .board-card-copy span { margin-top: 2px; color: var(--text2); font-size: 11px; }
+    .board-access { padding: 2px 4px; border: 1px solid var(--pink3); color: var(--text2); font-size: 10px; white-space: nowrap; }
+    .board-empty, .board-posts-empty { margin: 16px 0; color: var(--text2); font-size: 12px; text-align: center; }
     .board-posts { display: grid; gap: 5px; }
     .board-posts[hidden] { display: none; }
     .board-post { padding: 7px; border: 1px solid var(--pink4); background: #fffafd; }
-    .board-post strong { color: var(--text1); font-size: 11px; }
-    .board-post p { margin: 4px 0 0; color: var(--text2); font-size: 10px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .board-post strong { color: var(--text1); font-size: 13px; }
+    .board-post p { margin: 4px 0 0; color: var(--text2); font-size: 12px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
     .board-post-actions { display: flex; gap: 4px; justify-content: flex-end; margin-top: 5px; }
-    .board-post-action { padding: 2px 6px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text2); font: inherit; font-size: 9px; cursor: pointer; }
+    .board-post-action { padding: 2px 6px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text2); font: inherit; font-size: 11px; cursor: pointer; }
     .board-post-action:hover { background: var(--pink3); }
     .board-post-action--danger { border-color: #e0a0b0; color: #b04060; background: #fff0f4; }
     .board-post-action--danger:hover { background: #ffd8e4; }
     .board-post-form { display: grid; gap: 4px; }
-    .board-post-form input, .board-post-form textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; font-size: 10px; box-sizing: border-box; }
+    .board-post-form input, .board-post-form textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; font-size: 12px; box-sizing: border-box; }
     .board-post-form textarea { height: 60px; resize: vertical; }
-    .board-post-form p { margin: 0; color: var(--text2); font-size: 10px; }
+    .board-post-form p { margin: 0; color: var(--text2); font-size: 12px; }
     .board-post-form-actions { display: flex; gap: 4px; }
-    .board-post-form-actions button { padding: 3px 8px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text1); font: inherit; font-size: 10px; cursor: pointer; }
+    .board-post-form-actions button { padding: 3px 8px; border: 1px solid var(--pink3); background: var(--pink5); color: var(--text1); font: inherit; font-size: 12px; cursor: pointer; }
     .board-post-form-actions button:hover { background: var(--pink3); }
     .board-post-form-actions .board-post-action--danger { border-color: #e0a0b0; color: #b04060; background: #fff0f4; }
     .board-post-form-actions .board-post-action--danger:hover { background: #ffd8e4; }
     .board-unlock-form { margin-top: 9px; padding: 9px; border: 1px solid var(--pink3); background: var(--pink5); }
-    .board-unlock-form label { display: block; margin-bottom: 4px; color: var(--text2); font-size: 10px; }
+    .board-unlock-form label { display: block; margin-bottom: 4px; color: var(--text2); font-size: 12px; }
     .board-unlock-form div { display: flex; gap: 4px; }
     .board-unlock-form input { min-width: 0; flex: 1; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
     .board-unlock-form button { padding: 3px 8px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-unlock-form button:hover { background: var(--pink3); }
-    .board-unlock-form p { margin: 6px 0 0; color: var(--text2); font-size: 9px; line-height: 1.5; }
+    .board-unlock-form p { margin: 6px 0 0; color: var(--text2); font-size: 11px; line-height: 1.5; }
     .board-admin-toggle { display: block; margin: 9px 0 0 auto; padding: 3px 7px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-admin-toggle[hidden] { display: none; }
     .board-admin-toggle:hover { background: var(--pink3); }
     .board-admin-form { display: grid; gap: 4px; margin-top: 9px; padding: 8px; border: 1px solid var(--pink3); background: var(--pink5); }
     .board-admin-form[hidden] { display: none; }
-    .board-admin-form strong { color: var(--text1); font-size: 10px; }
-    .board-admin-form label { color: var(--text2); font-size: 9px; }
+    .board-admin-form strong { color: var(--text1); font-size: 12px; }
+    .board-admin-form label { color: var(--text2); font-size: 11px; }
     .board-admin-form input, .board-admin-form textarea { width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
     .board-admin-form textarea { height: 72px; resize: vertical; }
-    .board-admin-form p { margin: 2px 0; color: var(--text2); font-size: 9px; line-height: 1.5; }
+    .board-admin-form p { margin: 2px 0; color: var(--text2); font-size: 11px; line-height: 1.5; }
     .board-admin-form button { padding: 4px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font: inherit; cursor: pointer; }
     .board-admin-form button:hover { background: var(--pink3); }
     .board-admin-form fieldset { border: 1px solid var(--pink3); padding: 4px 7px 6px; }
-    .board-admin-form legend { color: var(--text2); font-size: 9px; padding: 0 2px; }
+    .board-admin-form legend { color: var(--text2); font-size: 11px; padding: 0 2px; }
     .board-type-option { display: flex; align-items: center; gap: 4px; padding: 2px 0; cursor: pointer; }
     .board-type-option input[type="radio"] { width: auto; }
     #board-admin-password-row, #board-admin-master-row { display: contents; }
-    .board-status { min-height: 16px; margin: 6px 0 0; color: var(--text2); font-size: 9px; }
+    .board-status { min-height: 16px; margin: 6px 0 0; color: var(--text2); font-size: 11px; }
     /* 방명록 창 */
-    #win-guestbook { width: min(390px, calc(100vw - 24px)); }
-    .guestbook-body { max-height: min(570px, calc(100vh - 105px)); }
-    .guestbook-intro { margin: 0 0 8px; color: var(--text2); text-align: center; font-size: 10px; }
+    #win-guestbook { width: min(460px, calc(100vw - 24px)); }
+    .guestbook-body { max-height: min(600px, calc(100vh - 120px)); }
+    .guestbook-intro { margin: 0 0 8px; color: var(--text2); text-align: center; font-size: 12px; }
     .guestbook-form { padding: 8px; border: 1px solid var(--pink3); background: var(--pink5); }
-    .guestbook-form label { display: block; margin: 0 0 3px; color: var(--text2); font-size: 10px; }
+    .guestbook-form label { display: block; margin: 0 0 3px; color: var(--text2); font-size: 12px; }
     .guestbook-form input, .guestbook-form textarea { box-sizing: border-box; width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
     .guestbook-form textarea { height: 66px; resize: vertical; }
     .guestbook-form label:not(:first-child) { margin-top: 6px; }
-    .guestbook-form-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; color: var(--text2); font-size: 9px; }
+    .guestbook-form-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; color: var(--text2); font-size: 11px; }
     .guestbook-form button, .guestbook-delete { padding: 3px 8px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer; }
     .guestbook-form button:hover, .guestbook-delete:hover { background: var(--pink3); }
-    .guestbook-status { min-height: 16px; margin-top: 5px; color: var(--text2); font-size: 9px; }
+    .guestbook-status { min-height: 16px; margin-top: 5px; color: var(--text2); font-size: 11px; }
     .guestbook-list { display: grid; gap: 7px; }
     .guestbook-entry { padding: 8px; border: 1px solid var(--pink4); background: #fffafd; }
-    .guestbook-entry-head { display: flex; gap: 7px; align-items: center; color: var(--text2); font-size: 9px; }
+    .guestbook-entry-head { display: flex; gap: 7px; align-items: center; color: var(--text2); font-size: 11px; }
     .guestbook-entry-name { color: var(--text1); font-weight: bold; }
     .guestbook-entry-date { margin-left: auto; }
-    .guestbook-entry-message { margin: 5px 0 0; color: var(--text1); font-size: 10px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
-    .guestbook-delete { margin-left: 4px; padding: 1px 4px; font-size: 9px; }
-    .guestbook-empty { margin: 7px 0; color: var(--text2); font-size: 10px; text-align: center; }
-    .guestbook-admin-badge { color: var(--pink1); font-size: 13px; font-weight: bold; line-height: 10px; text-shadow: 1px 1px 0 var(--pink4); }
+    .guestbook-entry-message { margin: 5px 0 0; color: var(--text1); font-size: 12px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .guestbook-delete { margin-left: 4px; padding: 1px 4px; font-size: 11px; }
+    .guestbook-empty { margin: 7px 0; color: var(--text2); font-size: 12px; text-align: center; }
+    .guestbook-admin-badge { color: var(--pink1); font-size: 15px; font-weight: bold; line-height: 10px; text-shadow: 1px 1px 0 var(--pink4); }
     .guestbook-comments { display: grid; gap: 4px; margin-top: 8px; padding: 6px 0 0 10px; border-top: 1px dotted var(--pink3); }
     .guestbook-comment { padding: 5px 6px; background: var(--pink5); }
-    .guestbook-comment-head { display: flex; align-items: center; gap: 5px; color: var(--text2); font-size: 9px; }
+    .guestbook-comment-head { display: flex; align-items: center; gap: 5px; color: var(--text2); font-size: 11px; }
     .guestbook-comment-head time { margin-left: auto; }
-    .guestbook-comment p { margin: 3px 0 0; color: var(--text1); font-size: 9px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .guestbook-comment p { margin: 3px 0 0; color: var(--text1); font-size: 11px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
     .guestbook-comment-form { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 4px; margin-top: 7px; padding-left: 10px; }
-    .guestbook-comment-form input { min-width: 0; padding: 3px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; font-size: 9px; }
+    .guestbook-comment-form input { min-width: 0; padding: 3px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; font-size: 11px; }
     .guestbook-comment-form.is-admin { grid-template-columns: minmax(0, 1fr) auto; }
-    .guestbook-comment-form button { padding: 2px 5px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; font-size: 9px; cursor: pointer; }
+    .guestbook-comment-form button { padding: 2px 5px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; font-size: 11px; cursor: pointer; }
     .guestbook-comment-form button:hover { background: var(--pink3); }
 
     .memo-deco {
@@ -225,64 +225,16 @@
 
     /* ── 토스트 알림 ── */
     #toast {
-      position: fixed; bottom: 50px; left: 50%;
+      position: fixed; bottom: 54px; left: 50%;
       transform: translateX(-50%);
       background: var(--pink5); border: 2px solid var(--pink1);
-      padding: 6px 18px; font-size: 11px; color: var(--text1);
+      padding: 6px 18px; font-size: 13px; color: var(--text1);
       box-shadow: 3px 3px 0 var(--shadow);
       z-index: 9000; opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
     }
     #toast.show { opacity: 1; }
-
-    /* ── 태스크바 ── */
-    .taskbar {
-      position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
-      background: linear-gradient(to bottom, var(--pink3), var(--pink4));
-      border-top: 2px solid var(--pink2);
-      display: flex; align-items: center; gap: 4px;
-      padding: 0 4px; z-index: 100;
-    }
-    .start-btn {
-      background: linear-gradient(to bottom, var(--pink5), var(--pink4));
-      border: 1px solid var(--pink1); font-family: inherit;
-      font-size: 11px; font-weight: bold; padding: 2px 10px;
-      cursor: default; color: var(--text1);
-      flex-shrink: 0;
-    }
-    .start-btn:active { background: var(--pink3); }
-    .start-menu {
-      position: fixed; left: 4px; bottom: 28px; z-index: 101;
-      min-width: 130px; padding: 4px; border: 2px solid var(--pink1);
-      background: var(--pink5); box-shadow: 3px 3px 0 var(--shadow);
-    }
-    .start-menu button {
-      width: 100%; padding: 5px 7px; border: 0; background: transparent;
-      color: var(--text1); font: inherit; text-align: left; cursor: default;
-    }
-    .start-menu button:hover { background: var(--pink2); color: var(--white); }
-    .tb-sep { width: 1px; background: var(--pink2); height: 18px; flex-shrink: 0; }
-    .tb-wins { display: flex; gap: 3px; flex: 1; overflow: hidden; }
-    .tb-win {
-      background: linear-gradient(to bottom, var(--pink4), var(--pink3));
-      border: 1px solid var(--pink2); font-family: inherit;
-      font-size: 10px; color: var(--text1);
-      padding: 1px 8px; cursor: default;
-      white-space: nowrap; min-width: 0;
-    }
-    .tb-win:hover { background: var(--pink3); }
-    .tb-win.active {
-      background: linear-gradient(to bottom, var(--pink2), var(--pink3));
-      font-weight: bold;
-      border-color: var(--pink1);
-    }
-    .tb-clock {
-      background: var(--pink5); border: 1px solid var(--pink2);
-      padding: 2px 8px; font-family: 'Courier New', monospace;
-      font-size: 11px; color: var(--text1); flex-shrink: 0; cursor: pointer;
-    }
-    .tb-clock:active { background: var(--pink3); }
 
     /* ── 게시글 목록 행 ── */
     .board-post-row {
@@ -292,39 +244,39 @@
       text-align: left; cursor: pointer;
     }
     .board-post-row:hover { background: var(--pink4); border-color: var(--pink2); }
-    .board-post-row-title { font-size: 11px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board-post-row-title { font-size: 13px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .board-post-row-bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-    .board-post-row-preview { font-size: 9px; color: var(--text2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .board-post-row-meta { font-size: 9px; color: var(--text2); white-space: nowrap; flex-shrink: 0; }
+    .board-post-row-preview { font-size: 11px; color: var(--text2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board-post-row-meta { font-size: 11px; color: var(--text2); white-space: nowrap; flex-shrink: 0; }
 
     /* ── 게시글 상세 ── */
     .board-post-detail-header { border-bottom: 1px solid var(--pink4); padding-bottom: 6px; margin-bottom: 8px; }
-    .board-post-detail-header strong { display: block; font-size: 12px; color: var(--text1); }
-    .board-post-meta { display: block; margin-top: 3px; font-size: 9px; color: var(--text2); }
+    .board-post-detail-header strong { display: block; font-size: 14px; color: var(--text1); }
+    .board-post-meta { display: block; margin-top: 3px; font-size: 11px; color: var(--text2); }
     .board-post-body {
-      font-size: 11px; color: var(--text1); line-height: 1.8;
+      font-size: 13px; color: var(--text1); line-height: 1.8;
       white-space: pre-wrap; overflow-wrap: anywhere;
-      max-height: 360px; overflow-y: auto;
+      max-height: 420px; overflow-y: auto;
     }
 
     /* ── 모바일 헤더 / 네비게이션 ── */
     #mobile-header {
       display: none; position: fixed; top: 0; left: 0; right: 0;
-      height: 44px; z-index: 200;
+      height: 48px; z-index: 200;
       background: linear-gradient(to right, var(--pink1), var(--pink2));
       padding: 0 12px; align-items: center; justify-content: space-between;
     }
-    #mobile-header-title { font-weight: bold; font-size: 13px; letter-spacing: 1px; color: var(--white); }
+    #mobile-header-title { font-weight: bold; font-size: 14px; letter-spacing: 1px; color: var(--white); }
     #mobile-header-right { display: flex; align-items: center; gap: 8px; }
-    #mobile-clock-display { font-family: 'Courier New', monospace; font-size: 11px; color: rgba(255,255,255,0.9); }
+    #mobile-clock-display { font-family: 'Courier New', monospace; font-size: 12px; color: rgba(255,255,255,0.9); }
     #mobile-admin-btn {
       background: transparent; border: 1px solid rgba(255,255,255,0.5);
-      color: var(--white); font: inherit; font-size: 12px;
-      width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--white); font: inherit; font-size: 13px;
+      width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
     #mobile-nav {
       display: none; position: fixed; bottom: 0; left: 0; right: 0;
-      height: 56px; z-index: 200;
+      height: 60px; z-index: 200;
       background: linear-gradient(to top, var(--pink3), var(--pink4));
       border-top: 2px solid var(--pink2); align-items: stretch;
     }
@@ -336,8 +288,8 @@
     }
     #mobile-nav button:last-child { border-right: none; }
     #mobile-nav button.active { background: rgba(255,255,255,0.4); font-weight: bold; }
-    .nav-icon { font-size: 18px; line-height: 1; }
-    .nav-label { font-size: 9px; }
+    .nav-icon { font-size: 20px; line-height: 1; }
+    .nav-label { font-size: 11px; }
 
     /* ── 모바일 전용 뷰 (560px 이하) ── */
     @media (max-width: 560px) {
@@ -346,15 +298,15 @@
       #mobile-header, #mobile-nav { display: flex !important; }
 
       /* 시작 메뉴 위치 조정 */
-      .start-menu { bottom: auto; top: 44px; left: auto; right: 4px; }
+      .start-menu { bottom: auto; top: 48px; left: auto; right: 4px; }
 
       /* 창 → 전체화면 패널
          top/left/right/bottom 고정으로 iOS Safari 100vh 버그 회피 */
       .win {
         display: none !important;
         position: fixed !important;
-        top: 44px !important; left: 0 !important;
-        right: 0 !important; bottom: 56px !important;
+        top: 48px !important; left: 0 !important;
+        right: 0 !important; bottom: 60px !important;
         width: auto !important; max-width: none !important; height: auto !important;
         border: none !important; box-shadow: none !important;
         overflow: hidden !important;
@@ -362,7 +314,7 @@
       .win.mobile-active {
         display: flex !important; flex-direction: column !important;
       }
-      .win-body { flex: 1 !important; min-height: 0 !important; overflow-y: auto; font-size: 12px; }
+      .win-body { flex: 1 !important; min-height: 0 !important; overflow-y: auto; font-size: 14px; }
       .win-title { cursor: default !important; flex-shrink: 0 !important; }
       .win-btns { display: none !important; }
       .win-menubar { flex-shrink: 0 !important; }
@@ -389,5 +341,5 @@
       .board-post-row-preview, .board-post-row-meta, .board-post-meta,
       .board-guide, .board-eyebrow, .board-status,
       .guestbook-status, .guestbook-intro,
-      .diary-date, .pstat, .pinfo { font-size: 10px; }
+      .diary-date, .pstat, .pinfo { font-size: 12px; }
     }
