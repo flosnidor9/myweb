@@ -5,9 +5,42 @@ const WIN_META = {
   'win-welcome': { label: '🏠 홈' },
   'win-diary':   { label: '📔 다이어리' },
   'win-typing':  { label: '⌨ 타자 놀이' },
+  'win-guestbook': { label: 'Guestbook' },
 };
 const OPEN_WINS = new Set();  // currently open (not minimized) windows
 const EXIST_WINS = new Set(); // windows that haven't been closed
+const WINDOW_STATE_KEY = 'banana-room.window-state.v1';
+
+function readWindowState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(WINDOW_STATE_KEY));
+    return saved && typeof saved === 'object' ? saved : {};
+  } catch {
+    return {};
+  }
+}
+
+const savedWindowState = readWindowState();
+
+function saveWindowState(id, state) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  const left = Number.parseFloat(el.style.left);
+  const top = Number.parseFloat(el.style.top);
+  savedWindowState[id] = {
+    ...savedWindowState[id],
+    ...(Number.isFinite(left) ? { left } : {}),
+    ...(Number.isFinite(top) ? { top } : {}),
+    state,
+  };
+
+  try {
+    localStorage.setItem(WINDOW_STATE_KEY, JSON.stringify(savedWindowState));
+  } catch {
+    // Storage can be unavailable in private browsing or when the user blocks it.
+  }
+}
 
 // Use the supplied mouse-click recordings and vary them for a less repetitive feel.
 const clickSounds = ['click1.mp3', 'click2.mp3', 'click3.mp3'].map(file => {
@@ -94,6 +127,7 @@ function openWin(id) {
   el.style.display = 'block';
   OPEN_WINS.add(id);
   EXIST_WINS.add(id);
+  saveWindowState(id, 'open');
   focusWin(id);
 }
 
@@ -105,6 +139,7 @@ function closeWin(id) {
   el.style.display = 'none';
   OPEN_WINS.delete(id);
   EXIST_WINS.delete(id);
+  saveWindowState(id, 'closed');
   updateTaskbar();
 }
 
@@ -114,6 +149,7 @@ function minimizeWin(id) {
   if (!el) return;
   el.style.display = 'none';
   OPEN_WINS.delete(id);
+  saveWindowState(id, 'minimized');
   updateTaskbar();
 }
 
@@ -130,6 +166,7 @@ function updateTaskbar() {
       if (el.style.display === 'none') {
         el.style.display = 'block';
         OPEN_WINS.add(id);
+        saveWindowState(id, 'open');
         focusWin(id);
       } else {
         focusWin(id);
@@ -152,6 +189,7 @@ function icoClick(el, winId) {
     EXIST_WINS.add(winId);
     win.style.display = 'block';
     OPEN_WINS.add(winId);
+    saveWindowState(winId, 'open');
     focusWin(winId);
   } else {
     showToast('공사중이에요! ♡');
@@ -209,7 +247,10 @@ document.addEventListener('mousemove', e => {
   }
   if (Math.random() < 0.15) spark(e.clientX, e.clientY);
 });
-document.addEventListener('mouseup', () => { dragEl = null; });
+document.addEventListener('mouseup', () => {
+  if (dragEl) saveWindowState(dragEl.id, 'open');
+  dragEl = null;
+});
 
 function spark(x, y) {
   const el = document.createElement('div');
@@ -241,8 +282,10 @@ window.addEventListener('load', () => {
   const setPos = (id, x, y) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.style.left = Math.max(0, x) + 'px';
-    el.style.top  = Math.max(0, y) + 'px';
+    const maxLeft = Math.max(0, W - el.offsetWidth);
+    const maxTop = Math.max(0, H - el.offsetHeight);
+    el.style.left = Math.min(maxLeft, Math.max(0, x)) + 'px';
+    el.style.top  = Math.min(maxTop, Math.max(0, y)) + 'px';
   };
 
   // 처음에 열려있는 윈도우들
@@ -261,6 +304,35 @@ window.addEventListener('load', () => {
 
   const typing = document.getElementById('win-typing');
   setPos('win-typing', (W - typing.offsetWidth) / 2 + 50, 110);
+
+  const guestbook = document.getElementById('win-guestbook');
+  setPos('win-guestbook', (W - guestbook.offsetWidth) / 2 - 20, 75);
+
+  Object.entries(savedWindowState).forEach(([id, saved]) => {
+    const el = document.getElementById(id);
+    if (!el || !saved || typeof saved !== 'object') return;
+
+    if (Number.isFinite(saved.left) && Number.isFinite(saved.top)) {
+      setPos(id, saved.left, saved.top);
+    }
+
+    if (saved.state === 'closed') {
+      el.classList.remove('open');
+      el.style.display = 'none';
+      OPEN_WINS.delete(id);
+      EXIST_WINS.delete(id);
+    } else if (saved.state === 'minimized') {
+      el.classList.remove('open');
+      el.style.display = 'none';
+      OPEN_WINS.delete(id);
+      EXIST_WINS.add(id);
+    } else if (saved.state === 'open') {
+      el.classList.add('open');
+      el.style.display = 'block';
+      OPEN_WINS.add(id);
+      EXIST_WINS.add(id);
+    }
+  });
 
   // 처음 열려 있는 창도 포커스 순서로 쌓아, 이후 열리는 창이 항상 맨 위에 오게 한다.
   ['win-profile', 'win-clock', 'win-welcome'].forEach(focusWin);

@@ -116,6 +116,39 @@
     .diary-editor-actions { display: flex; gap: 4px; margin-top: 7px; }
     .diary-editor-actions button { flex: 1; padding: 4px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer; }
     .diary-editor-actions button:hover { background: var(--pink3); }
+    /* 방명록 창 */
+    #win-guestbook { width: min(390px, calc(100vw - 24px)); }
+    .guestbook-body { max-height: min(570px, calc(100vh - 105px)); }
+    .guestbook-intro { margin: 0 0 8px; color: var(--text2); text-align: center; font-size: 10px; }
+    .guestbook-form { padding: 8px; border: 1px solid var(--pink3); background: var(--pink5); }
+    .guestbook-form label { display: block; margin: 0 0 3px; color: var(--text2); font-size: 10px; }
+    .guestbook-form input, .guestbook-form textarea { box-sizing: border-box; width: 100%; padding: 4px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; }
+    .guestbook-form textarea { height: 66px; resize: vertical; }
+    .guestbook-form label:not(:first-child) { margin-top: 6px; }
+    .guestbook-form-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; color: var(--text2); font-size: 9px; }
+    .guestbook-form button, .guestbook-delete { padding: 3px 8px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; cursor: pointer; }
+    .guestbook-form button:hover, .guestbook-delete:hover { background: var(--pink3); }
+    .guestbook-status { min-height: 16px; margin-top: 5px; color: var(--text2); font-size: 9px; }
+    .guestbook-list { display: grid; gap: 7px; }
+    .guestbook-entry { padding: 8px; border: 1px solid var(--pink4); background: #fffafd; }
+    .guestbook-entry-head { display: flex; gap: 7px; align-items: center; color: var(--text2); font-size: 9px; }
+    .guestbook-entry-name { color: var(--text1); font-weight: bold; }
+    .guestbook-entry-date { margin-left: auto; }
+    .guestbook-entry-message { margin: 5px 0 0; color: var(--text1); font-size: 10px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .guestbook-delete { margin-left: 4px; padding: 1px 4px; font-size: 9px; }
+    .guestbook-empty { margin: 7px 0; color: var(--text2); font-size: 10px; text-align: center; }
+    .guestbook-admin-badge { color: var(--pink1); font-size: 13px; font-weight: bold; line-height: 10px; text-shadow: 1px 1px 0 var(--pink4); }
+    .guestbook-comments { display: grid; gap: 4px; margin-top: 8px; padding: 6px 0 0 10px; border-top: 1px dotted var(--pink3); }
+    .guestbook-comment { padding: 5px 6px; background: var(--pink5); }
+    .guestbook-comment-head { display: flex; align-items: center; gap: 5px; color: var(--text2); font-size: 9px; }
+    .guestbook-comment-head time { margin-left: auto; }
+    .guestbook-comment p { margin: 3px 0 0; color: var(--text1); font-size: 9px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .guestbook-comment-form { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 4px; margin-top: 7px; padding-left: 10px; }
+    .guestbook-comment-form input { min-width: 0; padding: 3px; border: 1px solid var(--pink3); color: var(--text1); font: inherit; font-size: 9px; }
+    .guestbook-comment-form.is-admin { grid-template-columns: minmax(0, 1fr) auto; }
+    .guestbook-comment-form button { padding: 2px 5px; border: 1px solid var(--pink1); background: var(--pink4); color: var(--text1); font: inherit; font-size: 9px; cursor: pointer; }
+    .guestbook-comment-form button:hover { background: var(--pink3); }
+
     .memo-deco {
       float: right; margin: 0 0 6px 12px;
       image-rendering: pixelated; width: 72px;

@@ -1,13 +1,15 @@
 import { createFirebase } from './firebase.js';
 import { initAuthControls } from './auth-controls.js';
 import { initDiary } from './diary.js';
+import { initGuestbook } from './guestbook.js';
 import { initProfile } from './profile.js';
 import { initWelcome } from './welcome.js';
 
 const profile = initProfile();
 const welcome = initWelcome();
 const diary = initDiary();
-const features = [profile, welcome, diary];
+const guestbook = initGuestbook();
+const features = [profile, welcome, diary, guestbook];
 features.forEach((feature) => feature.render());
 
 try {

@@ -46,7 +46,7 @@
   <div class="desktop-icon" id="ico-typing"    onclick="icoClick(this,'win-typing')">
     <img src="assets/icons/key.png" alt=""><span>타자놀이</span>
   </div>
-  <div class="desktop-icon" id="ico-guestbook" onclick="icoClick(this,null)">
+  <div class="desktop-icon" id="ico-guestbook" onclick="icoClick(this,'win-guestbook')">
     <img src="assets/icons/mail.png" alt=""><span>방명록</span>
   </div>
 </div>
@@ -266,6 +266,29 @@
 <div id="toast">공사중이에요! ♡</div>
 
 <!-- ── 태스크바 ── -->
+<div class="win" id="win-guestbook">
+  <div class="win-title" data-win="win-guestbook">
+    <span class="win-label"><img class="px-icon" src="assets/icons/mail.png" alt="">방명록</span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-guestbook')">_</button>
+      <button class="tbtn" type="button">□</button>
+      <button class="tbtn" onclick="closeWin('win-guestbook')">×</button>
+    </div>
+  </div>
+  <div class="win-body guestbook-body">
+    <p class="guestbook-intro">반가운 마음을 남겨 주세요 ♡</p>
+    <form id="guestbook-form" class="guestbook-form">
+      <label for="guestbook-name">이름</label>
+      <input id="guestbook-name" name="name" maxlength="30" required placeholder="익명">
+      <label for="guestbook-message">메시지</label>
+      <textarea id="guestbook-message" name="message" maxlength="500" required placeholder="따뜻한 한마디를 남겨 주세요."></textarea>
+      <div class="guestbook-form-footer"><span id="guestbook-count">0 / 500</span><button type="submit">남기기</button></div>
+    </form>
+    <div id="guestbook-status" class="guestbook-status" aria-live="polite"></div>
+    <section id="guestbook-list" class="guestbook-list" aria-label="방명록 목록"></section>
+  </div>
+</div>
+
 <div class="taskbar">
   <button class="start-btn" id="start-menu-toggle" type="button">🐰 시작</button>
   <div class="tb-sep"></div>
