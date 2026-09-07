@@ -28,3 +28,6 @@ board-data/
 # Local Chrome debugging profile
 .chrome-debug/
 .chrome-preview-profile/
+
+# Private board source (plaintext passwords must not be committed)
+.private-board-source/passwords.json
