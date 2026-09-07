@@ -4,6 +4,7 @@ const WIN_META = {
   'win-clock':   { label: '⏰ 현재 시각' },
   'win-welcome': { label: '🏠 홈' },
   'win-diary':   { label: '📔 다이어리' },
+  'win-board':   { label: '📋 게시판' },
   'win-typing':  { label: '⌨ 타자 놀이' },
   'win-guestbook': { label: 'Guestbook' },
   'win-music': { label: '음악 플레이어' },
@@ -299,6 +300,9 @@ window.addEventListener('load', () => {
 
   const dia = document.getElementById('win-diary');
   setPos('win-diary', (W - dia.offsetWidth) / 2 + 30, 90);
+
+  const board = document.getElementById('win-board');
+  setPos('win-board', (W - board.offsetWidth) / 2 + 15, 82);
 
   const typing = document.getElementById('win-typing');
   setPos('win-typing', (W - typing.offsetWidth) / 2 + 50, 110);

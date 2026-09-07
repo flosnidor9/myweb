@@ -40,6 +40,9 @@
   <div class="desktop-icon" id="ico-diary"     onclick="icoClick(this,'win-diary')">
     <img src="assets/icons/memo.png" alt=""><span>다이어리</span>
   </div>
+  <div class="desktop-icon" id="ico-board"     onclick="icoClick(this,'win-board')">
+    <img src="assets/icons/memo.png" alt=""><span>게시판</span>
+  </div>
   <div class="desktop-icon" id="ico-typing"    onclick="icoClick(this,'win-typing')">
     <img src="assets/icons/key.png" alt=""><span>타자놀이</span>
   </div>
@@ -48,6 +51,50 @@
   </div>
   <div class="desktop-icon" id="ico-guestbook" onclick="icoClick(this,'win-guestbook')">
     <img src="assets/icons/mail.png" alt=""><span>방명록</span>
+  </div>
+</div>
+
+<!-- ── 게시판 ── -->
+<div class="win" id="win-board">
+  <div class="win-title" data-win="win-board">
+    <span class="win-label"><img class="px-icon" src="assets/icons/memo.png" alt="">게시판</span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-board')">_</button>
+      <button class="tbtn" type="button">□</button>
+      <button class="tbtn" onclick="closeWin('win-board')">×</button>
+    </div>
+  </div>
+  <div class="win-body board-body">
+    <div class="board-header">
+      <div>
+        <p class="board-eyebrow">BANANA ROOM BBS</p>
+        <h2 id="board-title">게시판 목록</h2>
+      </div>
+      <button id="board-back" type="button" hidden>◀ 목록</button>
+    </div>
+    <p id="board-guide" class="board-guide">들어갈 게시판을 선택해 주세요.</p>
+    <section id="board-list" class="board-list" aria-label="하위 게시판 목록"></section>
+    <section id="board-posts" class="board-posts" aria-label="게시글 목록" hidden></section>
+    <form id="board-unlock-form" class="board-unlock-form" hidden>
+      <label for="board-password-input">게시판 비밀번호</label>
+      <div><input id="board-password-input" name="password" type="password" autocomplete="off" required><button type="submit">열기</button></div>
+      <p>비밀번호는 이 기기에 저장되지 않으며, 암호화된 게시글을 여는 데에만 사용됩니다.</p>
+    </form>
+    <form id="board-admin-form" class="board-admin-form" hidden>
+      <strong>새 암호화 게시판 등록</strong>
+      <label for="board-admin-id">영문 ID</label><input id="board-admin-id" name="id" maxlength="40" pattern="[a-z0-9-]+" required placeholder="friends-only">
+      <label for="board-admin-name">게시판 이름</label><input id="board-admin-name" name="name" maxlength="40" required>
+      <label for="board-admin-description">설명</label><input id="board-admin-description" name="description" maxlength="160">
+      <label for="board-admin-title">첫 글 제목</label><input id="board-admin-title" name="title" maxlength="120" required>
+      <label for="board-admin-content">첫 글 내용</label><textarea id="board-admin-content" name="content" maxlength="5000" required></textarea>
+      <label for="board-admin-password">게시판 비밀번호</label><input id="board-admin-password" name="password" type="password" autocomplete="new-password" minlength="16" required>
+      <label for="board-admin-master">마스터키</label><input id="board-admin-master" name="masterKey" type="password" autocomplete="off" required>
+      <label for="board-admin-token">GitHub 쓰기 토큰</label><input id="board-admin-token" name="token" type="password" autocomplete="off" required>
+      <p>토큰과 마스터키는 저장하지 않습니다. 비밀번호는 16자 이상으로 설정하세요.</p>
+      <button type="submit">private 저장소에 등록</button>
+    </form>
+    <button id="board-admin-toggle" class="board-admin-toggle" type="button" hidden>+ 관리자 등록</button>
+    <p id="board-status" class="board-status" aria-live="polite"></p>
   </div>
 </div>
 <!-- ── 타자 놀이 ── -->

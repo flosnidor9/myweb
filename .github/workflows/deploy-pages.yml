@@ -24,6 +24,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Check out private board source
+        uses: actions/checkout@v4
+        with:
+          repository: flosnidor9/myweb-private
+          token: ${{ secrets.MYWEB_PRIVATE_REPO_TOKEN }}
+          path: .private-board-source
+          persist-credentials: false
+
+      - name: Build encrypted board data
+        env:
+          BOARD_CONTENT_MASTER_KEY: ${{ secrets.BOARD_CONTENT_MASTER_KEY }}
+        run: node scripts/build-encrypted-boards.mjs
+
+      - name: Remove private board source
+        run: rm -rf .private-board-source
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
