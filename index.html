@@ -101,6 +101,13 @@
       <p>토큰과 마스터키는 저장하지 않습니다. 비밀번호는 16자 이상으로 설정하세요.</p>
       <button type="submit">private 저장소에 등록</button>
     </form>
+    <form id="board-new-post-form" class="board-admin-form" hidden>
+      <strong>새 게시글 작성</strong>
+      <label for="board-post-title">제목</label><input id="board-post-title" name="title" maxlength="100" required>
+      <label for="board-post-content">내용</label><textarea id="board-post-content" name="content" required></textarea>
+      <label for="board-post-token">GitHub 쓰기 토큰</label><input id="board-post-token" name="token" type="password" autocomplete="off" required>
+      <button type="submit">게시글 등록</button>
+    </form>
     <button id="board-admin-toggle" class="board-admin-toggle" type="button" hidden>+ 새 게시판</button>
     <p id="board-status" class="board-status" aria-live="polite"></p>
   </div>
