@@ -233,13 +233,10 @@ document.querySelectorAll('.win').forEach(win => {
 });
 
 // ── 커서 + 드래그 + 스파클 ──
-const cur   = document.getElementById('cursor');
 const chars = ['✿','★','♡','✦','♪','✶'];
 const cols  = ['#e8547a','#ff8fab','#ffb3c6','#c45a7a','#ff6b9d'];
 
 document.addEventListener('mousemove', e => {
-  cur.style.left = e.clientX + 'px';
-  cur.style.top  = e.clientY + 'px';
   if (dragEl) {
     dragEl.style.left = (e.clientX - dox) + 'px';
     dragEl.style.top  = (e.clientY - doy) + 'px';
