@@ -29,5 +29,5 @@ board-data/
 .chrome-debug/
 .chrome-preview-profile/
 
-# Private board source (plaintext passwords must not be committed)
-.private-board-source/passwords.json
+# Private board source (must not be committed to public repo)
+.private-board-source/
