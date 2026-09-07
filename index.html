@@ -601,6 +601,29 @@ const WIN_META = {
 const OPEN_WINS = new Set();  // currently open (not minimized) windows
 const EXIST_WINS = new Set(); // windows that haven't been closed
 
+// Use the supplied mouse-click recordings and vary them for a less repetitive feel.
+const clickSounds = ['click1.mp3', 'click2.mp3', 'click3.mp3'].map(file => {
+  const sound = new Audio(`assets/sounds/${file}`);
+  sound.preload = 'auto';
+  sound.volume = 0.5;
+  return sound;
+});
+let previousClickSound = -1;
+function playMouseClick() {
+  let soundIndex = Math.floor(Math.random() * clickSounds.length);
+  if (clickSounds.length > 1 && soundIndex === previousClickSound) {
+    soundIndex = (soundIndex + 1) % clickSounds.length;
+  }
+  previousClickSound = soundIndex;
+  const sound = clickSounds[soundIndex];
+  sound.currentTime = 0;
+  sound.play().catch(() => {});
+}
+
+document.addEventListener('pointerdown', event => {
+  if (event.button === 0 && event.isPrimary) playMouseClick();
+}, { passive: true });
+
 // ── 로딩 바 ──
 let pct = 0;
 const barEl  = document.getElementById('load-bar');
