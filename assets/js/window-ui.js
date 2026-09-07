@@ -96,22 +96,33 @@ document.addEventListener('keydown', event => {
 });
 
 // ── 로딩 바 ──
-let pct = 0;
 const barEl  = document.getElementById('load-bar');
 const pctEl  = document.getElementById('load-pct');
-const loadIv = setInterval(() => {
-  pct = Math.min(100, pct + Math.floor(Math.random() * 9) + 3);
-  barEl.style.width = pct + '%';
+const barSegments = barEl.querySelectorAll('.load-bar-segment');
+const loadingDuration = 1000;
+const pauseIndexes = new Set();
+while (pauseIndexes.size < 2) pauseIndexes.add(Math.floor(Math.random() * (barSegments.length - 5)) + 3);
+const pauseDelays = new Map([...pauseIndexes].map(index => [index, 150 + Math.random() * 50]));
+const pauseTotal = [...pauseDelays.values()].reduce((total, delay) => total + delay, 0);
+const regularDelay = (loadingDuration - pauseTotal) / (barSegments.length - pauseIndexes.size);
+const loadingDelays = Array.from(barSegments, (_, index) => pauseDelays.get(index) ?? regularDelay);
+let loadingStep = 0;
+function advanceLoading() {
+  barSegments[loadingStep].classList.add('filled');
+  loadingStep += 1;
+  const pct = Math.round((loadingStep / barSegments.length) * 100);
   pctEl.textContent = pct + '%';
-  if (pct >= 100) {
-    clearInterval(loadIv);
+  if (loadingStep >= barSegments.length) {
     setTimeout(() => {
       const ol = document.getElementById('loading-overlay');
       ol.classList.add('hidden');
       setTimeout(() => ol.remove(), 600);
     }, 350);
+    return;
   }
-}, 80);
+  setTimeout(advanceLoading, loadingDelays[loadingStep]);
+}
+setTimeout(advanceLoading, loadingDelays[0]);
 
 // ── z-index 관리 ──
 let zTop = 10;

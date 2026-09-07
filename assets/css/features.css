@@ -4,11 +4,11 @@
     .profile-layout { display: flex; align-items: flex-start; gap: 10px; }
     .profile-summary { width: 178px; flex: 0 0 178px; }
     .avatar {
-      display: block; width: 64px; height: 64px;
+      display: block; width: 128px; height: 128px;
       margin: 6px auto 7px;
       border: 2px solid var(--pink1);
       background: var(--pink4);
-      font-size: 30px; line-height: 60px; text-align: center;
+      font-size: 54px; line-height: 124px; text-align: center;
       box-shadow: 2px 2px 0 var(--shadow);
     }
     .avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }

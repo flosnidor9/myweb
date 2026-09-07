@@ -12,14 +12,12 @@
       box-shadow: 4px 4px 0 var(--shadow);
     }
     .load-bar-bg {
-      flex: 1; height: 14px; background: var(--white);
-      border: 1px solid var(--pink1);
+      flex: 1; height: 14px; padding: 2px; gap: 2px;
+      display: grid; grid-template-columns: repeat(30, 1fr);
+      background: var(--white); border: 1px solid var(--pink1);
     }
-    .load-bar-fill {
-      height: 100%;
-      background: linear-gradient(to right, var(--pink3), var(--pink2));
-      width: 0%; transition: width 0.08s linear;
-    }
+    .load-bar-segment { background: var(--pink5); }
+    .load-bar-segment.filled { background: var(--pink2); }
 
     /* ── 스파클 ── */
     .sparkle {
