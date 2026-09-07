@@ -7,391 +7,599 @@
   <link href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css" rel="stylesheet">
   <style>
     :root {
-      --desk:   #008080;
-      --face:   #d4d0c8;
-      --light:  #ffffff;
-      --mid:    #808080;
-      --dark:   #404040;
-      --active: #000080;
-      --winbg:  #ffffff;
-      --text:   #000000;
+      --pink1: #e8547a;
+      --pink2: #ff8fab;
+      --pink3: #ffb3c6;
+      --pink4: #ffd6e7;
+      --pink5: #fff0f6;
+      --text1: #7a1a3e;
+      --text2: #b06080;
+      --white: #ffffff;
+      --shadow: rgba(232,84,122,0.22);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
-      min-height: 100vh;
-      background: var(--desk);
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 120% 60% at 50% 0%,   #b8e6ff 0%, transparent 65%),
+        radial-gradient(ellipse 80%  40% at 80% 20%,  #daf5ff 0%, transparent 55%),
+        linear-gradient(180deg,
+          #c5e8ff 0%, #d8f0ff 18%,
+          #fce8f2 42%, #ffd4e8 62%,
+          #ffe4c4 82%, #ffd9a8 100%);
       font-family: 'Galmuri11', 'MS Sans Serif', sans-serif;
       font-size: 11px;
-      color: var(--text);
+      color: var(--text1);
       cursor: none;
-      padding-bottom: 32px;
+      user-select: none;
     }
 
-    /* Cursor */
+    /* ── 로딩 오버레이 ── */
+    #loading-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, #ffdded 0%, #fff0f6 50%, #ffe8c8 100%);
+      transition: opacity 0.6s ease;
+    }
+    #loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .load-win {
+      width: 380px; background: var(--pink5);
+      border: 2px solid var(--pink1);
+      box-shadow: 4px 4px 0 var(--shadow);
+    }
+    .load-bar-bg {
+      flex: 1; height: 14px; background: var(--white);
+      border: 1px solid var(--pink1);
+    }
+    .load-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--pink3), var(--pink2));
+      width: 0%; transition: width 0.08s linear;
+    }
+
+    /* ── 커서 / 스파클 ── */
     #cursor {
-      position: fixed;
-      font-size: 14px;
-      pointer-events: none;
-      z-index: 9999;
+      position: fixed; font-size: 14px;
+      pointer-events: none; z-index: 9998;
       transform: translate(-50%, -50%);
     }
     .sparkle {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      font-size: 10px;
-      animation: sp 0.7s ease-out forwards;
+      position: fixed; pointer-events: none; z-index: 9997;
+      font-size: 10px; animation: sp 0.7s ease-out forwards;
     }
     @keyframes sp {
       from { opacity: 1; transform: translateY(0) scale(1); }
-      to   { opacity: 0; transform: translateY(-18px) scale(0.3); }
+      to   { opacity: 0; transform: translateY(-20px) scale(0.2); }
     }
 
-    /* Main window */
-    .window {
-      position: fixed;
-      width: 760px;
-      background: var(--face);
-      border: 2px solid;
-      border-color: var(--light) var(--dark) var(--dark) var(--light);
-      box-shadow: 1px 1px 0 var(--dark);
+    /* ── 데스크탑 아이콘 ── */
+    .icon-grid {
+      position: fixed; left: 16px; top: 40px;
+      display: flex; flex-direction: column; gap: 6px;
+      z-index: 5;
+    }
+    .desktop-icon {
+      display: flex; flex-direction: column;
+      align-items: center; width: 68px; padding: 5px 4px 4px;
+      cursor: default; gap: 4px;
+    }
+    .desktop-icon:hover  { background: rgba(255,143,171,0.30); outline: 1px dotted var(--pink2); }
+    .desktop-icon.active { background: rgba(255,143,171,0.50); outline: 1px dotted var(--pink1); }
+    .desktop-icon img {
+      width: 32px; height: 32px;
+      image-rendering: pixelated;
+      filter: sepia(0.3) hue-rotate(280deg) saturate(1.5);
+    }
+    .desktop-icon span {
+      font-size: 10px; color: #fff; text-align: center; line-height: 1.3;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7), -1px -1px 1px rgba(0,0,0,0.4);
+    }
+
+    /* ── 공통 윈도우 ── */
+    .win {
+      position: fixed; background: var(--pink5);
+      border: 2px solid var(--pink1);
+      box-shadow: 4px 4px 0 var(--shadow), 0 0 0 1px var(--pink3);
       z-index: 10;
+      display: none;
     }
-
-    /* Title bar */
-    .title-bar {
-      background: var(--active);
-      color: var(--light);
-      padding: 3px 4px 3px 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-    }
-    .title-bar-text {
-      font-size: 11px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .win.open { display: block; }
+    .win-title {
+      background: linear-gradient(to right, var(--pink2), var(--pink3), var(--pink2));
+      color: var(--text1);
+      padding: 3px 4px 3px 7px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--pink1);
       cursor: move;
-      flex: 1;
     }
-    .title-bar-controls { display: flex; gap: 2px; }
-    .title-btn {
-      width: 16px; height: 14px;
-      background: var(--face);
-      border: 1px solid;
-      border-color: var(--light) var(--mid) var(--mid) var(--light);
-      font-size: 9px;
-      font-family: inherit;
-      color: var(--text);
-      cursor: default;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
+    .win-label {
+      font-size: 11px; font-weight: bold;
+      display: flex; align-items: center; gap: 5px;
+      pointer-events: none;
     }
-    .title-btn:active {
-      border-color: var(--mid) var(--light) var(--light) var(--mid);
-    }
-
-    /* Menu bar */
-    .menu-bar {
-      background: var(--face);
-      border-bottom: 1px solid var(--mid);
-      padding: 2px 4px;
-      display: flex;
-      gap: 1px;
-    }
-    .menu-item {
-      padding: 2px 8px;
+    .win-btns { display: flex; gap: 3px; cursor: default; }
+    .tbtn {
+      width: 18px; height: 14px;
+      background: var(--pink5); border: 1px solid var(--pink1);
+      font-size: 9px; font-family: inherit; color: var(--text1);
+      display: flex; align-items: center; justify-content: center;
       cursor: default;
     }
-    .menu-item:hover {
-      background: var(--active);
-      color: var(--light);
+    .tbtn:hover  { background: var(--pink3); }
+    .tbtn:active { background: var(--pink4); }
+    .win-body {
+      padding: 8px; background: var(--white);
+      overflow: auto;
+    }
+    .win-menubar {
+      background: var(--pink4); border-bottom: 1px solid var(--pink3);
+      padding: 2px 4px; display: flex; gap: 1px;
+    }
+    .mitem {
+      padding: 2px 8px; cursor: default; color: var(--text1);
+    }
+    .mitem:hover { background: var(--pink2); color: var(--white); }
+
+    /* ── 픽셀 아이콘 (윈도우 내부) ── */
+    .px-icon {
+      width: 16px; height: 16px;
+      image-rendering: pixelated; vertical-align: middle;
+      margin-right: 3px; flex-shrink: 0;
+      filter: sepia(0.3) hue-rotate(280deg) saturate(1.5);
     }
 
-    /* Window body */
-    .window-body { padding: 8px; }
-
-    /* Layout */
-    .layout {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 6px;
-    }
-    .layout td { vertical-align: top; }
-    .col-side { width: 158px; }
-
-    /* Panel */
-    .panel {
-      border: 2px solid;
-      border-color: var(--mid) var(--light) var(--light) var(--mid);
-      margin-bottom: 6px;
-    }
-    .panel-title {
-      background: var(--active);
-      color: var(--light);
-      padding: 2px 6px;
-      font-weight: bold;
-    }
-    .panel-body {
-      padding: 6px;
-      background: var(--winbg);
-      line-height: 1.8;
-    }
-
-    /* Profile */
+    /* ── 프로필 윈도우 ── */
+    #win-profile { width: 170px; }
     .avatar {
-      display: block;
-      width: 64px; height: 64px;
-      margin: 2px auto 6px;
-      border: 2px solid;
-      border-color: var(--mid) var(--light) var(--light) var(--mid);
-      background: var(--face);
-      font-size: 32px;
-      line-height: 60px;
-      text-align: center;
+      display: block; width: 56px; height: 56px;
+      margin: 6px auto 7px;
+      border: 2px solid var(--pink1);
+      background: var(--pink4);
+      font-size: 26px; line-height: 52px; text-align: center;
+      box-shadow: 2px 2px 0 var(--shadow);
     }
-    .pname { text-align: center; font-weight: bold; }
-    .pstat { text-align: center; font-size: 10px; color: var(--mid); margin-top: 2px; }
-
-    /* Nav */
-    .nav a {
-      display: block;
-      padding: 3px 6px;
-      color: var(--text);
-      text-decoration: none;
-      border-bottom: 1px solid var(--face);
+    .pname { text-align: center; font-weight: bold; color: var(--text1); }
+    .pstat { text-align: center; font-size: 10px; color: var(--text2); margin-top: 2px; }
+    .pinfo {
+      margin-top: 7px; padding-top: 6px;
+      border-top: 1px solid var(--pink4);
+      font-size: 10px; color: var(--text2); line-height: 2;
     }
-    .nav a:last-child { border: none; }
-    .nav a:hover { background: var(--active); color: var(--light); }
 
-    /* Clock */
+    /* ── 시계 윈도우 ── */
+    #win-clock { width: 170px; }
     #clock {
       font-family: 'Courier New', monospace;
-      font-size: 14px;
-      text-align: center;
-      letter-spacing: 1px;
+      font-size: 18px; text-align: center;
+      letter-spacing: 2px; color: var(--text1); font-weight: bold;
+      padding: 4px 0;
     }
     #date-disp {
-      font-size: 9px;
-      text-align: center;
-      color: var(--mid);
-      margin-top: 2px;
+      font-size: 9px; text-align: center;
+      color: var(--text2); margin-top: 2px; padding-bottom: 2px;
     }
 
-    /* Welcome */
-    .welcome {
-      border: 2px solid;
-      border-color: var(--mid) var(--light) var(--light) var(--mid);
-      padding: 14px;
-      text-align: center;
-      margin-bottom: 6px;
-      background: var(--winbg);
+    /* ── 홈 윈도우 ── */
+    #win-welcome { width: 370px; }
+    .welcome-box {
+      border: 1px solid var(--pink3);
+      padding: 14px; text-align: center;
+      background: linear-gradient(135deg, var(--white) 0%, var(--pink4) 100%);
+      position: relative; overflow: hidden;
     }
-    .welcome .big { font-size: 13px; font-weight: bold; }
-    .welcome p { font-size: 11px; color: var(--mid); line-height: 2; margin-top: 6px; }
+    .welcome-box::before {
+      content: '♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡';
+      position: absolute; top: 4px; left: 0; right: 0;
+      font-size: 9px; color: var(--pink3); letter-spacing: 6px;
+      white-space: nowrap; overflow: hidden; pointer-events: none;
+    }
+    .welcome-box::after {
+      content: '♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡';
+      position: absolute; bottom: 4px; left: 0; right: 0;
+      font-size: 9px; color: var(--pink3); letter-spacing: 6px;
+      white-space: nowrap; overflow: hidden; pointer-events: none;
+    }
+    .welcome-box .big { font-size: 13px; font-weight: bold; color: var(--pink1); }
+    .welcome-box p { font-size: 11px; color: var(--text2); line-height: 2; margin-top: 6px; }
 
-    /* Diary */
+    /* ── 다이어리 윈도우 ── */
+    #win-diary { width: 370px; }
     .diary-date {
-      font-size: 10px;
-      color: var(--mid);
-      border-bottom: 1px solid var(--face);
-      padding-bottom: 4px;
-      margin-bottom: 8px;
+      font-size: 10px; color: var(--text2);
+      border-bottom: 1px solid var(--pink4);
+      padding-bottom: 5px; margin-bottom: 9px;
     }
-    .diary-body { font-size: 11px; line-height: 2.1; }
+    .diary-body { font-size: 11px; line-height: 2.2; color: var(--text1); }
+    .memo-deco {
+      float: right; margin: 0 0 6px 12px;
+      image-rendering: pixelated; width: 72px;
+      filter: sepia(0.2) hue-rotate(280deg) saturate(1.3);
+    }
 
-    /* Blink */
+    /* ── 깜빡임 ── */
     .blink { animation: bl 1s step-start infinite; }
     @keyframes bl { 50% { opacity: 0; } }
 
-    /* Taskbar */
+    /* ── 토스트 알림 ── */
+    #toast {
+      position: fixed; bottom: 50px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--pink5); border: 2px solid var(--pink1);
+      padding: 6px 18px; font-size: 11px; color: var(--text1);
+      box-shadow: 3px 3px 0 var(--shadow);
+      z-index: 9000; opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; }
+
+    /* ── 태스크바 ── */
     .taskbar {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      height: 28px;
-      background: var(--face);
-      border-top: 2px solid var(--light);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 4px;
-      z-index: 100;
+      position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
+      background: linear-gradient(to bottom, var(--pink3), var(--pink4));
+      border-top: 2px solid var(--pink2);
+      display: flex; align-items: center; gap: 4px;
+      padding: 0 4px; z-index: 100;
     }
     .start-btn {
-      background: var(--face);
-      border: 2px solid;
-      border-color: var(--light) var(--mid) var(--mid) var(--light);
-      font-family: inherit;
-      font-size: 11px;
+      background: linear-gradient(to bottom, var(--pink5), var(--pink4));
+      border: 1px solid var(--pink1); font-family: inherit;
+      font-size: 11px; font-weight: bold; padding: 2px 10px;
+      cursor: default; color: var(--text1);
+      flex-shrink: 0;
+    }
+    .start-btn:active { background: var(--pink3); }
+    .tb-sep { width: 1px; background: var(--pink2); height: 18px; flex-shrink: 0; }
+    .tb-wins { display: flex; gap: 3px; flex: 1; overflow: hidden; }
+    .tb-win {
+      background: linear-gradient(to bottom, var(--pink4), var(--pink3));
+      border: 1px solid var(--pink2); font-family: inherit;
+      font-size: 10px; color: var(--text1);
+      padding: 1px 8px; cursor: default;
+      white-space: nowrap; min-width: 0;
+    }
+    .tb-win:hover { background: var(--pink3); }
+    .tb-win.active {
+      background: linear-gradient(to bottom, var(--pink2), var(--pink3));
       font-weight: bold;
-      padding: 1px 10px;
-      cursor: default;
+      border-color: var(--pink1);
     }
-    .start-btn:active {
-      border-color: var(--mid) var(--light) var(--light) var(--mid);
-    }
-    .taskbar-clock {
-      background: var(--face);
-      border: 2px solid;
-      border-color: var(--mid) var(--light) var(--light) var(--mid);
-      padding: 2px 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 11px;
-    }
-    .taskbar-window {
-      background: var(--active);
-      color: var(--light);
-      border: 2px solid;
-      border-color: var(--light) var(--mid) var(--mid) var(--light);
-      padding: 1px 10px;
-      font-size: 11px;
+    .tb-clock {
+      background: var(--pink5); border: 1px solid var(--pink2);
+      padding: 2px 8px; font-family: 'Courier New', monospace;
+      font-size: 11px; color: var(--text1); flex-shrink: 0;
     }
   </style>
 </head>
 <body>
 
-<div id="cursor">✿</div>
-
-<div class="window">
-  <div class="title-bar">
-    <div class="title-bar-text">
-      <span>🌸</span>
-      <span>나의 미니홈피</span>
+<!-- ── 로딩 오버레이 ── -->
+<div id="loading-overlay">
+  <div class="load-win">
+    <div style="background:linear-gradient(to right,var(--pink2),var(--pink3),var(--pink2));padding:3px 7px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--pink1)">
+      <span style="font-weight:bold;font-size:11px">🐰 나의 미니홈피</span>
+      <div style="display:flex;gap:3px">
+        <div class="tbtn">_</div><div class="tbtn">□</div><div class="tbtn">×</div>
+      </div>
     </div>
-    <div class="title-bar-controls">
-      <button class="title-btn">_</button>
-      <button class="title-btn">□</button>
-      <button class="title-btn">✕</button>
+    <div style="padding:24px 32px 28px;text-align:center;background:var(--white)">
+      <div style="font-size:44px;margin-bottom:12px">🌸</div>
+      <div style="font-size:13px;font-weight:bold;color:var(--pink1);letter-spacing:2px;margin-bottom:18px">나의 미니홈피</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="load-pct" style="font-size:11px;color:var(--pink1);width:28px;text-align:right">0%</span>
+        <div class="load-bar-bg"><div class="load-bar-fill" id="load-bar"></div></div>
+      </div>
     </div>
-  </div>
-
-  <div class="menu-bar">
-    <span class="menu-item">파일(F)</span>
-    <span class="menu-item">보기(V)</span>
-    <span class="menu-item">도움말(H)</span>
-  </div>
-
-  <div class="window-body">
-    <table class="layout">
-      <tr>
-
-        <td class="col-side">
-
-          <div class="panel">
-            <div class="panel-title">프로필</div>
-            <div class="panel-body" style="text-align:center">
-              <div class="avatar">🌸</div>
-              <div class="pname">홈피 주인</div>
-              <div class="pstat">오늘도 반짝반짝</div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-title">메뉴</div>
-            <div class="panel-body nav">
-              <a href="#">🏠 홈</a>
-              <a href="#">📔 다이어리</a>
-              <a href="#">🖼️ 사진첩</a>
-              <a href="#">💌 방명록</a>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-title">현재 시각</div>
-            <div class="panel-body">
-              <div id="clock">00:00:00</div>
-              <div id="date-disp"></div>
-            </div>
-          </div>
-
-        </td>
-
-        <td>
-
-          <div class="welcome">
-            <div class="big"><span class="blink">★</span> 어서오세요~ <span class="blink">★</span></div>
-            <p>나의 소중한 미니홈피에 오신 것을 환영해요! ♡<br>편히 쉬다 가세요~</p>
-          </div>
-
-          <div class="panel">
-            <div class="panel-title">📔 다이어리</div>
-            <div class="panel-body">
-              <div class="diary-date">2026.09.07 (일) ☀️ 맑음</div>
-              <div class="diary-body">
-                드디어 나만의 홈피를 만들었어요! 🎉<br>
-                앞으로 여기에 일상도 올리고 사진도 올리고<br>
-                방명록에 흔적도 남겨주세요~ ♡<br>
-                <br>
-                <span style="color:#000080">♡ from. 홈피 주인 ♡</span>
-              </div>
-            </div>
-          </div>
-
-        </td>
-      </tr>
-    </table>
   </div>
 </div>
 
+<!-- ── 커서 ── -->
+<div id="cursor">✿</div>
+
+<!-- ── 데스크탑 아이콘 GNB ── -->
+<div class="icon-grid">
+  <div class="desktop-icon" id="ico-home"      onclick="icoClick(this,'win-welcome')">
+    <img src="assets/icons/file.png" alt=""><span>홈</span>
+  </div>
+  <div class="desktop-icon" id="ico-diary"     onclick="icoClick(this,'win-diary')">
+    <img src="assets/icons/memo.png" alt=""><span>다이어리</span>
+  </div>
+  <div class="desktop-icon" id="ico-photos"    onclick="icoClick(this,null)">
+    <img src="assets/icons/key.png" alt=""><span>사진첩</span>
+  </div>
+  <div class="desktop-icon" id="ico-guestbook" onclick="icoClick(this,null)">
+    <img src="assets/icons/mail.png" alt=""><span>방명록</span>
+  </div>
+  <div class="desktop-icon" id="ico-profile"   onclick="icoClick(this,'win-profile')">
+    <img src="assets/icons/warning.png" alt=""><span>프로필</span>
+  </div>
+</div>
+
+<!-- ── 프로필 윈도우 ── -->
+<div class="win open" id="win-profile">
+  <div class="win-title" data-win="win-profile">
+    <span class="win-label">🌸 프로필</span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-profile')">_</button>
+      <button class="tbtn">□</button>
+      <button class="tbtn" onclick="closeWin('win-profile')">×</button>
+    </div>
+  </div>
+  <div class="win-body" style="text-align:center">
+    <div class="avatar">🌸</div>
+    <div class="pname">홈피 주인</div>
+    <div class="pstat">오늘도 반짝반짝 ♡</div>
+    <div class="pinfo">
+      🌸 방문자: 1,234<br>
+      ♡ 친구: 12명<br>
+      ✦ 방명록: 56개
+    </div>
+  </div>
+</div>
+
+<!-- ── 시계 윈도우 ── -->
+<div class="win open" id="win-clock">
+  <div class="win-title" data-win="win-clock">
+    <span class="win-label">
+      <img class="px-icon" src="assets/icons/A_hourglass.png" alt="">현재 시각
+    </span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-clock')">_</button>
+      <button class="tbtn">□</button>
+      <button class="tbtn" onclick="closeWin('win-clock')">×</button>
+    </div>
+  </div>
+  <div class="win-body">
+    <div id="clock">00:00:00</div>
+    <div id="date-disp"></div>
+  </div>
+</div>
+
+<!-- ── 홈 윈도우 ── -->
+<div class="win open" id="win-welcome">
+  <div class="win-title" data-win="win-welcome">
+    <span class="win-label">🏠 홈</span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-welcome')">_</button>
+      <button class="tbtn">□</button>
+      <button class="tbtn" onclick="closeWin('win-welcome')">×</button>
+    </div>
+  </div>
+  <div class="win-menubar">
+    <span class="mitem">파일(F)</span>
+    <span class="mitem">보기(V)</span>
+    <span class="mitem">도움말(H)</span>
+  </div>
+  <div class="win-body">
+    <div class="welcome-box">
+      <div class="big"><span class="blink">★</span> 어서오세요~ <span class="blink">★</span></div>
+      <p>나의 소중한 미니홈피에 오신 것을 환영해요! ♡<br>편히 쉬다 가세요~</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── 다이어리 윈도우 ── -->
+<div class="win" id="win-diary">
+  <div class="win-title" data-win="win-diary">
+    <span class="win-label">
+      <img class="px-icon" src="assets/icons/memo.png" alt="">다이어리
+    </span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-diary')">_</button>
+      <button class="tbtn">□</button>
+      <button class="tbtn" onclick="closeWin('win-diary')">×</button>
+    </div>
+  </div>
+  <div class="win-menubar">
+    <span class="mitem">파일(F)</span>
+    <span class="mitem">편집(E)</span>
+  </div>
+  <div class="win-body">
+    <img class="memo-deco" src="assets/windows/memo.png" alt="">
+    <div class="diary-date">2026.09.07 (일) ☀️ 맑음</div>
+    <div class="diary-body">
+      드디어 나만의 홈피를 만들었어요! 🎉<br>
+      앞으로 여기에 일상도 올리고 사진도 올리고<br>
+      방명록에 흔적도 남겨주세요~ ♡<br>
+      <br>
+      <span style="color:var(--pink1)">♡ from. 홈피 주인 ♡</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── 토스트 ── -->
+<div id="toast">공사중이에요! ♡</div>
+
+<!-- ── 태스크바 ── -->
 <div class="taskbar">
-  <button class="start-btn">🪟 시작</button>
-  <div class="taskbar-window">🌸 나의 미니홈피</div>
-  <div class="taskbar-clock" id="taskbar-clock">00:00</div>
+  <button class="start-btn">🐰 시작</button>
+  <div class="tb-sep"></div>
+  <div class="tb-wins" id="tb-wins"></div>
+  <div class="tb-sep"></div>
+  <div class="tb-clock" id="taskbar-clock">00:00</div>
 </div>
 
 <script>
-// Window drag
-const win = document.querySelector('.window');
-const titleBar = document.querySelector('.title-bar');
+// ── 윈도우 메타 ──
+const WIN_META = {
+  'win-profile': { label: '🌸 프로필' },
+  'win-clock':   { label: '⏰ 현재 시각' },
+  'win-welcome': { label: '🏠 홈' },
+  'win-diary':   { label: '📔 다이어리' },
+};
+const OPEN_WINS = new Set();  // currently open (not minimized) windows
+const EXIST_WINS = new Set(); // windows that haven't been closed
 
-win.style.left = Math.max(0, (innerWidth  - win.offsetWidth)  / 2) + 'px';
-win.style.top  = Math.max(0, (innerHeight - win.offsetHeight) / 3) + 'px';
+// ── 로딩 바 ──
+let pct = 0;
+const barEl  = document.getElementById('load-bar');
+const pctEl  = document.getElementById('load-pct');
+const loadIv = setInterval(() => {
+  pct = Math.min(100, pct + Math.floor(Math.random() * 9) + 3);
+  barEl.style.width = pct + '%';
+  pctEl.textContent = pct + '%';
+  if (pct >= 100) {
+    clearInterval(loadIv);
+    setTimeout(() => {
+      const ol = document.getElementById('loading-overlay');
+      ol.classList.add('hidden');
+      setTimeout(() => ol.remove(), 600);
+    }, 350);
+  }
+}, 80);
 
-let dragging = false, ox = 0, oy = 0;
+// ── z-index 관리 ──
+let zTop = 10;
+function focusWin(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.zIndex = ++zTop;
+  updateTaskbar();
+}
 
-titleBar.addEventListener('mousedown', e => {
-  if (e.target.classList.contains('title-btn')) return;
-  dragging = true;
-  const r = win.getBoundingClientRect();
-  ox = e.clientX - r.left;
-  oy = e.clientY - r.top;
+// ── 윈도우 열기 ──
+function openWin(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('open');
+  el.style.display = 'block';
+  OPEN_WINS.add(id);
+  EXIST_WINS.add(id);
+  focusWin(id);
+}
+
+// ── 닫기 (완전히 숨김) ──
+function closeWin(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('open');
+  el.style.display = 'none';
+  OPEN_WINS.delete(id);
+  EXIST_WINS.delete(id);
+  updateTaskbar();
+}
+
+// ── 최소화 (taskbar로) ──
+function minimizeWin(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = 'none';
+  OPEN_WINS.delete(id);
+  updateTaskbar();
+}
+
+// ── 태스크바 업데이트 ──
+function updateTaskbar() {
+  const container = document.getElementById('tb-wins');
+  container.innerHTML = '';
+  EXIST_WINS.forEach(id => {
+    const btn = document.createElement('button');
+    btn.className = 'tb-win' + (document.getElementById(id).style.display !== 'none' ? ' active' : '');
+    btn.textContent = WIN_META[id]?.label || id;
+    btn.onclick = () => {
+      const el = document.getElementById(id);
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+        OPEN_WINS.add(id);
+        focusWin(id);
+      } else {
+        focusWin(id);
+      }
+      updateTaskbar();
+    };
+    container.appendChild(btn);
+  });
+}
+
+// ── 데스크탑 아이콘 클릭 ──
+let selectedIco = null;
+function icoClick(el, winId) {
+  if (selectedIco) selectedIco.classList.remove('active');
+  el.classList.add('active');
+  selectedIco = el;
+  if (winId) {
+    const win = document.getElementById(winId);
+    if (!win) return;
+    EXIST_WINS.add(winId);
+    win.style.display = 'block';
+    OPEN_WINS.add(winId);
+    focusWin(winId);
+  } else {
+    showToast('공사중이에요! ♡');
+  }
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.desktop-icon') && selectedIco) {
+    selectedIco.classList.remove('active');
+    selectedIco = null;
+  }
 });
-document.addEventListener('mouseup', () => { dragging = false; });
 
-// Cursor + drag move
-const cur = document.getElementById('cursor');
-const chars = ['✿','★','♡','✦','♪'];
+// ── 토스트 ──
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ── 드래그 ──
+let dragEl = null, dox = 0, doy = 0;
+document.querySelectorAll('.win-title').forEach(tb => {
+  tb.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('tbtn')) return;
+    const win = tb.closest('.win');
+    dragEl = win;
+    focusWin(win.id);
+    const r = win.getBoundingClientRect();
+    dox = e.clientX - r.left;
+    doy = e.clientY - r.top;
+  });
+});
+// 윈도우 클릭 시 focus
+document.querySelectorAll('.win').forEach(win => {
+  win.addEventListener('mousedown', e => {
+    if (!e.target.classList.contains('tbtn')) focusWin(win.id);
+  });
+});
+
+// ── 커서 + 드래그 + 스파클 ──
+const cur   = document.getElementById('cursor');
+const chars = ['✿','★','♡','✦','♪','✶'];
+const cols  = ['#e8547a','#ff8fab','#ffb3c6','#c45a7a','#ff6b9d'];
+
 document.addEventListener('mousemove', e => {
   cur.style.left = e.clientX + 'px';
   cur.style.top  = e.clientY + 'px';
-  if (dragging) {
-    win.style.left = (e.clientX - ox) + 'px';
-    win.style.top  = (e.clientY - oy) + 'px';
+  if (dragEl) {
+    dragEl.style.left = (e.clientX - dox) + 'px';
+    dragEl.style.top  = (e.clientY - doy) + 'px';
     return;
   }
-  if (Math.random() < 0.18) spark(e.clientX, e.clientY);
+  if (Math.random() < 0.15) spark(e.clientX, e.clientY);
 });
+document.addEventListener('mouseup', () => { dragEl = null; });
+
 function spark(x, y) {
   const el = document.createElement('div');
   el.className = 'sparkle';
   el.textContent = chars[Math.floor(Math.random() * chars.length)];
-  el.style.left  = (x + (Math.random()-0.5)*18) + 'px';
-  el.style.top   = (y + (Math.random()-0.5)*18) + 'px';
-  el.style.color = ['#000080','#800080','#008080'][Math.floor(Math.random()*3)];
+  el.style.left  = (x + (Math.random() - 0.5) * 20) + 'px';
+  el.style.top   = (y + (Math.random() - 0.5) * 20) + 'px';
+  el.style.color = cols[Math.floor(Math.random() * cols.length)];
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 700);
 }
 
+// ── 시계 ──
 const DAYS = ['일','월','화','수','목','금','토'];
 function tick() {
-  const n = new Date(), p = v => String(v).padStart(2,'0');
+  const n = new Date(), p = v => String(v).padStart(2, '0');
   document.getElementById('clock').textContent =
     `${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
   document.getElementById('date-disp').textContent =
@@ -400,6 +608,38 @@ function tick() {
     `${p(n.getHours())}:${p(n.getMinutes())}`;
 }
 setInterval(tick, 1000); tick();
+
+// ── 초기 위치 설정 ──
+window.addEventListener('load', () => {
+  const W = innerWidth, H = innerHeight;
+  const setPos = (id, x, y) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.left = Math.max(0, x) + 'px';
+    el.style.top  = Math.max(0, y) + 'px';
+  };
+
+  // 처음에 열려있는 윈도우들
+  ['win-profile','win-clock','win-welcome'].forEach(id => EXIST_WINS.add(id));
+  ['win-profile','win-clock','win-welcome'].forEach(id => OPEN_WINS.add(id));
+
+  // 위치
+  setPos('win-profile', 100, 48);
+  setPos('win-clock',   100, 290);
+
+  const wel = document.getElementById('win-welcome');
+  setPos('win-welcome', (W - wel.offsetWidth) / 2, 48);
+
+  const dia = document.getElementById('win-diary');
+  setPos('win-diary', (W - dia.offsetWidth) / 2 + 30, 90);
+
+  // 초기 z-index
+  document.getElementById('win-profile').style.zIndex = 11;
+  document.getElementById('win-clock').style.zIndex   = 12;
+  document.getElementById('win-welcome').style.zIndex  = 13;
+
+  updateTaskbar();
+});
 </script>
 </body>
 </html>
