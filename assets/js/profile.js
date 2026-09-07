@@ -1,4 +1,4 @@
-import { doc, onSnapshot, serverTimestamp, setDoc } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
+import { doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
 
 const defaults = { name: '홈피 주인', status: '오늘도 반짝반짝 ♡', info: '🌸 방문자: 1,234\n♡ 친구: 12명\n✦ 방명록: 56개' };
 const safeImageUrl = (value) => {
@@ -37,7 +37,7 @@ export function initProfile() {
   editor.addEventListener('submit', async (event) => {
     event.preventDefault(); if (!isAdmin || !db) return; const form = new FormData(editor); const imageUrl = safeImageUrl(form.get('imageUrl'));
     if (String(form.get('imageUrl')).trim() && !imageUrl) return setStatus('http 또는 https 사진 링크를 입력하세요.');
-    try { await setDoc(doc(db, 'siteContent', 'profile'), { name: form.get('name').trim(), status: form.get('status').trim(), imageUrl, info: form.get('info').trim(), updatedAt: serverTimestamp() }, { merge: true }); setStatus('프로필을 저장했습니다.'); setEditorOpen(false); }
+    try { await setDoc(doc(db, 'siteContent', 'profile'), { name: form.get('name').trim(), status: form.get('status').trim(), imageUrl, info: form.get('info').trim() }); setStatus('프로필을 저장했습니다.'); setEditorOpen(false); }
     catch (error) { setStatus('저장하지 못했습니다. 관리자 설정을 확인하세요.'); console.error(error); }
   });
   return { render, setStatus, connect: (database) => { db = database; onSnapshot(doc(db, 'siteContent', 'profile'), (snapshot) => render(snapshot.data()), (error) => { setStatus('프로필을 불러오지 못했습니다.'); console.error(error); }); }, setAdmin: (enabled) => { isAdmin = enabled; edit.hidden = !enabled; if (!enabled) setEditorOpen(false); } };

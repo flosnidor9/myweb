@@ -5,15 +5,18 @@ import { initGuestbook } from './guestbook.js';
 import { initProfile } from './profile.js';
 import { initWelcome } from './welcome.js';
 import { initBoard } from './board.js';
+import { initStickers } from './stickers.js';
 
 const profile = initProfile();
 const welcome = initWelcome();
 const diary = initDiary();
 const guestbook = initGuestbook();
 const board = initBoard();
+const stickers = initStickers();
 const features = [profile, welcome, diary, guestbook];
 features.forEach((feature) => feature.render());
 board.render();
+stickers.connect();
 
 document.getElementById('win-board').addEventListener('win-open', () => board.reload());
 document.getElementById('win-diary').addEventListener('win-open', () => diary.render());
@@ -21,7 +24,7 @@ document.getElementById('win-diary').addEventListener('win-open', () => diary.re
 try {
   const { auth, db } = createFirebase();
   features.forEach((feature) => feature.connect(db));
-  initAuthControls({ auth, db, onAdminChange: (isAdmin) => { features.forEach((feature) => feature.setAdmin(isAdmin)); board.setAdmin(isAdmin); } });
+  initAuthControls({ auth, db, onAdminChange: (isAdmin) => { features.forEach((feature) => feature.setAdmin(isAdmin)); board.setAdmin(isAdmin); stickers.setAdmin(isAdmin); } });
 } catch (error) {
   profile.setStatus('Firebase 설정 후 프로필을 연결할 수 있습니다.');
   console.error(error);

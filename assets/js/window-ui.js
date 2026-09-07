@@ -1,6 +1,7 @@
 // ── 윈도우 메타 ──
 const WIN_META = {
   'win-profile': { label: '🌸 프로필' },
+  'win-stickers': { label: '✨ 스티커' },
   'win-clock':   { label: '⏰ 현재 시각' },
   'win-welcome': { label: '🏠 홈' },
   'win-diary':   { label: '📔 다이어리' },
@@ -145,6 +146,7 @@ function openWin(id) {
   saveWindowState(id, 'open');
   focusWin(id);
   el.dispatchEvent(new CustomEvent('win-open', { bubbles: false }));
+  window.dispatchEvent(new Event('window-state-change'));
 }
 
 // ── 닫기 (완전히 숨김) ──
@@ -158,6 +160,7 @@ function closeWin(id) {
   EXIST_WINS.delete(id);
   if (!isMobile) saveWindowState(id, 'closed');
   if (!isMobile) updateTaskbar();
+  window.dispatchEvent(new Event('window-state-change'));
 }
 
 // ── 최소화 (taskbar로) ──
@@ -169,6 +172,7 @@ function minimizeWin(id) {
   OPEN_WINS.delete(id);
   if (!isMobile) saveWindowState(id, 'minimized');
   if (!isMobile) updateTaskbar();
+  window.dispatchEvent(new Event('window-state-change'));
 }
 
 // ── 태스크바 업데이트 ──
@@ -207,6 +211,7 @@ function mobileActivate(id) {
     btn.classList.toggle('active', btn.dataset.win === id);
   });
   el.dispatchEvent(new CustomEvent('win-open', { bubbles: false }));
+  window.dispatchEvent(new Event('window-state-change'));
 }
 
 // ── 데스크탑 아이콘 클릭 ──
@@ -280,12 +285,13 @@ document.addEventListener('mousemove', e => {
     const maxTop  = Math.max(0, window.innerHeight - dragEl.offsetHeight - taskbarH);
     dragEl.style.left = Math.max(0, Math.min(maxLeft, e.clientX - dox)) + 'px';
     dragEl.style.top  = Math.max(0, Math.min(maxTop,  e.clientY - doy)) + 'px';
+    window.dispatchEvent(new Event('window-moving'));
     return;
   }
   if (Math.random() < 0.15) spark(e.clientX, e.clientY);
 });
 document.addEventListener('mouseup', () => {
-  if (dragEl) saveWindowState(dragEl.id, 'open');
+  if (dragEl) { saveWindowState(dragEl.id, 'open'); window.dispatchEvent(new Event('window-state-change')); }
   dragEl = null;
 });
 
@@ -393,6 +399,7 @@ window.addEventListener('load', () => {
 
   initiallyOpen.forEach(focusWin);
   updateTaskbar();
+  window.dispatchEvent(new Event('window-state-change'));
 });
 
 // HTML의 기존 클릭 핸들러와 Firebase 모듈에서 사용하는 UI 함수를 노출한다.
