@@ -43,11 +43,44 @@
   <div class="desktop-icon" id="ico-typing"    onclick="icoClick(this,'win-typing')">
     <img src="assets/icons/key.png" alt=""><span>타자놀이</span>
   </div>
+  <div class="desktop-icon" id="ico-music" onclick="icoClick(this,'win-music')">
+    <img src="assets/icons/key.png" alt=""><span>음악</span>
+  </div>
   <div class="desktop-icon" id="ico-guestbook" onclick="icoClick(this,'win-guestbook')">
     <img src="assets/icons/mail.png" alt=""><span>방명록</span>
   </div>
 </div>
 <!-- ── 타자 놀이 ── -->
+<!-- 음악 플레이어 -->
+<div class="win" id="win-music">
+  <div class="win-title" data-win="win-music">
+    <span class="win-label"><img class="px-icon" src="assets/icons/key.png" alt="">음악 플레이어</span>
+    <div class="win-btns">
+      <button class="tbtn" onclick="minimizeWin('win-music')">_</button>
+      <button class="tbtn" type="button">□</button>
+      <button class="tbtn" onclick="closeWin('win-music')">×</button>
+    </div>
+  </div>
+  <div class="win-body music-body">
+    <p class="music-status" id="music-status" aria-live="polite">셔플 재생을 누르면 음악을 시작해요.</p>
+    <div class="music-player-frame" id="youtube-music-player" aria-hidden="true"></div>
+    <div class="music-visualizer" id="music-visualizer" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <p class="music-title" id="music-title">아직 재생 중인 곡이 없어요.</p>
+    <div class="music-progress-row">
+      <time id="music-current-time">0:00</time>
+      <input type="range" id="music-progress" min="0" max="100" value="0" step="0.1" aria-label="재생 위치" disabled>
+      <time id="music-duration">0:00</time>
+    </div>
+    <div class="music-controls">
+      <button type="button" id="music-play" disabled>▶ 셔플 재생</button>
+      <button type="button" id="music-pause" disabled>Ⅱ 일시정지</button>
+      <button type="button" id="music-next" disabled>▶▶ 다음 곡</button>
+      <label class="music-volume" for="music-volume">🔊 <input type="range" id="music-volume" min="0" max="100" value="50" aria-label="볼륨"><output id="music-volume-value">50%</output></label>
+    </div>
+  </div>
+</div>
 <div class="win" id="win-typing">
   <div class="win-title" data-win="win-typing">
     <span class="win-label"><img class="px-icon" src="assets/icons/key.png" alt="">타자 놀이</span>
@@ -300,6 +333,7 @@
 </div>
 
 <script type="module" src="assets/js/window-ui.js"></script>
+<script type="module" src="assets/js/music-player.js"></script>
 <script type="module" src="assets/js/typing-games.js"></script>
 <script type="module" src="assets/js/firebase-app.js"></script>
 </body>

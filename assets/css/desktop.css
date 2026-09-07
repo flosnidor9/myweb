@@ -117,6 +117,41 @@
     }
 
     /* ── 타자 놀이 ── */
+    /* 음악 플레이어 */
+    #win-music { width: min(380px, calc(100vw - 24px)); }
+    .music-body { padding: 8px; }
+    .music-status { min-height: 17px; margin-bottom: 7px; color: var(--text2); }
+    .music-player-frame {
+      position: fixed; left: -10000px; top: 0; width: 200px; height: 200px; overflow: hidden;
+    }
+    .music-player-frame iframe { display: block; width: 200px; height: 200px; border: 0; }
+    .music-visualizer {
+      height: 46px; display: flex; align-items: center; justify-content: center; gap: 4px;
+      margin: 3px 0 6px; border: 1px inset var(--pink3); background: linear-gradient(90deg, #fff5fa, var(--pink4), #fff5fa);
+    }
+    .music-visualizer span { width: 6px; height: 7px; background: var(--pink2); box-shadow: 1px 1px 0 var(--pink1); }
+    .music-visualizer.is-playing span { animation: music-wave 0.7s steps(4, end) infinite alternate; }
+    .music-visualizer.is-playing span:nth-child(2n) { animation-delay: -0.35s; }
+    .music-visualizer.is-playing span:nth-child(3n) { animation-delay: -0.15s; }
+    .music-visualizer.is-playing span:nth-child(4n) { animation-delay: -0.52s; }
+    @keyframes music-wave { from { height: 7px; } to { height: 34px; } }
+    .music-title { min-height: 16px; overflow: hidden; color: var(--text1); font-weight: bold; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+    .music-progress-row { display: flex; align-items: center; gap: 6px; color: var(--text2); }
+    .music-progress-row time { width: 30px; font-variant-numeric: tabular-nums; }
+    .music-progress-row time:last-child { text-align: right; }
+    .music-progress-row input { flex: 1; accent-color: var(--pink1); }
+    .music-controls { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .music-controls button {
+      padding: 4px 7px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1);
+      font: inherit; cursor: pointer;
+    }
+    .music-controls button:hover:not(:disabled) { background: var(--pink2); color: var(--white); }
+    .music-controls button:disabled { cursor: not-allowed; opacity: 0.55; }
+    .music-volume { display: flex; align-items: center; gap: 3px; padding: 3px 0 3px 3px; color: var(--text1); }
+    .music-volume input { width: 64px; accent-color: var(--pink1); }
+    .music-volume output { width: 28px; font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { .music-visualizer.is-playing span { animation: none; height: 19px; } }
+
     #win-typing { width: min(450px, calc(100vw - 24px)); }
     .typing-tabs { display: flex; gap: 3px; padding: 4px 5px 0; background: var(--pink4); }
     .typing-tabs button, .typing-footer button {

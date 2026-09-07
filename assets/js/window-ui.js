@@ -6,6 +6,7 @@ const WIN_META = {
   'win-diary':   { label: '📔 다이어리' },
   'win-typing':  { label: '⌨ 타자 놀이' },
   'win-guestbook': { label: 'Guestbook' },
+  'win-music': { label: '음악 플레이어' },
 };
 const OPEN_WINS = new Set();  // currently open (not minimized) windows
 const EXIST_WINS = new Set(); // windows that haven't been closed
@@ -304,6 +305,9 @@ window.addEventListener('load', () => {
 
   const guestbook = document.getElementById('win-guestbook');
   setPos('win-guestbook', (W - guestbook.offsetWidth) / 2 - 20, 75);
+
+  const music = document.getElementById('win-music');
+  setPos('win-music', (W - music.offsetWidth) / 2 + 80, 145);
 
   Object.entries(savedWindowState).forEach(([id, saved]) => {
     const el = document.getElementById(id);
