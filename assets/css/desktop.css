@@ -224,6 +224,29 @@
       color: var(--text1); font: inherit; text-align: left; cursor: default;
     }
     .start-menu button:hover { background: var(--pink2); color: var(--white); }
+    #window-layout-editor {
+      position: fixed; top: 42px; left: 50%; transform: translateX(-50%); z-index: 180;
+      display: flex; align-items: center; gap: 6px; padding: 6px 8px;
+      border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1);
+      box-shadow: 2px 2px 0 var(--shadow); font-size: 11px;
+    }
+    #window-layout-editor[hidden] { display: none !important; }
+    #window-layout-editor button {
+      padding: 3px 6px; border: 1px solid var(--pink1); background: var(--white);
+      color: var(--text1); font: inherit; cursor: pointer;
+    }
+    #window-layout-editor button:hover { background: var(--pink2); color: var(--white); }
+    .win-layout-resize-handle {
+      display: none; position: absolute; right: -1px; bottom: -1px; z-index: 30;
+      width: 14px; height: 14px; border: 1px solid var(--pink1); background: var(--pink5);
+      cursor: nwse-resize;
+    }
+    body.window-layout-editing .win { outline: 2px dashed var(--pink1); outline-offset: 3px; }
+    body.window-layout-editing .win-layout-resize-handle { display: block; }
+    body.window-layout-editing .win.layout-editing {
+      display: flex !important; flex-direction: column; overflow: hidden;
+    }
+    body.window-layout-editing .win.layout-editing .win-body { flex: 1; min-height: 0; }
     .tb-sep { width: 1px; background: var(--pink2); height: 20px; flex-shrink: 0; }
     .tb-wins { display: flex; gap: 3px; flex: 1; overflow: hidden; }
     .tb-win {

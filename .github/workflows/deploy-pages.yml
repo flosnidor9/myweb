@@ -32,21 +32,29 @@ jobs:
           path: .private-board-source
           persist-credentials: false
 
-      - name: Build encrypted board data
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site
         env:
           BOARD_CONTENT_MASTER_KEY: ${{ secrets.BOARD_CONTENT_MASTER_KEY }}
-        run: node scripts/build-encrypted-boards.mjs
+          VITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+        run: npm ci && npm run build
 
       - name: Remove private board source
         run: rm -rf .private-board-source
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ./dist
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -73,6 +73,11 @@
 <!-- ── 게시판 ── -->
 <div id="desktop-stickers" aria-label="꾸미기 스티커"></div>
 <div id="mobile-stickers" aria-label="꾸미기 스티커"></div>
+<div id="mobile-sticker-editor" hidden aria-label="모바일 스티커 편집">
+  <span>드래그: 배치 · ↗: 회전 · ↘: 크기</span>
+  <button id="mobile-sticker-save" type="button">저장</button>
+  <button id="mobile-sticker-discard" type="button">취소</button>
+</div>
 
 <div class="win" id="win-stickers">
   <div class="win-title" data-win="win-stickers">
@@ -458,10 +463,16 @@
   <button class="tb-clock" id="taskbar-clock" type="button" onclick="openWin('win-clock')" aria-label="현재 시각 창 열기">00:00</button>
 </div>
 <div class="start-menu" id="start-menu" hidden>
-  <button id="sticker-menu-open" type="button" hidden onclick="openWin('win-stickers')">✨ 스티커 편집</button>
+  <button id="window-layout-edit" type="button" hidden>🪟 창 초기 위치 편집</button>
+  <button id="sticker-menu-open" type="button" hidden onclick="openStickerEditor()">✨ 스티커 편집</button>
   <button id="admin-login" type="button" title="관리자 로그인">
     <span id="admin-login-label">관리자 로그인</span>
   </button>
+</div>
+<div id="window-layout-editor" hidden aria-live="polite">
+  <span>열린 창을 드래그하거나 ↘ 핸들로 크기를 조절하세요.</span>
+  <button id="window-layout-save" type="button">초기 배치 저장</button>
+  <button id="window-layout-cancel" type="button">취소</button>
 </div>
 
 <!-- ── 모바일 헤더 ── -->

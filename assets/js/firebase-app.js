@@ -24,7 +24,7 @@ document.getElementById('win-diary').addEventListener('win-open', () => diary.re
 try {
   const { auth, db } = createFirebase();
   features.forEach((feature) => feature.connect(db));
-  initAuthControls({ auth, db, onAdminChange: (isAdmin) => { features.forEach((feature) => feature.setAdmin(isAdmin)); board.setAdmin(isAdmin); stickers.setAdmin(isAdmin); } });
+  initAuthControls({ auth, db, onAdminChange: (isAdmin) => { features.forEach((feature) => feature.setAdmin(isAdmin)); board.setAdmin(isAdmin); stickers.setAdmin(isAdmin); window.setWindowLayoutAdmin?.(isAdmin); } });
 } catch (error) {
   profile.setStatus('Firebase 설정 후 프로필을 연결할 수 있습니다.');
   console.error(error);

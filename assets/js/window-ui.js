@@ -13,6 +13,8 @@ const WIN_META = {
 const OPEN_WINS = new Set();  // currently open (not minimized) windows
 const EXIST_WINS = new Set(); // windows that haven't been closed
 const WINDOW_STATE_KEY = 'banana-room.window-state.v1';
+const INITIAL_LAYOUT_URL = `${import.meta.env.BASE_URL}window-layout.json`;
+const DEFAULT_SIZED_WINDOWS = new Set(['win-typing']);
 
 function readWindowState() {
   try {
@@ -24,7 +26,44 @@ function readWindowState() {
 }
 
 const savedWindowState = readWindowState();
-const isMobile = window.matchMedia('(max-width: 560px)').matches;
+const savedInitialLayout = {};
+const isMobile = () => window.matchMedia('(max-width: 560px), (max-height: 560px) and (orientation: landscape)').matches;
+const windowLayout = new Map();
+
+function desktopBounds(el) {
+  return {
+    left: Math.max(0, innerWidth - el.offsetWidth),
+    top: Math.max(0, innerHeight - el.offsetHeight - 32),
+  };
+}
+
+// Keep a window's intended position as a percentage of its available desktop
+// area.  A narrow viewport may force several windows together; this lets them
+// return to their separate positions when the viewport grows again.
+function rememberWindowLayout(el) {
+  if (!el) return;
+  const bounds = desktopBounds(el);
+  const left = Number.parseFloat(el.style.left);
+  const top = Number.parseFloat(el.style.top);
+  const previous = windowLayout.get(el.id) || { x: 0, y: 0 };
+  windowLayout.set(el.id, {
+    x: bounds.left > 0 && Number.isFinite(left) ? Math.min(1, Math.max(0, left / bounds.left)) : previous.x,
+    y: bounds.top > 0 && Number.isFinite(top) ? Math.min(1, Math.max(0, top / bounds.top)) : previous.y,
+  });
+}
+
+function restoreWindowLayout(el) {
+  if (!el || el.style.display === 'none') return;
+  const layout = windowLayout.get(el.id);
+  if (!layout) return clampWin(el.id);
+  const bounds = desktopBounds(el);
+  el.style.left = `${bounds.left * layout.x}px`;
+  el.style.top = `${bounds.top * layout.y}px`;
+}
+
+function visibleDesktopWindows() {
+  return [...document.querySelectorAll('.win')].filter(el => getComputedStyle(el).display !== 'none');
+}
 
 function saveWindowState(id, state) {
   const el = document.getElementById(id);
@@ -136,11 +175,12 @@ function focusWin(id) {
 
 // ── 윈도우 열기 ──
 function openWin(id) {
-  if (isMobile) { mobileActivate(id); return; }
+  if (isMobile()) { mobileActivate(id); return; }
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.add('open');
   el.style.display = 'block';
+  restoreWindowLayout(el);
   OPEN_WINS.add(id);
   EXIST_WINS.add(id);
   saveWindowState(id, 'open');
@@ -158,8 +198,8 @@ function closeWin(id) {
   el.style.display = 'none';
   OPEN_WINS.delete(id);
   EXIST_WINS.delete(id);
-  if (!isMobile) saveWindowState(id, 'closed');
-  if (!isMobile) updateTaskbar();
+  if (!isMobile()) saveWindowState(id, 'closed');
+  if (!isMobile()) updateTaskbar();
   window.dispatchEvent(new Event('window-state-change'));
 }
 
@@ -170,8 +210,8 @@ function minimizeWin(id) {
   el.classList.remove('mobile-active');
   el.style.display = 'none';
   OPEN_WINS.delete(id);
-  if (!isMobile) saveWindowState(id, 'minimized');
-  if (!isMobile) updateTaskbar();
+  if (!isMobile()) saveWindowState(id, 'minimized');
+  if (!isMobile()) updateTaskbar();
   window.dispatchEvent(new Event('window-state-change'));
 }
 
@@ -189,7 +229,7 @@ function updateTaskbar() {
         el.style.display = 'block';
         OPEN_WINS.add(id);
         saveWindowState(id, 'open');
-        clampWin(id);
+        restoreWindowLayout(el);
         focusWin(id);
       } else {
         focusWin(id);
@@ -217,7 +257,7 @@ function mobileActivate(id) {
 // ── 데스크탑 아이콘 클릭 ──
 let selectedIco = null;
 function icoClick(el, winId) {
-  if (isMobile) {
+  if (isMobile()) {
     if (winId) mobileActivate(winId);
     else showToast('공사중이에요! ♡');
     return;
@@ -230,6 +270,7 @@ function icoClick(el, winId) {
     if (!win) return;
     EXIST_WINS.add(winId);
     win.style.display = 'block';
+    restoreWindowLayout(win);
     OPEN_WINS.add(winId);
     saveWindowState(winId, 'open');
     focusWin(winId);
@@ -291,7 +332,11 @@ document.addEventListener('mousemove', e => {
   if (Math.random() < 0.15) spark(e.clientX, e.clientY);
 });
 document.addEventListener('mouseup', () => {
-  if (dragEl) { saveWindowState(dragEl.id, 'open'); window.dispatchEvent(new Event('window-state-change')); }
+  if (dragEl) {
+    rememberWindowLayout(dragEl);
+    if (!windowLayoutEditing) saveWindowState(dragEl.id, 'open');
+    window.dispatchEvent(new Event('window-state-change'));
+  }
   dragEl = null;
 });
 
@@ -309,10 +354,221 @@ function clampWin(id) {
 }
 
 // ── 창 크기 변경 시 보더 밖으로 나간 창 재배치 ──
+function setInitialDesktopPositions() {
+  const W = innerWidth, H = innerHeight;
+  const setPos = (id, x, y) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const maxLeft = Math.max(0, W - el.offsetWidth);
+    const maxTop = Math.max(0, H - el.offsetHeight - 32);
+    el.style.left = `${Math.min(maxLeft, Math.max(0, x))}px`;
+    el.style.top = `${Math.min(maxTop, Math.max(0, y))}px`;
+  };
+  const centered = (id, offset, top) => {
+    const el = document.getElementById(id);
+    if (el) setPos(id, (W - el.offsetWidth) / 2 + offset, top);
+  };
+
+  setPos('win-profile', 100, 48);
+  setPos('win-clock', 100, 290);
+  centered('win-welcome', 0, 48);
+  centered('win-diary', 30, 90);
+  centered('win-board', 15, 82);
+  centered('win-typing', 50, 110);
+  centered('win-guestbook', -20, 75);
+  centered('win-music', 80, 145);
+  applySavedInitialLayout();
+}
+
+function applySavedInitialLayout() {
+  Object.entries(savedInitialLayout).forEach(([id, layout]) => {
+    const el = document.getElementById(id);
+    if (!el || !layout || typeof layout !== 'object') return;
+    if (!DEFAULT_SIZED_WINDOWS.has(id)) {
+      if (Number.isFinite(layout.width)) el.style.width = `${Math.max(160, layout.width)}px`;
+      if (Number.isFinite(layout.height)) el.style.height = `${Math.max(110, layout.height)}px`;
+    }
+    if (Number.isFinite(layout.x) && Number.isFinite(layout.y)) {
+      windowLayout.set(id, {
+        x: Math.min(1, Math.max(0, layout.x)),
+        y: Math.min(1, Math.max(0, layout.y)),
+      });
+      restoreWindowLayout(el);
+    }
+  });
+}
+
+function isDesktopMaximized() {
+  // Browsers do not expose a maximized flag. Account for browser chrome and
+  // platform window borders, which can be noticeably larger than a few pixels.
+  const allowance = 80;
+  return outerWidth >= screen.availWidth - allowance && outerHeight >= screen.availHeight - allowance;
+}
+
+let wasDesktopMaximized = false;
+let desktopInitialized = false;
+let wasMobileLayout = isMobile();
+
 window.addEventListener('resize', () => {
-  if (isMobile) return;
-  EXIST_WINS.forEach(clampWin);
+  const mobileLayout = isMobile();
+  if (mobileLayout) {
+    if (!wasMobileLayout) mobileActivate('win-welcome');
+    wasMobileLayout = true;
+    return;
+  }
+  wasMobileLayout = false;
+  if (windowLayoutEditing) return;
+  const maximized = isDesktopMaximized();
+  if (maximized && !wasDesktopMaximized) {
+    setInitialDesktopPositions();
+    visibleDesktopWindows().forEach(rememberWindowLayout);
+  } else {
+    EXIST_WINS.forEach(id => restoreWindowLayout(document.getElementById(id)));
+  }
+  wasDesktopMaximized = maximized;
 });
+
+let windowLayoutEditing = false;
+let windowLayoutAdmin = false;
+let layoutEditSnapshot = new Map();
+let resizingWindow = null;
+
+function snapshotWindowLayout() {
+  return new Map([...document.querySelectorAll('.win')].map(el => [el.id, {
+    left: el.style.left,
+    top: el.style.top,
+    width: el.style.width,
+    height: el.style.height,
+  }]));
+}
+
+function addWindowResizeHandle(el) {
+  if (el.querySelector('.win-layout-resize-handle')) return;
+  const handle = document.createElement('span');
+  handle.className = 'win-layout-resize-handle';
+  handle.setAttribute('aria-label', '창 크기 조절');
+  handle.addEventListener('pointerdown', event => {
+    if (!windowLayoutEditing || event.button !== 0) return;
+    const rect = el.getBoundingClientRect();
+    resizingWindow = { el, pointerId: event.pointerId, x: event.clientX, y: event.clientY, width: rect.width, height: rect.height };
+    handle.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+  handle.addEventListener('pointermove', event => {
+    if (!resizingWindow || resizingWindow.el !== el || resizingWindow.pointerId !== event.pointerId) return;
+    const left = Number.parseFloat(el.style.left) || 0;
+    const top = Number.parseFloat(el.style.top) || 0;
+    const width = Math.max(160, Math.min(innerWidth - left, resizingWindow.width + event.clientX - resizingWindow.x));
+    const height = Math.max(110, Math.min(innerHeight - 32 - top, resizingWindow.height + event.clientY - resizingWindow.y));
+    el.style.width = `${width}px`;
+    el.style.height = `${height}px`;
+  });
+  const stopResize = event => {
+    if (!resizingWindow || resizingWindow.el !== el) return;
+    if (handle.hasPointerCapture(event.pointerId)) handle.releasePointerCapture(event.pointerId);
+    rememberWindowLayout(el);
+    resizingWindow = null;
+  };
+  handle.addEventListener('pointerup', stopResize);
+  handle.addEventListener('pointercancel', stopResize);
+  el.append(handle);
+}
+
+function setWindowLayoutEditing(next) {
+  if (next && !windowLayoutAdmin) return showToast('관리자 로그인 후 초기 위치를 편집할 수 있어요.');
+  if (isMobile()) return showToast('창 초기 위치 편집은 데스크톱 화면에서 사용할 수 있어요.');
+  const editor = document.getElementById('window-layout-editor');
+  windowLayoutEditing = next;
+  document.body.classList.toggle('window-layout-editing', next);
+  editor.hidden = !next;
+  if (!next) {
+    document.querySelectorAll('.win').forEach(el => el.classList.remove('layout-editing'));
+    return;
+  }
+  layoutEditSnapshot = snapshotWindowLayout();
+  document.querySelectorAll('.win').forEach(addWindowResizeHandle);
+  [...OPEN_WINS].forEach(id => document.getElementById(id)?.classList.add('layout-editing'));
+}
+
+async function saveInitialWindowLayout() {
+  if (!windowLayoutAdmin) return;
+  document.querySelectorAll('.win.layout-editing').forEach(el => {
+    rememberWindowLayout(el);
+    const layout = windowLayout.get(el.id);
+    if (!layout) return;
+    const savedLayout = {
+      x: layout.x,
+      y: layout.y,
+    };
+    if (!DEFAULT_SIZED_WINDOWS.has(el.id)) {
+      savedLayout.width = Math.round(el.offsetWidth);
+      savedLayout.height = Math.round(el.offsetHeight);
+    }
+    savedInitialLayout[el.id] = savedLayout;
+  });
+  const saveButton = document.getElementById('window-layout-save');
+  saveButton.disabled = true;
+  try {
+    const response = await fetch('/__local-window-layout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ windows: savedInitialLayout }),
+    });
+    if (!response.ok) throw new Error(`local-save-${response.status}`);
+    setWindowLayoutEditing(false);
+    showToast('초기 배치를 저장했습니다. 배포하면 모두에게 반영됩니다.');
+  } catch (error) {
+    cancelInitialWindowLayout();
+    const status = /^local-save-(\d+)$/.exec(error?.message || '')?.[1];
+    showToast(status ? `초기 배치 저장에 실패했습니다. (HTTP ${status})` : '로컬 개발 서버에서만 저장할 수 있습니다. npm run dev로 실행해 주세요.');
+  } finally {
+    saveButton.disabled = false;
+  }
+}
+
+function cancelInitialWindowLayout() {
+  layoutEditSnapshot.forEach((style, id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    Object.assign(el.style, style);
+    if (el.style.display !== 'none') rememberWindowLayout(el);
+  });
+  setWindowLayoutEditing(false);
+}
+
+document.getElementById('window-layout-edit')?.addEventListener('click', () => {
+  document.getElementById('start-menu').hidden = true;
+  setWindowLayoutEditing(true);
+});
+document.getElementById('window-layout-save')?.addEventListener('click', saveInitialWindowLayout);
+document.getElementById('window-layout-cancel')?.addEventListener('click', cancelInitialWindowLayout);
+
+async function connectInitialWindowLayout() {
+  try {
+    const response = await fetch(INITIAL_LAYOUT_URL, { cache: 'no-store' });
+    if (!response.ok) throw new Error('load-layout');
+    const data = await response.json();
+    if (!data || typeof data !== 'object' || !data.windows || typeof data.windows !== 'object') return;
+    Object.keys(savedInitialLayout).forEach(key => delete savedInitialLayout[key]);
+    Object.assign(savedInitialLayout, data.windows);
+    if (desktopInitialized && isDesktopMaximized()) {
+      setInitialDesktopPositions();
+      visibleDesktopWindows().forEach(rememberWindowLayout);
+    }
+  } catch {
+    // The built-in default layout remains available when the JSON is absent.
+  }
+}
+
+function setWindowLayoutAdmin(enabled) {
+  windowLayoutAdmin = enabled;
+  const edit = document.getElementById('window-layout-edit');
+  if (edit) edit.hidden = !enabled;
+  if (!enabled && windowLayoutEditing) cancelInitialWindowLayout();
+}
+
+connectInitialWindowLayout();
 
 function spark(x, y) {
   const el = document.createElement('div');
@@ -342,7 +598,7 @@ setInterval(tick, 1000); tick();
 
 // ── 초기 위치 설정 ──
 window.addEventListener('load', () => {
-  if (isMobile) {
+  if (isMobile()) {
     // 모바일: 모든 창을 EXIST에 등록하고 홈 패널을 활성화
     Object.keys(WIN_META).forEach(id => EXIST_WINS.add(id));
     mobileActivate('win-welcome');
@@ -397,10 +653,19 @@ window.addEventListener('load', () => {
 
   });
 
+  // A maximized desktop always starts from the intended default arrangement.
+  if (isDesktopMaximized()) setInitialDesktopPositions();
+
+  // Record the desktop arrangement once.  Future resize events use these
+  // relative coordinates instead of leaving windows pinned to a small view.
+  visibleDesktopWindows().forEach(rememberWindowLayout);
+  wasDesktopMaximized = isDesktopMaximized();
+  desktopInitialized = true;
+
   initiallyOpen.forEach(focusWin);
   updateTaskbar();
   window.dispatchEvent(new Event('window-state-change'));
 });
 
 // HTML의 기존 클릭 핸들러와 Firebase 모듈에서 사용하는 UI 함수를 노출한다.
-Object.assign(window, { closeWin, icoClick, minimizeWin, openWin, showToast });
+Object.assign(window, { closeWin, icoClick, minimizeWin, openWin, showToast, connectInitialWindowLayout, setWindowLayoutAdmin });

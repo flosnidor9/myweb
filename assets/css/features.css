@@ -336,16 +336,26 @@
     #mobile-nav button.active { background: rgba(255,255,255,0.4); font-weight: bold; }
     .nav-icon { font-size: 20px; line-height: 1; }
     .nav-label { font-size: 11px; }
+    #mobile-sticker-editor { display: none; }
+    #mobile-sticker-editor[hidden] { display: none !important; }
 
     /* ── 모바일 전용 뷰 (560px 이하) ── */
-    @media (max-width: 560px) {
+    @media (max-width: 560px), (max-height: 560px) and (orientation: landscape) {
       /* 데스크탑 크롬 숨김, 모바일 크롬 표시 */
       .icon-grid, .taskbar { display: none !important; }
       #mobile-header, #mobile-nav { display: flex !important; }
       #desktop-stickers { display: none; }
-      #mobile-stickers { position: fixed; display: flex; top: 48px; left: 0; right: 0; z-index: 190; min-height: 72px; gap: 8px; align-items: center; overflow-x: auto; padding: 7px 12px; background: rgba(255, 240, 246, .93); border-bottom: 1px solid var(--pink3); }
-      .mobile-sticker { flex: 0 0 auto; width: var(--sticker-mobile-size); padding: 0; border: 0; background: transparent; transform: rotate(var(--sticker-rotation)); line-height: 0; }
-      .mobile-sticker img, .mobile-sticker video { display: block; width: 100%; height: auto; max-height: 62px; object-fit: contain; }
+      /* Overlay stickers at their saved viewport percentages; do not create a top list. */
+      #mobile-stickers { display: block; position: fixed; inset: 0; z-index: 190; pointer-events: none; }
+      #mobile-stickers.is-editing { pointer-events: auto; }
+      .mobile-sticker { position: absolute; left: var(--sticker-x); top: var(--sticker-y); z-index: var(--sticker-order); width: var(--sticker-mobile-size); padding: 0; border: 0; background: transparent; transform: translate(-50%, -50%) rotate(var(--sticker-rotation)); line-height: 0; pointer-events: none; }
+      .mobile-sticker.is-editable { cursor: grab; pointer-events: auto; outline: 1px dashed var(--pink1); touch-action: none; }
+      .mobile-sticker.is-selected .sticker-handle { display: block; }
+      .mobile-sticker.is-dragging { cursor: grabbing; opacity: .8; }
+      .mobile-sticker img, .mobile-sticker video { display: block; width: 100%; height: auto; max-height: 360px; object-fit: contain; }
+      #mobile-sticker-editor { position: fixed; display: flex; top: 54px; left: 8px; right: 8px; z-index: 210; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid var(--pink1); background: var(--pink5); color: var(--text1); font-size: 11px; box-shadow: 1px 1px 0 rgba(0, 0, 0, .12); }
+      #mobile-sticker-editor span { flex: 1; }
+      #mobile-sticker-editor button { padding: 4px 7px; border: 1px solid var(--pink1); background: var(--white); color: var(--text1); font: inherit; }
 
       /* 시작 메뉴 위치 조정 */
       .start-menu { bottom: auto; top: 48px; left: auto; right: 4px; }
@@ -355,7 +365,8 @@
       .win {
         display: none !important;
         position: fixed !important;
-        top: 120px !important; left: 0 !important;
+        /* The former 72px sticker tray is gone, so fill the space below the header. */
+        top: 48px !important; left: 0 !important;
         right: 0 !important; bottom: 60px !important;
         width: auto !important; max-width: none !important; height: auto !important;
         border: none !important; box-shadow: none !important;

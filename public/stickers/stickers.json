@@ -10,8 +10,12 @@
       "anchorY": 121.00000305175782,
       "x": 0,
       "y": 35.25640989160747,
+      "mobileX": 11.84000015258789,
+      "mobileY": 33.780778439089744,
       "size": 148.1018960374661,
+      "mobileSize": 211.2494903271211,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 0
     },
     {
@@ -24,8 +28,12 @@
       "anchorY": 225.00001831054686,
       "x": 6.4545510031960225,
       "y": 85.74696019212118,
+      "mobileX": 11.894551155783912,
+      "mobileY": 32.239958823010205,
       "size": 120,
+      "mobileSize": 175.98755462615986,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 1
     },
     {
@@ -38,8 +46,12 @@
       "anchorY": 229.8000061035156,
       "x": 93.7272782759233,
       "y": 87.57622387528359,
+      "mobileX": 87.80728621049364,
+      "mobileY": 32.74972386170362,
       "size": 120,
+      "mobileSize": 174.4265589403476,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 2
     },
     {
@@ -52,8 +64,12 @@
       "anchorY": null,
       "x": 23.24218600988388,
       "y": 94.53499110981696,
+      "mobileX": 48.20218509435652,
+      "mobileY": 91.084908994913,
       "size": 120,
+      "mobileSize": 107.33548049549832,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 6
     },
     {
@@ -66,8 +82,12 @@
       "anchorY": null,
       "x": 16.40625037252903,
       "y": 94.84179956686691,
+      "mobileX": 22.006250372529028,
+      "mobileY": 91.24838817141917,
       "size": 120,
+      "mobileSize": 107.88551925568999,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 3
     },
     {
@@ -80,8 +100,12 @@
       "anchorY": null,
       "x": 18.71093511581421,
       "y": 94.84180249280921,
+      "mobileX": 30.870931148529053,
+      "mobileY": 91.3363004346244,
       "size": 120,
+      "mobileSize": 108.01776377928702,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 4
     },
     {
@@ -94,23 +118,13 @@
       "anchorY": null,
       "x": 20.976559817790985,
       "y": 94.84179956686691,
+      "mobileX": 39.05655249357222,
+      "mobileY": 91.5121190016423,
       "size": 120,
+      "mobileSize": 108.89786064328169,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 5
-    },
-    {
-      "id": "e48e03d8-ba03-4cf3-a94d-df7988cb2a44",
-      "imageUrl": "/stickers/e48e03d8-ba03-4cf3-a94d-df7988cb2a44--_-X.png",
-      "alt": "아즈_배경X",
-      "mediaType": "image",
-      "attachedTo": "win-music",
-      "anchorX": 25.00006103515625,
-      "anchorY": -22.20005493164058,
-      "x": 5.681832053444602,
-      "y": 0,
-      "size": 88.45974898470888,
-      "rotation": 0,
-      "mobileOrder": 10
     },
     {
       "id": "c09a7eb7-0bbd-4693-afa6-4c2548f9202c",
@@ -122,8 +136,12 @@
       "anchorY": 48.200000000000045,
       "x": 100,
       "y": 47.817458869768856,
+      "mobileX": 100,
+      "mobileY": 47.817458869768856,
       "size": 120,
+      "mobileSize": 57.599999999999994,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 7
     },
     {
@@ -136,8 +154,12 @@
       "anchorY": 49.80000610351567,
       "x": 0.79998779296875,
       "y": 49.40476646408914,
+      "mobileX": 0.79998779296875,
+      "mobileY": 49.40476646408914,
       "size": 120,
+      "mobileSize": 57.599999999999994,
       "rotation": 0,
+      "mobileRotation": 0,
       "mobileOrder": 8
     }
   ]
