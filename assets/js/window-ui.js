@@ -85,9 +85,26 @@ function saveWindowState(id, state) {
   }
 }
 
+// Keep these as static module URLs so Vite copies the recordings into the
+// deployment build and rewrites their paths for GitHub Pages' base URL.
+const CLICK_SOUND_URLS = [
+  new URL('../sounds/click1.mp3', import.meta.url).href,
+  new URL('../sounds/click2.mp3', import.meta.url).href,
+  new URL('../sounds/click3.mp3', import.meta.url).href,
+];
+const KEYBOARD_SOUND_URLS = [
+  new URL('../sounds/key1.mp3', import.meta.url).href,
+  new URL('../sounds/key2.mp3', import.meta.url).href,
+  new URL('../sounds/key3.mp3', import.meta.url).href,
+  new URL('../sounds/key4.mp3', import.meta.url).href,
+  new URL('../sounds/key5.mp3', import.meta.url).href,
+  new URL('../sounds/key6.mp3', import.meta.url).href,
+  new URL('../sounds/key7.mp3', import.meta.url).href,
+];
+
 // Use the supplied mouse-click recordings and vary them for a less repetitive feel.
-const clickSounds = ['click1.mp3', 'click2.mp3', 'click3.mp3'].map(file => {
-  const sound = new Audio(`assets/sounds/${file}`);
+const clickSounds = CLICK_SOUND_URLS.map(url => {
+  const sound = new Audio(url);
   sound.preload = 'auto';
   sound.volume = 0.5;
   return sound;
@@ -109,9 +126,9 @@ document.addEventListener('pointerdown', event => {
 }, { passive: true });
 
 // Randomize the supplied key sounds. Two voices per recording preserve rapid typing.
-const keyboardSounds = ['key1.mp3', 'key2.mp3', 'key3.mp3', 'key4.mp3', 'key5.mp3', 'key6.mp3', 'key7.mp3'].map(file =>
+const keyboardSounds = KEYBOARD_SOUND_URLS.map(url =>
   Array.from({ length: 2 }, () => {
-    const sound = new Audio(`assets/sounds/${file}`);
+    const sound = new Audio(url);
     sound.preload = 'auto';
     sound.volume = 0.28;
     return sound;
