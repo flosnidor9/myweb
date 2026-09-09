@@ -1,6 +1,7 @@
 import { createCipheriv, createDecipheriv, pbkdf2Sync, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const siblingPrivateSource = path.resolve('..', 'myweb-private');
 const fallbackPrivateSource = path.resolve('.private-board-source');
@@ -50,4 +51,4 @@ export function buildEncryptedBoards({ localBypass = false } = {}) {
   writeManifest(publicBoards); console.log(`${publicBoards.length}개 게시판을 처리했습니다.`);
 }
 
-if (import.meta.url === `file://${process.argv[1].replaceAll('\\', '/')}`) buildEncryptedBoards();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) buildEncryptedBoards();
