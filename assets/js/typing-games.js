@@ -59,7 +59,7 @@ function updateMeter(state, label = '') {
   const count = (state.offset || 0) + characterCount(state.input.value);
   state.speed.textContent = `${label ? `${label} · ` : ''}${count}타 · 속도 ${count ? speed(state) : '--'} 타/분`;
 }
-function resetTimer(state) { clearInterval(state.timer); clearTimeout(state.idleTimer); state.timer = null; state.idleTimer = null; state.started = null; state.lastInputAt = null; state.elapsed = 0; updateMeter(state); }
+function resetTimer(state, preserveMeter = false) { clearInterval(state.timer); clearTimeout(state.idleTimer); state.timer = null; state.idleTimer = null; state.started = null; state.lastInputAt = null; state.elapsed = 0; if (!preserveMeter) updateMeter(state); }
 function pauseTimer(state, label = '멈춤') {
   if (!state.started) return;
   state.elapsed += (state.lastInputAt || performance.now()) - state.started;
@@ -120,7 +120,8 @@ function sentences(posts) {
     .filter(hasVisibleText));
 }
 function renderRandom() {
-  random.input.value = ''; resetTimer(random);
+  const preservePreviousMeter = characterCount(random.input.value) > 0;
+  random.input.value = ''; resetTimer(random, preservePreviousMeter);
   if (!random.sentences.length) { random.text.textContent = '게시판을 선택해 주세요.'; random.input.disabled = true; random.next.disabled = true; return; }
   const pool = random.sentences.length > 1 ? random.sentences.filter((sentence) => sentence !== random.last) : random.sentences;
   random.last = pool[Math.floor(Math.random() * pool.length)]; renderTarget(random.text, random.last);
