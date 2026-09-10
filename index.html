@@ -153,13 +153,13 @@
       <label for="board-admin-name">게시판 이름</label><input id="board-admin-name" name="name" maxlength="40" required>
       <label for="board-admin-description">설명</label><input id="board-admin-description" name="description" maxlength="160">
       <div id="board-admin-password-row">
-        <label for="board-admin-password">게시판 비밀번호</label><input id="board-admin-password" name="password" type="text" autocomplete="off" minlength="16" required>
+        <label for="board-admin-password">게시판 비밀번호</label><input id="board-admin-password" name="password" type="text" autocomplete="off" required>
       </div>
       <div id="board-admin-master-row">
         <label for="board-admin-master">마스터키</label><input id="board-admin-master" name="masterKey" type="password" autocomplete="off" required>
       </div>
       <label for="board-admin-token">GitHub 쓰기 토큰</label><input id="board-admin-token" name="token" type="password" autocomplete="off" required>
-      <p>토큰과 마스터키는 저장하지 않습니다. 비밀번호는 16자 이상으로 설정하세요.</p>
+      <p>토큰과 마스터키는 저장하지 않습니다.</p>
       <button type="submit">private 저장소에 등록</button>
     </form>
     <form id="board-new-post-form" class="board-admin-form" hidden>

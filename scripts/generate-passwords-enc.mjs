@@ -3,7 +3,7 @@
  *
  * 사용법:
  *   1. .private-board-source/passwords.json 을 아래 형식으로 작성 (커밋 금지)
- *      { "board-id": "비밀번호(16자 이상)", ... }
+ *      { "board-id": "비밀번호", ... }
  *   2. 환경변수 설정 후 실행
  *      BOARD_CONTENT_MASTER_KEY=<마스터키> node scripts/generate-passwords-enc.mjs
  *   3. 생성된 .private-board-source/passwords.enc.json 을 private 저장소에 커밋
@@ -26,7 +26,7 @@ const passwordsPath = path.join(source, 'passwords.json');
 if (!fs.existsSync(passwordsPath)) {
   console.error(`오류: ${passwordsPath} 파일이 없습니다.`);
   console.error('아래 형식으로 작성해 주세요:');
-  console.error('  { "게시판-id": "비밀번호(16자 이상)", ... }');
+  console.error('  { "게시판-id": "비밀번호", ... }');
   process.exit(1);
 }
 
@@ -43,10 +43,10 @@ if (fs.existsSync(boardsPath)) {
   }
 }
 
-// 비밀번호 최소 길이 검증
+// 비밀번호 입력 여부 검증
 for (const [id, pw] of Object.entries(passwords)) {
-  if (typeof pw !== 'string' || pw.length < 16) {
-    console.error(`오류: '${id}' 비밀번호는 16자 이상이어야 합니다.`);
+  if (typeof pw !== 'string' || pw.length === 0) {
+    console.error(`오류: '${id}' 게시판 비밀번호를 입력해야 합니다.`);
     process.exit(1);
   }
 }
