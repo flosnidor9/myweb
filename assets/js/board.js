@@ -421,7 +421,7 @@ export function initBoard() {
     const token = String(data.get('token'));
     if (!/^[a-z0-9-]{1,40}$/.test(id)) { setStatus('게시판 ID는 영소문자·숫자·하이픈(-)만 사용할 수 있어요.'); return; }
     if (!name) { setStatus('게시판 이름을 입력해 주세요.'); return; }
-    if (!isPublic && password.length < 16) { setStatus('비공개 게시판 비밀번호는 16자 이상이어야 해요.'); return; }
+    if (!isPublic && !password) { setStatus('비공개 게시판 비밀번호를 입력해 주세요.'); return; }
     if (!isPublic && !masterKey) { setStatus('마스터키를 입력해 주세요.'); return; }
     if (!token) { setStatus('GitHub 토큰을 입력해 주세요.'); return; }
     const submit = adminForm.querySelector('button[type="submit"]');

@@ -40,7 +40,7 @@ export function buildEncryptedBoards({ localBypass = false } = {}) {
       fs.writeFileSync(path.join(output, `${board.id}.json`), `${JSON.stringify(content, null, 2)}\n`);
       publicBoards.push({ id: board.id, name: board.name.slice(0, 40), description: board.description.slice(0, 160), public: true });
     } else if (!localBypass) {
-      const password = passwords[board.id]; if (typeof password !== 'string' || password.length < 16) throw new Error(`${board.id} 게시판의 비밀번호는 16자 이상이어야 합니다.`);
+      const password = passwords[board.id]; if (typeof password !== 'string' || password.length === 0) throw new Error(`${board.id} 게시판의 비밀번호를 입력해야 합니다.`);
       fs.writeFileSync(path.join(output, `${board.id}.enc.json`), `${JSON.stringify(encrypt(JSON.stringify(content), password))}\n`);
       publicBoards.push({ id: board.id, name: board.name.slice(0, 40), description: board.description.slice(0, 160) });
     } else {
